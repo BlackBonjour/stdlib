@@ -1,0 +1,551 @@
+<?php
+declare(strict_types=1);
+
+namespace BlackBonjour\Stdlib\Lang;
+
+use InvalidArgumentException;
+use OutOfBoundsException;
+use RuntimeException;
+
+/**
+ * Represents character strings
+ *
+ * @author      Erick Dyck <info@erickdyck.de>
+ * @since       22.11.2017
+ * @package     BlackBonjour\Stdlib\Lang
+ * @copyright   Copyright (c) 2017 Erick Dyck
+ */
+class StdString extends Object
+{
+    const DEFAULT_VALUE = '';
+
+    /** @var string  */
+    protected $data = self::DEFAULT_VALUE;
+
+    /**
+     * Constructor
+     *
+     * @param   string  $string
+     */
+    public function __construct(string $string = self::DEFAULT_VALUE)
+    {
+        $this->data = $string;
+    }
+
+    /**
+     * This strings value
+     *
+     * @return  string
+     */
+    public function __toString() : string
+    {
+        return $this->data;
+    }
+
+    /**
+     * Returns the character at specified index
+     *
+     * @param   int $index
+     * @return  string
+     * @throws  OutOfBoundsException
+     */
+    public function charAt(int $index) : string
+    {
+        if ($index < 0 || $index > $this->length() - 1) {
+            throw new OutOfBoundsException('Negative values and values greater or equal object length are not allowed!');
+        }
+
+        return $this->data[$index];
+    }
+
+    /**
+     * Compares given string with this string
+     *
+     * @param   StdString|string $string
+     * @return  int
+     * @throws  InvalidArgumentException
+     */
+    public function compareTo($string) : int
+    {
+        self::handleIncomingString($string);
+        return strcmp($this->data, (string) $string);
+    }
+
+    /**
+     * Compares given string with this string case insensitive
+     *
+     * @param   StdString|string $string
+     * @return  int
+     * @throws  InvalidArgumentException
+     */
+    public function compareToIgnoreCase($string) : int
+    {
+        self::handleIncomingString($string);
+        return strcasecmp($this->data, (string) $string);
+    }
+
+    /**
+     * Concatenates given string to the end of this string
+     *
+     * @param   StdString|string $string
+     * @return  $this
+     * @throws  InvalidArgumentException
+     */
+    public function concat($string)
+    {
+        self::handleIncomingString($string);
+        $this->data .= (string) $string;
+
+        return $this;
+    }
+
+    /**
+     * Checks if this string contains specified string
+     *
+     * @param   StdString|string $string
+     * @return  boolean
+     */
+    public function contains($string) : bool
+    {
+        if (self::validateString($string) === false) {
+            return false;
+        }
+
+        return strpos($this->data, (string) $string) !== false;
+    }
+
+    /**
+     * Checks if this string is equal to the given string
+     *
+     * @param   StdString|string $string
+     * @return  boolean
+     */
+    public function contentEquals($string) : bool
+    {
+        if (self::validateString($string) === false) {
+            return false;
+        }
+
+        return $this->data === (string) $string;
+    }
+
+    /**
+     * Returns a string that represents the character sequence in the array specified
+     *
+     * @param   StdString|string    $string
+     * @return  StdString
+     * @throws  InvalidArgumentException
+     */
+    public static function copyValueOf($string) : self
+    {
+        self::handleIncomingString($string);
+        return new self((string) $string);
+    }
+
+    /**
+     * Checks if this string ends with specified string
+     *
+     * @param   StdString|string    $string
+     * @return  boolean
+     */
+    public function endsWith($string) : bool
+    {
+        if (self::validateString($string) === false) {
+            return false;
+        }
+
+        $value  = (string) $string;
+        $strLen = \strlen($value);
+        $length = $this->length();
+
+        return $strLen > $length ? false : substr_compare($this->data, $value, $length - $strLen, $length) === 0;
+    }
+
+    /**
+     * Compares this string to the given string case insensitive
+     *
+     * @param   StdString|string    $string
+     * @return  boolean
+     */
+    public function equalsIgnoreCase($string) : bool
+    {
+        if (self::validateString($string) === false) {
+            return false;
+        }
+
+        return strcasecmp($this->data, (string) $string) === 0;
+    }
+
+    /**
+     * Returns a formatted string using the given format and arguments
+     *
+     * @param   StdString|string    $format
+     * @param   mixed               ...$args
+     * @return  string
+     * @throws  InvalidArgumentException
+     */
+    public static function format($format, ...$args) : string
+    {
+        self::handleIncomingString($format);
+        return sprintf((string) $format, ...$args);
+    }
+
+    /**
+     * Encodes this string into a sequence of bytes
+     *
+     * @return  int[]
+     * @todo    Add support for different encodings!
+     */
+    public function getBytes() : array
+    {
+        return unpack('C*', $this->data);
+    }
+
+    /**
+     * Copies characters from this string into the destination array
+     *
+     * @param   int         $begin
+     * @param   int         $end
+     * @param   string[]    $destination
+     * @param   int         $dstBegin
+     * @return  void
+     * @throws  OutOfBoundsException
+     */
+    public function getChars(int $begin, int $end, array &$destination, int $dstBegin)
+    {
+        $length = $end + $begin + 1;
+
+        for ($i = 0; $i < $length; $i++) {
+            $destination[$dstBegin + $i] = $this->charAt($begin + $i);
+        }
+    }
+
+    /**
+     * Validates given string and throws an exception if required
+     *
+     * @param   mixed[] $strings
+     * @return  void
+     * @throws  InvalidArgumentException
+     */
+    private static function handleIncomingString(...$strings)
+    {
+        foreach ($strings as $string) {
+            if (self::validateString($string) === false) {
+                throw new InvalidArgumentException('Given value must be of type string or a string related object!');
+            }
+        }
+    }
+
+    /**
+     * Returns the index within this string of the first occurrence of the specified string
+     *
+     * @param   StdString|string    $string
+     * @param   int                 $offset
+     * @return  int
+     * @throws  InvalidArgumentException
+     */
+    public function indexOf($string, int $offset = 0) : int
+    {
+        self::handleIncomingString($string);
+        $pos = strpos($this->data, (string) $string, $offset);
+
+        return $pos > -1 ? $pos : -1;
+    }
+
+    /**
+     * Checks if this string is empty
+     *
+     * @return  boolean
+     */
+    public function isEmpty() : bool
+    {
+        return empty($this->data);
+    }
+
+    /**
+     * Returns the index within this string of the last occurrence of the specified string
+     *
+     * @param   StdString|string    $string
+     * @param   int $offset
+     * @return  int
+     * @throws  InvalidArgumentException
+     */
+    public function lastIndexOf($string, int $offset = 0) : int
+    {
+        self::handleIncomingString($string);
+        $pos = strrpos($this->data, (string) $string, $offset);
+
+        return $pos > -1 ? $pos : -1;
+    }
+
+    /**
+     * Returns the length of this string
+     *
+     * @return  int
+     */
+    public function length() : int
+    {
+        return \strlen($this->data);
+    }
+
+    /**
+     * Checks if this string matches the given regex pattern
+     *
+     * @param   StdString|string    $pattern
+     * @return  boolean
+     * @throws  InvalidArgumentException
+     */
+    public function matches($pattern) : bool
+    {
+        self::handleIncomingString($pattern);
+        return preg_match((string) $pattern, $this->data) === 1;
+    }
+
+    /**
+     * Checks if two string regions are equal
+     *
+     * @param   int                 $offset
+     * @param   StdString|string    $string
+     * @param   int                 $strOffset
+     * @param   int                 $len
+     * @param   boolean             $ignoreCase
+     * @return  boolean
+     */
+    public function regionMatches(int $offset, $string, int $strOffset, int $len, bool $ignoreCase = false) : bool
+    {
+        $strLen = \is_string($string) ? \strlen($string) : $string->length();
+
+        if ($offset < 0 || $strOffset < 0 || ($strOffset + $len) > $strLen || ($offset + $len) > $this->length()) {
+            return false;
+        }
+
+        $stringA = substr($this->data, $offset, $len);
+        $stringB = substr((string) $string, $strOffset, $len);
+
+        return ($ignoreCase ? strcasecmp($stringA, $stringB) : strcmp($stringA, $stringB)) === 0;
+    }
+
+    /**
+     * Replaces all occurrences of $old in this string with $new
+     *
+     * @param   StdString|string    $old
+     * @param   StdString|string    $new
+     * @return  $this
+     * @throws  InvalidArgumentException
+     */
+    public function replace($old, $new)
+    {
+        self::handleIncomingString($old, $new);
+        $this->data = str_replace((string) $old, (string) $new, $this->data);
+
+        return $this;
+    }
+
+    /**
+     * Replaces each substring of this string that matches the given regex pattern with the specified replacement
+     *
+     * @param   StdString|string    $pattern
+     * @param   StdString|string    $replacement
+     * @return  $this
+     * @throws  InvalidArgumentException
+     */
+    public function replaceAll($pattern, $replacement)
+    {
+        self::handleIncomingString($pattern, $replacement);
+        $result = preg_replace($pattern, $replacement, $this->data);
+
+        if ($result !== null) {
+            $this->data = $result;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Replaces the first substring of this string that matches the given regex pattern with the specified replacement
+     *
+     * @param   StdString|string    $pattern
+     * @param   StdString|string    $replacement
+     * @return  $this
+     * @throws  InvalidArgumentException
+     */
+    public function replaceFirst($pattern, $replacement)
+    {
+        self::handleIncomingString($pattern, $replacement);
+        $result = preg_replace($pattern, $replacement, $this->data, 1);
+
+        if ($result !== null) {
+            $this->data = $result;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Splits this string around matches of the given regex pattern
+     *
+     * @param   StdString|string    $pattern
+     * @param   int                 $limit
+     * @return  StdString[]
+     * @throws  InvalidArgumentException
+     * @throws  RuntimeException
+     */
+    public function split($pattern, int $limit = -1) : array
+    {
+        self::handleIncomingString($pattern);
+
+        $response = [];
+        $results  = preg_split($pattern, $this->data, $limit);
+
+        if ($results === false) {
+            throw new RuntimeException('An unknown error occurred while splitting string!');
+        }
+
+        foreach ($results as $result) {
+            $response[] = new self($result);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Checks if this string starts with specified string
+     *
+     * @param   StdString|string    $string
+     * @param   int                 $offset
+     * @return  boolean
+     */
+    public function startsWith($string, int $offset = 0) : bool
+    {
+        if (self::validateString($string) === false) {
+            return false;
+        }
+
+        return strpos($this->data, (string) $string, $offset) === 0;
+    }
+
+    /**
+     * Returns an array containing characters between specified start index and end index
+     *
+     * @param   int $begin
+     * @param   int $end
+     * @return  string[]
+     * @throws  OutOfBoundsException
+     */
+    public function subSequence(int $begin, int $end) : array
+    {
+        if ($begin < 0 || $end > $this->length() - 1) {
+            throw new OutOfBoundsException('Specified begin index is negative and/or end index is greater or equal string length!');
+        }
+
+        $charList = [];
+        $this->getChars($begin, $end, $charList, 0);
+
+        return $charList;
+    }
+
+    /**
+     * Returns a new string object that is a substring of this string
+     *
+     * @param   int $begin
+     * @param   int $end
+     * @return  StdString
+     * @throws  InvalidArgumentException
+     */
+    public function substring(int $begin, int $end = null) : self
+    {
+        if ($begin < 0) {
+            throw new InvalidArgumentException('Negative index is not allowed!');
+        }
+
+        return new self(substr($this->data, $begin, $end));
+    }
+
+    /**
+     * Converts this string to a new string (character) array
+     *
+     * @return  string[]
+     * @throws  OutOfBoundsException
+     */
+    public function toCharArray() : array
+    {
+        $charList = [];
+        $this->getChars(0, $this->length(), $charList, 0);
+
+        return $charList;
+    }
+
+    /**
+     * Converts all characters in this string to lower case
+     *
+     * @return  $this
+     */
+    public function toLowerCase()
+    {
+        $this->data = strtolower($this->data);
+        return $this;
+    }
+
+    /**
+     * Converts all characters in this string to upper case
+     *
+     * @return  $this
+     */
+    public function toUpperCase()
+    {
+        $this->data = strtoupper($this->data);
+        return $this;
+    }
+
+    /**
+     * Removes leading and ending whitespaces in this string
+     *
+     * @return  $this
+     */
+    public function trim()
+    {
+        $this->data = trim($this->data);
+        return $this;
+    }
+
+    /**
+     * Validates given string
+     *
+     * @param   StdString|string $string
+     * @return  boolean
+     */
+    private static function validateString($string) : bool
+    {
+        return \is_string($string) || $string instanceof self;
+    }
+
+    /**
+     * Returns the string representation of the given value
+     *
+     * @param   mixed   $value
+     * @return  StdString
+     */
+    public static function valueOf($value) : self
+    {
+        $strVal = '';
+
+        switch (\gettype($value)) {
+            case 'array':
+                $strVal = json_encode($value);
+                break;
+            case 'object':
+                if ($value instanceof Object) {
+                    $strVal = (string) $value;
+                }
+                break;
+            case 'resource':
+            case 'NULL':
+                break;
+            default:
+                $strVal = (string) $value;
+                break;
+        }
+
+        return new self($strVal);
+    }
+}

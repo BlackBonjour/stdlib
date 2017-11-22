@@ -1,0 +1,14 @@
+{
+  "name": "blackbonjour/stdlib",
+  "type": "library",
+  "description": "",
+  "keywords": ["PHP", "stdlib"],
+  "homepage": "http://www.erickdyck.de",
+  "version": "0.1.0",
+  "require": {
+    "php": ">=7.0"
+  },
+  "autoload": {
+    "psr-4": { "BlackBonjour\\Stdlib\\": "src/" }
+  }
+}
