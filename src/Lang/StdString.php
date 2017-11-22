@@ -132,14 +132,28 @@ class StdString extends Object
     /**
      * Returns a string that represents the character sequence in the array specified
      *
-     * @param   StdString|string    $string
+     * @param   StdString|string|array  $charList
      * @return  StdString
      * @throws  InvalidArgumentException
      */
-    public static function copyValueOf($string) : self
+    public static function copyValueOf($charList) : self
     {
-        self::handleIncomingString($string);
-        return new self((string) $string);
+        if (\is_array($charList) === false && self::validateString($charList) === false) {
+            throw new InvalidArgumentException('Given value must be of type string, array or a string related object!');
+        }
+
+        // Convert to native string before creating a new string object instance
+        $string = '';
+
+        if (\is_array($charList)) {
+            foreach ($charList as $value) {
+                $string .= (string) self::valueOf($value);
+            }
+        } else {
+            $string = (string) $charList;
+        }
+
+        return new self($string);
     }
 
     /**
@@ -530,14 +544,12 @@ class StdString extends Object
         $strVal = '';
 
         switch (\gettype($value)) {
-            case 'array':
-                $strVal = json_encode($value);
-                break;
             case 'object':
                 if ($value instanceof Object) {
                     $strVal = (string) $value;
                 }
                 break;
+            case 'array':
             case 'resource':
             case 'NULL':
                 break;
