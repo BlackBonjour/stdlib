@@ -191,6 +191,33 @@ class StdString extends Object
     }
 
     /**
+     * Explodes this string by specified delimiter
+     *
+     * @param   StdString|string    $delimiter
+     * @param   int                 $limit
+     * @return  StdString[]
+     * @throws  InvalidArgumentException
+     * @throws  RuntimeException
+     */
+    public function explode($delimiter, int $limit = null) : array
+    {
+        self::handleIncomingString($delimiter);
+
+        $response = [];
+        $results  = explode((string) $delimiter, $this->data, $limit);
+
+        if ($results === false) {
+            throw new RuntimeException('An unknown error occurred while splitting string!');
+        }
+
+        foreach ($results as $result) {
+            $response[] = new self($result);
+        }
+
+        return $response;
+    }
+
+    /**
      * Returns a formatted string using the given format and arguments
      *
      * @param   StdString|string    $format
