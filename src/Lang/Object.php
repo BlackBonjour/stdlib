@@ -38,10 +38,10 @@ class Object
     /**
      * Checks if given object is equal to this one
      *
-     * @param   Object  $obj
+     * @param   mixed   $obj
      * @return  boolean
      */
-    public function equals(Object $obj) : bool
+    public function equals($obj) : bool
     {
         // We ain't gonna check for same reference here!
         return $this == $obj;

@@ -68,7 +68,7 @@ class StdString extends Object
     public function compareTo($string) : int
     {
         self::handleIncomingString($string);
-        return strcmp($this->data, (string) $string);
+        return strcmp($this->data, (string) $string) <=> 0;
     }
 
     /**
@@ -81,7 +81,7 @@ class StdString extends Object
     public function compareToIgnoreCase($string) : int
     {
         self::handleIncomingString($string);
-        return strcasecmp($this->data, (string) $string);
+        return strcasecmp($this->data, (string) $string) <=> 0;
     }
 
     /**
