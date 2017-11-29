@@ -8,9 +8,17 @@
   "require": {
     "php": ">=7.0"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^6.4"
+  },
   "autoload": {
     "psr-4": {
       "BlackBonjour\\Stdlib\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "BlackBonjourTest\\Stdlib": "test/"
     }
   }
 }
