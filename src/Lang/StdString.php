@@ -55,7 +55,7 @@ class StdString extends Object
             throw new OutOfBoundsException('Negative values and values greater or equal object length are not allowed!');
         }
 
-        return $this->data[$index];
+        return mb_substr($this->data, $index, 1);
     }
 
     /**
@@ -111,7 +111,7 @@ class StdString extends Object
             return false;
         }
 
-        return strpos($this->data, (string) $string) !== false;
+        return mb_strpos($this->data, (string) $string) !== false;
     }
 
     /**
@@ -169,7 +169,7 @@ class StdString extends Object
         }
 
         $value  = (string) $string;
-        $strLen = \strlen($value);
+        $strLen = mb_strlen($value);
         $length = $this->length();
 
         return $strLen > $length ? false : substr_compare($this->data, $value, $length - $strLen, $length) === 0;
@@ -261,7 +261,7 @@ class StdString extends Object
     public function indexOf($string, int $offset = 0) : int
     {
         self::handleIncomingString($string);
-        $pos = strpos($this->data, (string) $string, $offset);
+        $pos = mb_strpos($this->data, (string) $string, $offset);
 
         return $pos > -1 ? $pos : -1;
     }
@@ -287,7 +287,7 @@ class StdString extends Object
     public function lastIndexOf($string, int $offset = 0) : int
     {
         self::handleIncomingString($string);
-        $pos = strrpos($this->data, (string) $string, $offset);
+        $pos = mb_strrpos($this->data, (string) $string, $offset);
 
         return $pos > -1 ? $pos : -1;
     }
@@ -299,7 +299,7 @@ class StdString extends Object
      */
     public function length() : int
     {
-        return \strlen($this->data);
+        return mb_strlen($this->data);
     }
 
     /**
@@ -324,10 +324,12 @@ class StdString extends Object
      * @param   int                 $len
      * @param   boolean             $ignoreCase
      * @return  boolean
+     * @throws  InvalidArgumentException
      */
     public function regionMatches(int $offset, $string, int $strOffset, int $len, bool $ignoreCase = false) : bool
     {
-        $strLen = \is_string($string) ? \strlen($string) : $string->length();
+        self::handleIncomingString($string);
+        $strLen = \is_string($string) ? \mb_strlen($string) : $string->length();
 
         if ($offset < 0 || $strOffset < 0 || ($strOffset + $len) > $strLen || ($offset + $len) > $this->length()) {
             return false;
@@ -409,7 +411,7 @@ class StdString extends Object
         self::handleIncomingString($pattern);
 
         $response = [];
-        $results  = preg_split($pattern, $this->data, $limit);
+        $results  = preg_split((string) $pattern, $this->data, $limit);
 
         if ($results === false) {
             throw new RuntimeException('An unknown error occurred while splitting string!');
@@ -435,7 +437,7 @@ class StdString extends Object
             return false;
         }
 
-        return strpos($this->data, (string) $string, $offset) === 0;
+        return mb_strpos($this->data, (string) $string, $offset) === 0;
     }
 
     /**
@@ -472,7 +474,7 @@ class StdString extends Object
             throw new InvalidArgumentException('Negative index is not allowed!');
         }
 
-        return new self(substr($this->data, $begin, $end));
+        return new self(mb_substr($this->data, $begin, $end));
     }
 
     /**
@@ -496,7 +498,7 @@ class StdString extends Object
      */
     public function toLowerCase()
     {
-        $this->data = strtolower($this->data);
+        $this->data = mb_strtolower($this->data);
         return $this;
     }
 
@@ -507,7 +509,7 @@ class StdString extends Object
      */
     public function toUpperCase()
     {
-        $this->data = strtoupper($this->data);
+        $this->data = mb_strtoupper($this->data);
         return $this;
     }
 
