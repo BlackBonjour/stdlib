@@ -15,7 +15,7 @@ use RuntimeException;
  * @package     BlackBonjour\Stdlib\Lang
  * @copyright   Copyright (c) 2017 Erick Dyck
  */
-class StdString extends Object
+class StdString extends Object implements Comparable
 {
     const DEFAULT_VALUE = '';
 
