@@ -187,24 +187,23 @@ class StdString extends Object
             return false;
         }
 
-        return strcasecmp($this->data, (string) $string) === 0;
+        return strcmp(mb_strtolower($this->data), mb_strtolower((string) $string)) === 0;
     }
 
     /**
      * Explodes this string by specified delimiter
      *
      * @param   StdString|string    $delimiter
-     * @param   int                 $limit
      * @return  StdString[]
      * @throws  InvalidArgumentException
      * @throws  RuntimeException
      */
-    public function explode($delimiter, int $limit = null) : array
+    public function explode($delimiter) : array
     {
         self::handleIncomingString($delimiter);
 
         $response = [];
-        $results  = explode((string) $delimiter, $this->data, $limit);
+        $results  = explode((string) $delimiter, $this->data);
 
         if ($results === false) {
             throw new RuntimeException('An unknown error occurred while splitting string!');
@@ -222,13 +221,13 @@ class StdString extends Object
      *
      * @param   StdString|string    $format
      * @param   mixed               ...$args
-     * @return  string
+     * @return  self
      * @throws  InvalidArgumentException
      */
-    public static function format($format, ...$args) : string
+    public static function format($format, ...$args) : self
     {
         self::handleIncomingString($format);
-        return sprintf((string) $format, ...$args);
+        return new self(sprintf((string) $format, ...$args));
     }
 
     /**
@@ -239,7 +238,7 @@ class StdString extends Object
      */
     public function getBytes() : array
     {
-        return unpack('C*', $this->data);
+        return array_values(unpack('C*', $this->data));
     }
 
     /**
@@ -254,7 +253,7 @@ class StdString extends Object
      */
     public function getChars(int $begin, int $end, array &$destination, int $dstBegin)
     {
-        $length = $end + $begin + 1;
+        $length = $end - $begin + 1;
 
         for ($i = 0; $i < $length; $i++) {
             $destination[$dstBegin + $i] = $this->charAt($begin + $i);
@@ -356,16 +355,23 @@ class StdString extends Object
     public function regionMatches(int $offset, $string, int $strOffset, int $len, bool $ignoreCase = false) : bool
     {
         self::handleIncomingString($string);
-        $strLen = \is_string($string) ? \mb_strlen($string) : $string->length();
+        $strLen = \is_string($string) ? mb_strlen($string) : $string->length();
 
         if ($offset < 0 || $strOffset < 0 || ($strOffset + $len) > $strLen || ($offset + $len) > $this->length()) {
             return false;
         }
 
-        $stringA = substr($this->data, $offset, $len);
-        $stringB = substr((string) $string, $strOffset, $len);
+        $stringA = mb_substr($this->data, $offset, $len);
+        $stringB = mb_substr((string) $string, $strOffset, $len);
 
-        return ($ignoreCase ? strcasecmp($stringA, $stringB) : strcmp($stringA, $stringB)) === 0;
+        // Compare strings
+        if ($ignoreCase) {
+            $result = strcmp(mb_strtolower($stringA), mb_strtolower($stringB));
+        } else {
+            $result = strcmp($stringA, $stringB);
+        }
+
+        return $result === 0;
     }
 
     /**
