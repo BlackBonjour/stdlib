@@ -26,8 +26,8 @@ class StdClassTest extends TestCase
     public function dataProviderReplace() : array
     {
         return [
-            'latin'    => ['FooBar', 'FooB', 'Saftb', 'Saftbar'],
-            'cyrillic' => ['Тест', 'ест', 'ормоз', 'Тормоз'],
+            'latin'    => ['FooBar', 'FooB', 'Saftb', $this->getObject('Saftbar')],
+            'cyrillic' => ['Тест', 'ест', 'ормоз', $this->getObject('Тормоз')],
         ];
     }
 
@@ -38,13 +38,13 @@ class StdClassTest extends TestCase
                 'She sells sea shells by the sea shore.',
                 '/sea/',
                 'ocean',
-                'She sells ocean shells by the ocean shore.'
+                $this->getObject('She sells ocean shells by the ocean shore.'),
             ],
             'cyrillic' => [
                 'Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Спейси из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.',
                 '/Спейси/',
                 'Джеймс',
-                'Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Джеймс секс-скандал, сообщает EW.'
+                $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Джеймс секс-скандал, сообщает EW.'),
             ],
         ];
     }
@@ -56,13 +56,13 @@ class StdClassTest extends TestCase
                 'She sells sea shells by the sea shore.',
                 '/sea/',
                 'ocean',
-                'She sells ocean shells by the sea shore.'
+                $this->getObject('She sells ocean shells by the sea shore.'),
             ],
             'cyrillic' => [
                 'Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Спейси из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.',
                 '/Спейси/',
                 'Джеймс',
-                'Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'
+                $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'),
             ],
         ];
     }
@@ -72,12 +72,12 @@ class StdClassTest extends TestCase
         $obj = new Object;
 
         return [
-            'boolean-true'  => [true, 'true', false],
-            'boolean-false' => [false, 'false', false],
-            'array'         => [[], '', true],
-            'float'         => [1.25, '1.25', false],
-            'integer'       => [125, '125', false],
-            'object'        => [$obj, Object::class . '@' . spl_object_hash($obj), false],
+            'boolean-true'  => [true, $this->getObject('true'), false],
+            'boolean-false' => [false, $this->getObject('false'), false],
+            'array'         => [[], $this->getObject(''), true],
+            'float'         => [1.25, $this->getObject('1.25'), false],
+            'integer'       => [125, $this->getObject('125'), false],
+            'object'        => [$obj, $this->getObject(Object::class . '@' . spl_object_hash($obj)), false],
         ];
     }
 
@@ -92,8 +92,8 @@ class StdClassTest extends TestCase
         $stringA = $this->getObject();
         $stringB = $this->getObject('Тест');
 
-        self::assertEquals('B', $stringA->charAt(3));
-        self::assertEquals('с', $stringB->charAt(2));
+        self::assertEquals($this->getObject('B'), $stringA->charAt(3));
+        self::assertEquals($this->getObject('с'), $stringB->charAt(2));
     }
 
     public function testClone()
@@ -134,9 +134,9 @@ class StdClassTest extends TestCase
     {
         $string = $this->getObject();
 
-        self::assertEquals('FooBarTest', (string) (clone $string)->concat('Test'));
-        self::assertEquals('FooBarTest', (string) (clone $string)->concat($this->getObject('Test')));
-        self::assertEquals('FooBarТест', (string) (clone $string)->concat('Тест'));
+        self::assertEquals($this->getObject('FooBarTest'), $string->concat('Test'));
+        self::assertEquals($this->getObject('FooBarTest'), $string->concat($this->getObject('Test')));
+        self::assertEquals($this->getObject('FooBarТест'), $string->concat('Тест'));
     }
 
     public function testContains()
@@ -240,8 +240,25 @@ class StdClassTest extends TestCase
         $string->getChars(0, 5, $result1, 0);
         $string->getChars(1, 2, $result2, 6);
 
-        self::assertEquals(['F', 'o', 'o', 'B', 'a', 'r'], $result1);
-        self::assertEquals([6 => 'o', 7 => 'o'], $result2);
+        self::assertEquals(
+            [
+                $this->getObject('F'),
+                $this->getObject('o'),
+                $this->getObject('o'),
+                $this->getObject('B'),
+                $this->getObject('a'),
+                $this->getObject('r'),
+            ],
+            $result1
+        );
+
+        self::assertEquals(
+            [
+                6 => $this->getObject('o'),
+                7 => $this->getObject('o'),
+            ],
+            $result2
+        );
     }
 
     public function testHashCode()
@@ -326,11 +343,10 @@ class StdClassTest extends TestCase
      */
     public function testReplace(string $string, string $old, string $new, string $expected)
     {
-        $baseA = $this->getObject($string);
-        $baseB = $this->getObject($string);
+        $base = $this->getObject($string);
 
-        self::assertEquals($expected, (string) $baseA->replace($old, $new));
-        self::assertEquals($expected, (string) $baseB->replace($this->getObject($old), $this->getObject($new)));
+        self::assertEquals($expected, $base->replace($old, $new));
+        self::assertEquals($expected, $base->replace($this->getObject($old), $this->getObject($new)));
     }
 
     /**
@@ -342,11 +358,10 @@ class StdClassTest extends TestCase
      */
     public function testReplaceAll(string $string, string $pattern, string $replacement, string $expected)
     {
-        $baseA = $this->getObject($string);
-        $baseB = $this->getObject($string);
+        $base = $this->getObject($string);
 
-        self::assertEquals($expected, (string) $baseA->replaceAll($pattern, $replacement));
-        self::assertEquals($expected, (string) $baseB->replaceAll($this->getObject($pattern), $this->getObject($replacement)));
+        self::assertEquals($expected, $base->replaceAll($pattern, $replacement));
+        self::assertEquals($expected, $base->replaceAll($this->getObject($pattern), $this->getObject($replacement)));
     }
 
     /**
@@ -358,17 +373,19 @@ class StdClassTest extends TestCase
      */
     public function testReplaceFirst(string $string, string $pattern, string $replacement, string $expected)
     {
-        $baseA = $this->getObject($string);
-        $baseB = $this->getObject($string);
+        $base = $this->getObject($string);
 
-        self::assertEquals($expected, (string) $baseA->replaceFirst($pattern, $replacement));
-        self::assertEquals($expected, (string) $baseB->replaceFirst($this->getObject($pattern), $this->getObject($replacement)));
+        self::assertEquals($expected, $base->replaceFirst($pattern, $replacement));
+        self::assertEquals($expected, $base->replaceFirst($this->getObject($pattern), $this->getObject($replacement)));
     }
 
     public function testSplit()
     {
         self::assertEquals(
-            [$this->getObject('F'), $this->getObject('Bar')],
+            [
+                $this->getObject('F'),
+                $this->getObject('Bar'),
+            ],
             $this->getObject()->split('/oo/')
         );
     }
@@ -388,8 +405,25 @@ class StdClassTest extends TestCase
 
     public function testSubSequence()
     {
-        self::assertEquals(['o', 'o', 'B', 'a'], $this->getObject()->subSequence(1, 4));
-        self::assertEquals(['о', 'о', 'Б', 'а'], $this->getObject('ФооБар')->subSequence(1, 4));
+        self::assertEquals(
+            [
+                $this->getObject('o'),
+                $this->getObject('o'),
+                $this->getObject('B'),
+                $this->getObject('a'),
+            ],
+            $this->getObject()->subSequence(1, 4)
+        );
+
+        self::assertEquals(
+            [
+                $this->getObject('о'),
+                $this->getObject('о'),
+                $this->getObject('Б'),
+                $this->getObject('а'),
+            ],
+            $this->getObject('ФооБар')->subSequence(1, 4)
+        );
     }
 
     public function testSubstring()
@@ -406,21 +440,21 @@ class StdClassTest extends TestCase
 
     public function testToLowercase()
     {
-        self::assertEquals('foobar', $this->getObject()->toLowerCase());
-        self::assertEquals('тест', $this->getObject('Тест')->toLowerCase());
+        self::assertEquals($this->getObject('foobar'), $this->getObject()->toLowerCase());
+        self::assertEquals($this->getObject('тест'), $this->getObject('Тест')->toLowerCase());
     }
 
     public function testToUppercase()
     {
-        self::assertEquals('FOOBAR', $this->getObject()->toUpperCase());
-        self::assertEquals('ТЕСТ', $this->getObject('Тест')->toUpperCase());
+        self::assertEquals($this->getObject('FOOBAR'), $this->getObject()->toUpperCase());
+        self::assertEquals($this->getObject('ТЕСТ'), $this->getObject('Тест')->toUpperCase());
     }
 
     public function testTrim()
     {
-        self::assertEquals('FooBar', (string) $this->getObject(' FooBar ')->trim());
-        self::assertEquals('FooBar', (string) $this->getObject("FooBar\n")->trim());
-        self::assertEquals('Тест', (string) $this->getObject("Тест\n")->trim());
+        self::assertEquals($this->getObject(), $this->getObject(' FooBar ')->trim());
+        self::assertEquals($this->getObject(), $this->getObject("FooBar\n")->trim());
+        self::assertEquals($this->getObject('Тест'), $this->getObject("Тест\n")->trim());
     }
 
     /**

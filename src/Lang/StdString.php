@@ -14,6 +14,8 @@ use RuntimeException;
  * @since       22.11.2017
  * @package     BlackBonjour\Stdlib\Lang
  * @copyright   Copyright (c) 2017 Erick Dyck
+ *
+ * @todo    Add support for different encodings!
  */
 class StdString extends Object implements Comparable
 {
@@ -46,16 +48,16 @@ class StdString extends Object implements Comparable
      * Returns the character at specified index
      *
      * @param   int $index
-     * @return  string
+     * @return  self
      * @throws  OutOfBoundsException
      */
-    public function charAt(int $index) : string
+    public function charAt(int $index) : self
     {
         if ($index < 0 || $index > $this->length() - 1) {
             throw new OutOfBoundsException('Negative values and values greater or equal object length are not allowed!');
         }
 
-        return mb_substr($this->data, $index, 1);
+        return new self(mb_substr($this->data, $index, 1));
     }
 
     /**
@@ -88,15 +90,13 @@ class StdString extends Object implements Comparable
      * Concatenates given string to the end of this string
      *
      * @param   StdString|string $string
-     * @return  $this
+     * @return  self
      * @throws  InvalidArgumentException
      */
-    public function concat($string)
+    public function concat($string) : self
     {
         self::handleIncomingString($string);
-        $this->data .= (string) $string;
-
-        return $this;
+        return new self($this->data . (string) $string);
     }
 
     /**
@@ -133,7 +133,7 @@ class StdString extends Object implements Comparable
      * Returns a string that represents the character sequence in the array specified
      *
      * @param   StdString|string|array  $charList
-     * @return  StdString
+     * @return  self
      * @throws  InvalidArgumentException
      */
     public static function copyValueOf($charList) : self
@@ -194,7 +194,7 @@ class StdString extends Object implements Comparable
      * Explodes this string by specified delimiter
      *
      * @param   StdString|string    $delimiter
-     * @return  StdString[]
+     * @return  self[]
      * @throws  InvalidArgumentException
      * @throws  RuntimeException
      */
@@ -234,7 +234,6 @@ class StdString extends Object implements Comparable
      * Encodes this string into a sequence of bytes
      *
      * @return  int[]
-     * @todo    Add support for different encodings!
      */
     public function getBytes() : array
     {
@@ -244,10 +243,10 @@ class StdString extends Object implements Comparable
     /**
      * Copies characters from this string into the destination array
      *
-     * @param   int         $begin
-     * @param   int         $end
-     * @param   string[]    $destination
-     * @param   int         $dstBegin
+     * @param   int     $begin
+     * @param   int     $end
+     * @param   self[]  $destination
+     * @param   int     $dstBegin
      * @return  void
      * @throws  OutOfBoundsException
      */
@@ -379,15 +378,13 @@ class StdString extends Object implements Comparable
      *
      * @param   StdString|string    $old
      * @param   StdString|string    $new
-     * @return  $this
+     * @return  self
      * @throws  InvalidArgumentException
      */
-    public function replace($old, $new)
+    public function replace($old, $new) : self
     {
         self::handleIncomingString($old, $new);
-        $this->data = str_replace((string) $old, (string) $new, $this->data);
-
-        return $this;
+        return new self(str_replace((string) $old, (string) $new, $this->data));
     }
 
     /**
@@ -395,19 +392,19 @@ class StdString extends Object implements Comparable
      *
      * @param   StdString|string    $pattern
      * @param   StdString|string    $replacement
-     * @return  $this
+     * @return  self
      * @throws  InvalidArgumentException
      */
-    public function replaceAll($pattern, $replacement)
+    public function replaceAll($pattern, $replacement) : self
     {
         self::handleIncomingString($pattern, $replacement);
         $result = preg_replace($pattern, $replacement, $this->data);
 
         if ($result !== null) {
-            $this->data = $result;
+            return new self($result);
         }
 
-        return $this;
+        return new self($this->data);
     }
 
     /**
@@ -415,19 +412,19 @@ class StdString extends Object implements Comparable
      *
      * @param   StdString|string    $pattern
      * @param   StdString|string    $replacement
-     * @return  $this
+     * @return  self
      * @throws  InvalidArgumentException
      */
-    public function replaceFirst($pattern, $replacement)
+    public function replaceFirst($pattern, $replacement) : self
     {
         self::handleIncomingString($pattern, $replacement);
         $result = preg_replace($pattern, $replacement, $this->data, 1);
 
         if ($result !== null) {
-            $this->data = $result;
+            return new self($result);
         }
 
-        return $this;
+        return new self($this->data);
     }
 
     /**
@@ -435,7 +432,7 @@ class StdString extends Object implements Comparable
      *
      * @param   StdString|string    $pattern
      * @param   int                 $limit
-     * @return  StdString[]
+     * @return  self[]
      * @throws  InvalidArgumentException
      * @throws  RuntimeException
      */
@@ -478,7 +475,7 @@ class StdString extends Object implements Comparable
      *
      * @param   int $begin
      * @param   int $end
-     * @return  string[]
+     * @return  self[]
      * @throws  OutOfBoundsException
      */
     public function subSequence(int $begin, int $end) : array
@@ -498,7 +495,7 @@ class StdString extends Object implements Comparable
      *
      * @param   int $begin
      * @param   int $end
-     * @return  StdString
+     * @return  self
      * @throws  InvalidArgumentException
      */
     public function substring(int $begin, int $end = null) : self
@@ -513,7 +510,7 @@ class StdString extends Object implements Comparable
     /**
      * Converts this string to a new string (character) array
      *
-     * @return  string[]
+     * @return  self[]
      * @throws  OutOfBoundsException
      */
     public function toCharArray() : array
@@ -527,34 +524,31 @@ class StdString extends Object implements Comparable
     /**
      * Converts all characters in this string to lower case
      *
-     * @return  $this
+     * @return  self
      */
-    public function toLowerCase()
+    public function toLowerCase() : self
     {
-        $this->data = mb_strtolower($this->data);
-        return $this;
+        return new self(mb_strtolower($this->data));
     }
 
     /**
      * Converts all characters in this string to upper case
      *
-     * @return  $this
+     * @return  self
      */
-    public function toUpperCase()
+    public function toUpperCase() : self
     {
-        $this->data = mb_strtoupper($this->data);
-        return $this;
+        return new self(mb_strtoupper($this->data));
     }
 
     /**
      * Removes leading and ending whitespaces in this string
      *
-     * @return  $this
+     * @return  self
      */
-    public function trim()
+    public function trim() : self
     {
-        $this->data = trim($this->data);
-        return $this;
+        return new self(trim($this->data));
     }
 
     /**
@@ -572,7 +566,7 @@ class StdString extends Object implements Comparable
      * Returns the string representation of the given value
      *
      * @param   mixed   $value
-     * @return  StdString
+     * @return  self
      * @throws  InvalidArgumentException
      */
     public static function valueOf($value) : self
