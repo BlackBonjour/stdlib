@@ -184,7 +184,7 @@ class StdClassTest extends TestCase
     public function testEquals()
     {
         $objA = $this->getObject();
-        $objB = $this->getObject();
+        $objB = clone $objA;
         $objC = $this->getObject('Dis I Like');
         $objD = new Object;
 
@@ -335,13 +335,13 @@ class StdClassTest extends TestCase
     }
 
     /**
-     * @param   string  $string
-     * @param   string  $old
-     * @param   string  $new
-     * @param   string  $expected
+     * @param   string      $string
+     * @param   string      $old
+     * @param   string      $new
+     * @param   StdString   $expected
      * @dataProvider    dataProviderReplace
      */
-    public function testReplace(string $string, string $old, string $new, string $expected)
+    public function testReplace(string $string, string $old, string $new, StdString $expected)
     {
         $base = $this->getObject($string);
 
@@ -350,13 +350,13 @@ class StdClassTest extends TestCase
     }
 
     /**
-     * @param   string  $string
-     * @param   string  $pattern
-     * @param   string  $replacement
-     * @param   string  $expected
+     * @param   string      $string
+     * @param   string      $pattern
+     * @param   string      $replacement
+     * @param   StdString   $expected
      * @dataProvider    dataProviderReplaceAll
      */
-    public function testReplaceAll(string $string, string $pattern, string $replacement, string $expected)
+    public function testReplaceAll(string $string, string $pattern, string $replacement, StdString $expected)
     {
         $base = $this->getObject($string);
 
@@ -365,13 +365,13 @@ class StdClassTest extends TestCase
     }
 
     /**
-     * @param   string  $string
-     * @param   string  $pattern
-     * @param   string  $replacement
-     * @param   string  $expected
+     * @param   string      $string
+     * @param   string      $pattern
+     * @param   string      $replacement
+     * @param   StdString   $expected
      * @dataProvider    dataProviderReplaceFirst
      */
-    public function testReplaceFirst(string $string, string $pattern, string $replacement, string $expected)
+    public function testReplaceFirst(string $string, string $pattern, string $replacement, StdString $expected)
     {
         $base = $this->getObject($string);
 
@@ -458,12 +458,12 @@ class StdClassTest extends TestCase
     }
 
     /**
-     * @param   mixed   $value
-     * @param   string  $expected
-     * @param   boolean $throwsException
+     * @param   mixed       $value
+     * @param   StdString   $expected
+     * @param   boolean     $throwsException
      * @dataProvider    dataProviderValueOf
      */
-    public function testValueOf($value, string $expected, bool $throwsException)
+    public function testValueOf($value, StdString $expected, bool $throwsException)
     {
         if ($throwsException) {
             $this->expectException(\InvalidArgumentException::class);
