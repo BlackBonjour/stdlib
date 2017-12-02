@@ -67,6 +67,20 @@ class StdClassTest extends TestCase
         ];
     }
 
+    public function dataProviderValueOf() : array
+    {
+        $obj = new Object;
+
+        return [
+            'boolean-true'  => [true, 'true', false],
+            'boolean-false' => [false, 'false', false],
+            'array'         => [[], '', true],
+            'float'         => [1.25, '1.25', false],
+            'integer'       => [125, '125', false],
+            'object'        => [$obj, Object::class . '@' . spl_object_hash($obj), false],
+        ];
+    }
+
     public function test__toString()
     {
         $string = $this->getObject();
@@ -357,5 +371,70 @@ class StdClassTest extends TestCase
             [$this->getObject('F'), $this->getObject('Bar')],
             $this->getObject()->split('/oo/')
         );
+    }
+
+    public function testStartsWith()
+    {
+        self::assertTrue($this->getObject()->startsWith('Foo'));
+        self::assertTrue($this->getObject()->startsWith($this->getObject('Foo')));
+        self::assertFalse($this->getObject()->startsWith('Bar'));
+        self::assertFalse($this->getObject()->startsWith($this->getObject('Bar')));
+
+        self::assertTrue($this->getObject('Тест')->startsWith('Те'));
+        self::assertTrue($this->getObject('Тест')->startsWith($this->getObject('Те')));
+        self::assertFalse($this->getObject('Тест')->startsWith('ст'));
+        self::assertFalse($this->getObject('Тест')->startsWith($this->getObject('ст')));
+    }
+
+    public function testSubSequence()
+    {
+        self::assertEquals(['o', 'o', 'B', 'a'], $this->getObject()->subSequence(1, 4));
+        self::assertEquals(['о', 'о', 'Б', 'а'], $this->getObject('ФооБар')->subSequence(1, 4));
+    }
+
+    public function testSubstring()
+    {
+        self::assertEquals($this->getObject('oBa'), $this->getObject()->substring(2, 4));
+        self::assertEquals($this->getObject('ест'), $this->getObject('Тест')->substring(1, 3));
+    }
+
+    public function testToCharArray()
+    {
+        self::assertEquals(['F', 'o', 'o', 'B', 'a', 'r'], $this->getObject()->toCharArray());
+        self::assertEquals(['Ф', 'о', 'о', 'Б', 'а', 'р'], $this->getObject('ФооБар')->toCharArray());
+    }
+
+    public function testToLowercase()
+    {
+        self::assertEquals('foobar', $this->getObject()->toLowerCase());
+        self::assertEquals('тест', $this->getObject('Тест')->toLowerCase());
+    }
+
+    public function testToUppercase()
+    {
+        self::assertEquals('FOOBAR', $this->getObject()->toUpperCase());
+        self::assertEquals('ТЕСТ', $this->getObject('Тест')->toUpperCase());
+    }
+
+    public function testTrim()
+    {
+        self::assertEquals('FooBar', (string) $this->getObject(' FooBar ')->trim());
+        self::assertEquals('FooBar', (string) $this->getObject("FooBar\n")->trim());
+        self::assertEquals('Тест', (string) $this->getObject("Тест\n")->trim());
+    }
+
+    /**
+     * @param   mixed   $value
+     * @param   string  $expected
+     * @param   boolean $throwsException
+     * @dataProvider    dataProviderValueOf
+     */
+    public function testValueOf($value, string $expected, bool $throwsException)
+    {
+        if ($throwsException) {
+            $this->expectException(\InvalidArgumentException::class);
+        }
+
+        self::assertEquals($expected, StdString::valueOf($value));
     }
 }

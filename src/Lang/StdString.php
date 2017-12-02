@@ -507,7 +507,7 @@ class StdString extends Object implements Comparable
             throw new InvalidArgumentException('Negative index is not allowed!');
         }
 
-        return new self(mb_substr($this->data, $begin, $end));
+        return new self(mb_substr($this->data, $begin, $end - $begin + 1));
     }
 
     /**
@@ -519,7 +519,7 @@ class StdString extends Object implements Comparable
     public function toCharArray() : array
     {
         $charList = [];
-        $this->getChars(0, $this->length(), $charList, 0);
+        $this->getChars(0, $this->length() - 1, $charList, 0);
 
         return $charList;
     }
@@ -573,6 +573,7 @@ class StdString extends Object implements Comparable
      *
      * @param   mixed   $value
      * @return  StdString
+     * @throws  InvalidArgumentException
      */
     public static function valueOf($value) : self
     {
@@ -584,9 +585,13 @@ class StdString extends Object implements Comparable
                     $strVal = (string) $value;
                 }
                 break;
+            case 'boolean':
+                $strVal = $value ? 'true' : 'false';
+                break;
             case 'array':
             case 'resource':
             case 'NULL':
+                throw new InvalidArgumentException('Unsupported value type!');
                 break;
             default:
                 $strVal = (string) $value;
