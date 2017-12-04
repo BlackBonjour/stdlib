@@ -8,7 +8,7 @@ use OutOfBoundsException;
 use RuntimeException;
 
 /**
- * Represents character strings
+ * Represents a string of characters
  *
  * @author      Erick Dyck <info@erickdyck.de>
  * @since       22.11.2017
