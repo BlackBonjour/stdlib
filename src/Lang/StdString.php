@@ -21,7 +21,7 @@ class StdString extends Object implements Comparable
 {
     const DEFAULT_VALUE = '';
 
-    /** @var string  */
+    /** @var string */
     protected $data = self::DEFAULT_VALUE;
 
     /**
