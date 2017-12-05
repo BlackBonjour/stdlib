@@ -11,7 +11,7 @@ namespace BlackBonjour\Stdlib\Lang;
  * @package     BlackBonjour\Stdlib\Lang
  * @copyright   Copyright (c) 2017 Erick Dyck
  */
-class Object
+class StdObject
 {
     const DEFAULT_VALUE = null;
 

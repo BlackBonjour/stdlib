@@ -14,10 +14,8 @@ use RuntimeException;
  * @since       22.11.2017
  * @package     BlackBonjour\Stdlib\Lang
  * @copyright   Copyright (c) 2017 Erick Dyck
- *
- * @todo    Add support for different encodings!
  */
-class StdString extends Object implements Comparable
+class StdString extends StdObject implements Comparable, CharSequence
 {
     const DEFAULT_VALUE = '';
 
@@ -35,9 +33,7 @@ class StdString extends Object implements Comparable
     }
 
     /**
-     * This strings value
-     *
-     * @return  string
+     * @inheritdoc
      */
     public function __toString() : string
     {
@@ -58,6 +54,36 @@ class StdString extends Object implements Comparable
         }
 
         return new self(mb_substr($this->data, $index, 1));
+    }
+
+    /**
+     * Returns the unicode code point at specified index
+     *
+     * @param   int $index
+     * @return  int
+     * @throws  OutOfBoundsException
+     */
+    public function codePointAt(int $index) : int
+    {
+        $char = (string) $this->charAt($index);
+
+        if (PHP_VERSION_ID >= 70200) {
+            return mb_ord($char);
+        }
+
+        return unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'))[1];
+    }
+
+    /**
+     * Returns the unicode code point before specified index
+     *
+     * @param   int $index
+     * @return  int
+     * @throws  OutOfBoundsException
+     */
+    public function codePointBefore(int $index) : int
+    {
+        return $this->codePointAt($index - 1);
     }
 
     /**
@@ -160,9 +186,10 @@ class StdString extends Object implements Comparable
      * Checks if this string ends with specified string
      *
      * @param   StdString|string    $string
+     * @param   boolean             $caseInsensitive
      * @return  boolean
      */
-    public function endsWith($string) : bool
+    public function endsWith($string, bool $caseInsensitive = false) : bool
     {
         if (self::validateString($string) === false) {
             return false;
@@ -172,7 +199,11 @@ class StdString extends Object implements Comparable
         $strLen = mb_strlen($value);
         $length = $this->length();
 
-        return $strLen > $length ? false : substr_compare($this->data, $value, $length - $strLen, $length) === 0;
+        if ($strLen > $length) {
+            return false;
+        }
+
+        return substr_compare($this->data, $value, $length - $strLen, $length, $caseInsensitive) === 0;
     }
 
     /**
@@ -318,9 +349,7 @@ class StdString extends Object implements Comparable
     }
 
     /**
-     * Returns the length of this string
-     *
-     * @return  int
+     * @inheritdoc
      */
     public function length() : int
     {
@@ -471,12 +500,7 @@ class StdString extends Object implements Comparable
     }
 
     /**
-     * Returns an array containing characters between specified start index and end index
-     *
-     * @param   int $begin
-     * @param   int $end
-     * @return  self[]
-     * @throws  OutOfBoundsException
+     * @inheritdoc
      */
     public function subSequence(int $begin, int $end) : array
     {
@@ -493,6 +517,23 @@ class StdString extends Object implements Comparable
     /**
      * Returns a new string object that is a substring of this string
      *
+     * @param   int $start
+     * @param   int $length
+     * @return  self
+     * @throws  InvalidArgumentException
+     */
+    public function substr(int $start, int $length = null) : self
+    {
+        if ($start < 0) {
+            throw new InvalidArgumentException('Negative index is not allowed!');
+        }
+
+        return new self(mb_substr($this->data, $start, $length));
+    }
+
+    /**
+     * Returns a new string object that is a substring of this string (equivalent to java.lang.String)
+     *
      * @param   int $begin
      * @param   int $end
      * @return  self
@@ -500,11 +541,7 @@ class StdString extends Object implements Comparable
      */
     public function substring(int $begin, int $end = null) : self
     {
-        if ($begin < 0) {
-            throw new InvalidArgumentException('Negative index is not allowed!');
-        }
-
-        return new self(mb_substr($this->data, $begin, $end - $begin + 1));
+        return $this->substr($begin, $end ? $end - $begin + 1 : null);
     }
 
     /**
@@ -575,7 +612,7 @@ class StdString extends Object implements Comparable
 
         switch (\gettype($value)) {
             case 'object':
-                if ($value instanceof Object) {
+                if ($value instanceof StdObject) {
                     $strVal = (string) $value;
                 }
                 break;

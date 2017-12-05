@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Lang;
 
-use BlackBonjour\Stdlib\Lang\Object;
+use BlackBonjour\Stdlib\Lang\StdObject;
 use BlackBonjour\Stdlib\Lang\StdString;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  * @copyright   Copyright (c) 2017 Erick Dyck
  * @covers      \BlackBonjour\Stdlib\Lang\StdString
  */
-class StdClassTest extends TestCase
+class StdStringTest extends TestCase
 {
     private function getObject(string $string = 'FooBar') : StdString
     {
@@ -69,7 +69,7 @@ class StdClassTest extends TestCase
 
     public function dataProviderValueOf() : array
     {
-        $obj = new Object;
+        $obj = new StdObject;
 
         return [
             'boolean-true'  => [true, $this->getObject('true'), false],
@@ -77,7 +77,7 @@ class StdClassTest extends TestCase
             'array'         => [[], $this->getObject(''), true],
             'float'         => [1.25, $this->getObject('1.25'), false],
             'integer'       => [125, $this->getObject('125'), false],
-            'object'        => [$obj, $this->getObject(Object::class . '@' . spl_object_hash($obj)), false],
+            'object'        => [$obj, $this->getObject(StdObject::class . '@' . spl_object_hash($obj)), false],
         ];
     }
 
@@ -94,6 +94,18 @@ class StdClassTest extends TestCase
 
         self::assertEquals($this->getObject('B'), $stringA->charAt(3));
         self::assertEquals($this->getObject('с'), $stringB->charAt(2));
+    }
+
+    public function testCodePointAt()
+    {
+        self::assertEquals(97, $this->getObject()->codePointAt(4));
+        self::assertEquals(1041, $this->getObject('ФооБар')->codePointAt(3));
+    }
+
+    public function testCodePointBefore()
+    {
+        self::assertEquals(97, $this->getObject()->codePointBefore(5));
+        self::assertEquals(1041, $this->getObject('ФооБар')->codePointBefore(4));
     }
 
     public function testClone()
@@ -177,6 +189,7 @@ class StdClassTest extends TestCase
         $string = $this->getObject();
 
         self::assertTrue($string->endsWith('Bar'));
+        self::assertTrue($string->endsWith('bar', true));
         self::assertFalse($string->endsWith('bar'));
         self::assertFalse($string->endsWith(null));
     }
@@ -186,7 +199,7 @@ class StdClassTest extends TestCase
         $objA = $this->getObject();
         $objB = clone $objA;
         $objC = $this->getObject('Dis I Like');
-        $objD = new Object;
+        $objD = new StdObject;
 
         self::assertTrue($objA->equals($objB));
         self::assertFalse($objA->equals($objC));
@@ -426,9 +439,17 @@ class StdClassTest extends TestCase
         );
     }
 
+    public function testSubstr()
+    {
+        self::assertEquals($this->getObject('oBa'), $this->getObject()->substr(2, 3));
+        self::assertEquals($this->getObject('oBar'), $this->getObject()->substr(2));
+        self::assertEquals($this->getObject('ест'), $this->getObject('Тест')->substr(1, 3));
+    }
+
     public function testSubstring()
     {
         self::assertEquals($this->getObject('oBa'), $this->getObject()->substring(2, 4));
+        self::assertEquals($this->getObject('oBar'), $this->getObject()->substring(2));
         self::assertEquals($this->getObject('ест'), $this->getObject('Тест')->substring(1, 3));
     }
 
