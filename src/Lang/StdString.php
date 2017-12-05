@@ -30,6 +30,7 @@ class StdString extends StdObject implements Comparable, CharSequence
     public function __construct(string $string = self::DEFAULT_VALUE)
     {
         $this->data = $string;
+        // Useless comment
     }
 
     /**
