@@ -96,6 +96,18 @@ class StdClassTest extends TestCase
         self::assertEquals($this->getObject('с'), $stringB->charAt(2));
     }
 
+    public function testCodePointAt()
+    {
+        self::assertEquals(97, $this->getObject()->codePointAt(4));
+        self::assertEquals(1041, $this->getObject('ФооБар')->codePointAt(3));
+    }
+
+    public function testCodePointBefore()
+    {
+        self::assertEquals(97, $this->getObject()->codePointBefore(5));
+        self::assertEquals(1041, $this->getObject('ФооБар')->codePointBefore(4));
+    }
+
     public function testClone()
     {
         $string = $this->getObject();
@@ -426,9 +438,17 @@ class StdClassTest extends TestCase
         );
     }
 
+    public function testSubstr()
+    {
+        self::assertEquals($this->getObject('oBa'), $this->getObject()->substr(2, 3));
+        self::assertEquals($this->getObject('oBar'), $this->getObject()->substr(2));
+        self::assertEquals($this->getObject('ест'), $this->getObject('Тест')->substr(1, 3));
+    }
+
     public function testSubstring()
     {
         self::assertEquals($this->getObject('oBa'), $this->getObject()->substring(2, 4));
+        self::assertEquals($this->getObject('oBar'), $this->getObject()->substring(2));
         self::assertEquals($this->getObject('ест'), $this->getObject('Тест')->substring(1, 3));
     }
 

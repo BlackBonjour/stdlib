@@ -61,6 +61,36 @@ class StdString extends Object implements Comparable
     }
 
     /**
+     * Returns the unicode code point at specified index
+     *
+     * @param   int $index
+     * @return  int
+     * @throws  OutOfBoundsException
+     */
+    public function codePointAt(int $index) : int
+    {
+        $char = (string) $this->charAt($index);
+
+        if (PHP_VERSION_ID >= 70200) {
+            return mb_ord($char);
+        }
+
+        return unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'))[1];
+    }
+
+    /**
+     * Returns the unicode code point before specified index
+     *
+     * @param   int $index
+     * @return  int
+     * @throws  OutOfBoundsException
+     */
+    public function codePointBefore(int $index) : int
+    {
+        return $this->codePointAt($index - 1);
+    }
+
+    /**
      * Compares given string with this string
      *
      * @param   StdString|string $string
@@ -493,6 +523,23 @@ class StdString extends Object implements Comparable
     /**
      * Returns a new string object that is a substring of this string
      *
+     * @param   int $start
+     * @param   int $length
+     * @return  self
+     * @throws  InvalidArgumentException
+     */
+    public function substr(int $start, int $length = null) : self
+    {
+        if ($start < 0) {
+            throw new InvalidArgumentException('Negative index is not allowed!');
+        }
+
+        return new self(mb_substr($this->data, $start, $length));
+    }
+
+    /**
+     * Returns a new string object that is a substring of this string (equivalent to java.lang.String)
+     *
      * @param   int $begin
      * @param   int $end
      * @return  self
@@ -500,11 +547,7 @@ class StdString extends Object implements Comparable
      */
     public function substring(int $begin, int $end = null) : self
     {
-        if ($begin < 0) {
-            throw new InvalidArgumentException('Negative index is not allowed!');
-        }
-
-        return new self(mb_substr($this->data, $begin, $end - $begin + 1));
+        return $this->substr($begin, $end ? $end - $begin + 1 : null);
     }
 
     /**
