@@ -17,7 +17,7 @@ use RuntimeException;
  *
  * @todo    Add support for different encodings!
  */
-class StdString extends Object implements Comparable
+class StdString extends StdObject implements Comparable
 {
     const DEFAULT_VALUE = '';
 
@@ -575,7 +575,7 @@ class StdString extends Object implements Comparable
 
         switch (\gettype($value)) {
             case 'object':
-                if ($value instanceof Object) {
+                if ($value instanceof StdObject) {
                     $strVal = (string) $value;
                 }
                 break;

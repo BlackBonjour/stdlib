@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Lang;
 
-use BlackBonjour\Stdlib\Lang\Object;
+use BlackBonjour\Stdlib\Lang\StdObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,26 +13,26 @@ use PHPUnit\Framework\TestCase;
  * @since       29.11.2017
  * @package     BlackBonjourTest\Stdlib\Lang
  * @copyright   Copyright (c) 2017 Erick Dyck
- * @covers      \BlackBonjour\Stdlib\Lang\Object
+ * @covers      \BlackBonjour\Stdlib\Lang\StdObject
  */
-class ObjectTest extends TestCase
+class StdObjectTest extends TestCase
 {
     public function test__toString()
     {
-        $obj = new Object;
-        self::assertEquals(Object::class . '@' . spl_object_hash($obj), (string) $obj);
+        $obj = new StdObject;
+        self::assertEquals(StdObject::class . '@' . spl_object_hash($obj), (string) $obj);
     }
 
     public function testClone()
     {
-        $obj = new Object;
-        self::assertInstanceOf(Object::class, $obj->clone());
+        $obj = new StdObject;
+        self::assertInstanceOf(StdObject::class, $obj->clone());
     }
 
     public function testEquals()
     {
-        $objA = new Object;
-        $objB = new Object;
+        $objA = new StdObject;
+        $objB = new StdObject;
         $objC = new \stdClass;
 
         self::assertTrue($objA->equals($objB));
@@ -41,7 +41,7 @@ class ObjectTest extends TestCase
 
     public function testHashCode()
     {
-        $obj = new Object;
+        $obj = new StdObject;
         self::assertEquals(spl_object_hash($obj), $obj->hashCode());
     }
 }

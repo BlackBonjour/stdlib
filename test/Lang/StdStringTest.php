@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Lang;
 
-use BlackBonjour\Stdlib\Lang\Object;
+use BlackBonjour\Stdlib\Lang\StdObject;
 use BlackBonjour\Stdlib\Lang\StdString;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  * @copyright   Copyright (c) 2017 Erick Dyck
  * @covers      \BlackBonjour\Stdlib\Lang\StdString
  */
-class StdClassTest extends TestCase
+class StdStringTest extends TestCase
 {
     private function getObject(string $string = 'FooBar') : StdString
     {
@@ -69,7 +69,7 @@ class StdClassTest extends TestCase
 
     public function dataProviderValueOf() : array
     {
-        $obj = new Object;
+        $obj = new StdObject;
 
         return [
             'boolean-true'  => [true, $this->getObject('true'), false],
@@ -77,7 +77,7 @@ class StdClassTest extends TestCase
             'array'         => [[], $this->getObject(''), true],
             'float'         => [1.25, $this->getObject('1.25'), false],
             'integer'       => [125, $this->getObject('125'), false],
-            'object'        => [$obj, $this->getObject(Object::class . '@' . spl_object_hash($obj)), false],
+            'object'        => [$obj, $this->getObject(StdObject::class . '@' . spl_object_hash($obj)), false],
         ];
     }
 
@@ -186,7 +186,7 @@ class StdClassTest extends TestCase
         $objA = $this->getObject();
         $objB = clone $objA;
         $objC = $this->getObject('Dis I Like');
-        $objD = new Object;
+        $objD = new StdObject;
 
         self::assertTrue($objA->equals($objB));
         self::assertFalse($objA->equals($objC));
