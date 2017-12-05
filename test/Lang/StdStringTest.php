@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  * @copyright   Copyright (c) 2017 Erick Dyck
  * @covers      \BlackBonjour\Stdlib\Lang\StdString
  */
-class StdClassTest extends TestCase
+class StdStringTest extends TestCase
 {
     private function getObject(string $string = 'FooBar') : StdString
     {
