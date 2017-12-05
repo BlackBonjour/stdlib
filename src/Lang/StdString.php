@@ -14,10 +14,8 @@ use RuntimeException;
  * @since       22.11.2017
  * @package     BlackBonjour\Stdlib\Lang
  * @copyright   Copyright (c) 2017 Erick Dyck
- *
- * @todo    Add support for different encodings!
  */
-class StdString extends StdObject implements Comparable
+class StdString extends StdObject implements Comparable, CharSequence
 {
     const DEFAULT_VALUE = '';
 
@@ -35,9 +33,7 @@ class StdString extends StdObject implements Comparable
     }
 
     /**
-     * This strings value
-     *
-     * @return  string
+     * @inheritdoc
      */
     public function __toString() : string
     {
@@ -190,9 +186,10 @@ class StdString extends StdObject implements Comparable
      * Checks if this string ends with specified string
      *
      * @param   StdString|string    $string
+     * @param   boolean             $caseInsensitive
      * @return  boolean
      */
-    public function endsWith($string) : bool
+    public function endsWith($string, bool $caseInsensitive = false) : bool
     {
         if (self::validateString($string) === false) {
             return false;
@@ -202,7 +199,11 @@ class StdString extends StdObject implements Comparable
         $strLen = mb_strlen($value);
         $length = $this->length();
 
-        return $strLen > $length ? false : substr_compare($this->data, $value, $length - $strLen, $length) === 0;
+        if ($strLen > $length) {
+            return false;
+        }
+
+        return substr_compare($this->data, $value, $length - $strLen, $length, $caseInsensitive) === 0;
     }
 
     /**
@@ -348,9 +349,7 @@ class StdString extends StdObject implements Comparable
     }
 
     /**
-     * Returns the length of this string
-     *
-     * @return  int
+     * @inheritdoc
      */
     public function length() : int
     {
@@ -501,12 +500,7 @@ class StdString extends StdObject implements Comparable
     }
 
     /**
-     * Returns an array containing characters between specified start index and end index
-     *
-     * @param   int $begin
-     * @param   int $end
-     * @return  self[]
-     * @throws  OutOfBoundsException
+     * @inheritdoc
      */
     public function subSequence(int $begin, int $end) : array
     {

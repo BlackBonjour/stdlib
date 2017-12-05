@@ -189,6 +189,7 @@ class StdStringTest extends TestCase
         $string = $this->getObject();
 
         self::assertTrue($string->endsWith('Bar'));
+        self::assertTrue($string->endsWith('bar', true));
         self::assertFalse($string->endsWith('bar'));
         self::assertFalse($string->endsWith(null));
     }
