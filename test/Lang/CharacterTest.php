@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace BlackBonjourTest\Stdlib\Lang;
 
 use BlackBonjour\Stdlib\Lang\Character;
+use BlackBonjour\Stdlib\Lang\CharSequence;
+use BlackBonjour\Stdlib\Lang\StdString;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,6 +19,34 @@ use PHPUnit\Framework\TestCase;
  */
 class CharacterTest extends TestCase
 {
+    public function dataProviderCodePointAt() : array
+    {
+        $charA = $this->getObject('a');
+        $charB = $this->getObject('B');
+        $charF = $this->getObject('F');
+        $charO = $this->getObject('o');
+        $charR = $this->getObject('r');
+
+        return [
+            [97, [$charF, $charO, $charO, $charB, $charA, $charR], 4],
+            [97, new StdString('FooBar'), 4],
+        ];
+    }
+
+    public function dataProviderCodePointBefore() : array
+    {
+        $charA = $this->getObject('a');
+        $charB = $this->getObject('B');
+        $charF = $this->getObject('F');
+        $charO = $this->getObject('o');
+        $charR = $this->getObject('r');
+
+        return [
+            [97, [$charF, $charO, $charO, $charB, $charA, $charR], 5],
+            [97, new StdString('FooBar'), 5],
+        ];
+    }
+
     public function dataProviderCompareTo() : array
     {
         $charA = $this->getObject();    // Latin
@@ -48,10 +78,44 @@ class CharacterTest extends TestCase
         self::assertEquals('с', (string) $this->getObject('с')); // Cyrillic
     }
 
+    public function testCharCount()
+    {
+        self::assertEquals(1, Character::charCount('c'));
+        self::assertEquals(1, Character::charCount($this->getObject()));
+        self::assertEquals(1, Character::charCount('я'));
+        self::assertEquals(2, Character::charCount('😁'));
+    }
+
     public function testClone()
     {
         $char = $this->getObject();
         self::assertInstanceOf(Character::class, $char->clone());
+    }
+
+
+
+    /**
+     * @param   int                 $expected
+     * @param   CharSequence|array  $chars
+     * @param   int                 $index
+     * @param   int                 $limit
+     * @dataProvider    dataProviderCodePointAt
+     */
+    public function testCodePointAt(int $expected, $chars, int $index, int $limit = null)
+    {
+        self::assertEquals($expected, Character::codePointAt($chars, $index, $limit));
+    }
+
+    /**
+     * @param   int                 $expected
+     * @param   CharSequence|array  $chars
+     * @param   int                 $index
+     * @param   int                 $start
+     * @dataProvider    dataProviderCodePointBefore
+     */
+    public function testCodePointBefore(int $expected, $chars, int $index, int $start = null)
+    {
+        self::assertEquals($expected, Character::codePointBefore($chars, $index, $start));
     }
 
     /**
