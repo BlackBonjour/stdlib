@@ -6,6 +6,7 @@ namespace BlackBonjourTest\Stdlib\Lang;
 use BlackBonjour\Stdlib\Lang\Character;
 use BlackBonjour\Stdlib\Lang\CharSequence;
 use BlackBonjour\Stdlib\Lang\StdString;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -67,6 +68,46 @@ class CharacterTest extends TestCase
         ];
     }
 
+    public function dataProviderToLowerCase() : array
+    {
+        $charA = $this->getObject(); // Latin
+        $charB = $this->getObject('б'); // Cyrillic
+
+        return [
+            'latin-string'    => [$charA, 'C'],
+            'latin-char'      => [$charA, $this->getObject('C')],
+            'cyrillic-string' => [$charB, 'Б'],
+            'cyrillic-char'   => [$charB, $this->getObject('Б')],
+        ];
+    }
+
+    public function dataProviderToUpperCase() : array
+    {
+        $charA = $this->getObject('C'); // Latin
+        $charB = $this->getObject('Б'); // Cyrillic
+
+        return [
+            'latin-string'    => [$charA, 'c'],
+            'latin-char'      => [$charA, $this->getObject()],
+            'cyrillic-string' => [$charB, 'б'],
+            'cyrillic-char'   => [$charB, $this->getObject('б')],
+        ];
+    }
+
+    public function dataProviderValueOf() : array
+    {
+        $charA = $this->getObject(); // Latin
+        $charB = $this->getObject('б'); // Cyrillic
+
+        return [
+            'latin-string'    => [$charA, 'c'],
+            'latin-char'      => [$charA, $this->getObject()],
+            'cyrillic-string' => [$charB, 'б'],
+            'cyrillic-char'   => [$charB, $this->getObject('б')],
+            'exception'       => [null, null, true, InvalidArgumentException::class],
+        ];
+    }
+
     private function getObject(string $char = 'c') : Character
     {
         return new Character($char);
@@ -91,8 +132,6 @@ class CharacterTest extends TestCase
         $char = $this->getObject();
         self::assertInstanceOf(Character::class, $char->clone());
     }
-
-
 
     /**
      * @param   int                 $expected
@@ -149,5 +188,60 @@ class CharacterTest extends TestCase
 
         self::assertEquals(spl_object_hash($charA), $charA->hashCode());
         self::assertEquals(spl_object_hash($charB), $charB->hashCode());
+    }
+
+    public function testIsLowerCase()
+    {
+        self::assertTrue(Character::isLowerCase($this->getObject())); // Latin
+        self::assertTrue(Character::isLowerCase($this->getObject('с'))); // Cyrillic
+        self::assertTrue(Character::isLowerCase('c'));
+        self::assertFalse(Character::isLowerCase($this->getObject('C'))); // Latin
+        self::assertFalse(Character::isLowerCase($this->getObject('С'))); // Cyrillic
+        self::assertFalse(Character::isLowerCase('C'));
+    }
+
+    public function testIsUpperCase()
+    {
+        self::assertTrue(Character::isUpperCase($this->getObject('C'))); // Latin
+        self::assertTrue(Character::isUpperCase($this->getObject('С'))); // Cyrillic
+        self::assertTrue(Character::isUpperCase('C'));
+        self::assertFalse(Character::isUpperCase($this->getObject())); // Latin
+        self::assertFalse(Character::isUpperCase($this->getObject('с'))); // Cyrillic
+        self::assertFalse(Character::isUpperCase('c'));
+    }
+
+    /**
+     * @param   Character           $expectation
+     * @param   Character|string    $char
+     * @dataProvider    dataProviderToLowerCase
+     */
+    public function testToLowerCase(Character $expectation, $char)
+    {
+        self::assertEquals($expectation, Character::toLowerCase($char));
+    }
+
+    /**
+     * @param   Character           $expectation
+     * @param   Character|string    $char
+     * @dataProvider    dataProviderToUpperCase
+     */
+    public function testToUpperCase(Character $expectation, $char)
+    {
+        self::assertEquals($expectation, Character::toUpperCase($char));
+    }
+
+    /**
+     * @param   Character   $expectation
+     * @param   mixed       $char
+     * @param   boolean     $expectException
+     * @param   string      $exception
+     * @dataProvider    dataProviderValueOf
+     */
+    public function testValueOf($expectation, $char, bool $expectException = false, string $exception = null) {
+        if ($expectException) {
+            $this->expectException($exception);
+        }
+
+        self::assertEquals($expectation, Character::valueOf($char));
     }
 }

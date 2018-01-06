@@ -166,6 +166,58 @@ class Character extends StdObject implements Comparable
     }
 
     /**
+     * Checks if specified character is lower case
+     *
+     * @param   Character|string    $char
+     * @return  boolean
+     * @throws  InvalidArgumentException
+     */
+    public static function isLowerCase($char) : bool
+    {
+        self::handleIncomingChar($char);
+        return self::compare($char, self::toLowerCase($char)) === 0;
+    }
+
+    /**
+     * Checks if specified character is upper case
+     *
+     * @param   Character|string    $char
+     * @return  boolean
+     * @throws  InvalidArgumentException
+     */
+    public static function isUpperCase($char) : bool
+    {
+        self::handleIncomingChar($char);
+        return self::compare($char, self::toUpperCase($char)) === 0;
+    }
+
+    /**
+     * Converts specified character to lower case
+     *
+     * @param   Character|string    $char
+     * @return  Character
+     * @throws  InvalidArgumentException
+     */
+    public static function toLowerCase($char) : Character
+    {
+        self::handleIncomingChar($char);
+        return new self(mb_strtolower((string) $char));
+    }
+
+    /**
+     * Converts specified character to upper case
+     *
+     * @param   Character|string    $char
+     * @return  Character
+     * @throws  InvalidArgumentException
+     */
+    public static function toUpperCase($char) : Character
+    {
+        self::handleIncomingChar($char);
+        return new self(mb_strtoupper((string) $char));
+    }
+
+    /**
      * Validates given character
      *
      * @param   Character|string    $char
@@ -174,5 +226,21 @@ class Character extends StdObject implements Comparable
     private static function validateChar($char) : bool
     {
         return (\is_string($char) && mb_strlen($char) === 1) || $char instanceof self;
+    }
+
+    /**
+     * Returns specified value as character
+     *
+     * @param   Character|string    $char
+     * @return  self
+     * @throws  InvalidArgumentException
+     */
+    public static function valueOf($char) : self
+    {
+        if (\is_string($char) || $char instanceof self) {
+            return new self((string) $char);
+        }
+
+        throw new \InvalidArgumentException('Unsupported character type!');
     }
 }
