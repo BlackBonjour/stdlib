@@ -66,11 +66,6 @@ class StdString extends StdObject implements Comparable, CharSequence
     public function codePointAt(int $index) : int
     {
         $char = (string) $this->charAt($index);
-
-        if (PHP_VERSION_ID >= 70200) {
-            return mb_ord($char);
-        }
-
         return unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'))[1];
     }
 
