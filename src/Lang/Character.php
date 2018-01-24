@@ -115,7 +115,7 @@ class Character extends StdObject implements Comparable
      */
     public static function codePointBefore($chars, int $index, int $start = null) : int
     {
-        if ($start < 0 || ($start !== null && $index <= $start)) {
+        if ($start !== null && ($start < 0 || $index <= $start)) {
             throw new InvalidArgumentException('Start cannot be negative and index must be greater than start!');
         }
 

@@ -5,7 +5,10 @@ namespace BlackBonjourTest\Stdlib\Lang;
 
 use BlackBonjour\Stdlib\Lang\StdObject;
 use BlackBonjour\Stdlib\Lang\StdString;
+use InvalidArgumentException;
+use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 /**
  * Test for StdString class
@@ -21,6 +24,126 @@ class StdStringTest extends TestCase
     private function getObject(string $string = 'FooBar') : StdString
     {
         return new StdString($string);
+    }
+
+    public function dataProviderCharAt() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'latin'               => [$string, 3, $this->getObject('B')],
+            'cyrillic'            => [$this->getObject('Тест'), 2, $this->getObject('с')],
+            'negative-index'      => [$string, -1, $string, OutOfBoundsException::class],
+            'index-equals-length' => [$string, 6, $string, OutOfBoundsException::class],
+            'index-above-length'  => [$string, 7, $string, OutOfBoundsException::class],
+        ];
+    }
+
+    public function dataProviderContains() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'latin-string-class'    => [$string, $this->getObject('oo'), true],
+            'latin-string'          => [$string, 'oo', true],
+            'cyrillic-string-class' => [$string, $this->getObject('оо'), false],
+            'cyrillic-string'       => [$string, 'оо', false],
+            'invalid-pattern'       => [$string, 666, false],
+        ];
+    }
+
+    public function dataProviderContentEquals() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'latin-string-class'     => [$string, $string, true],
+            'latin-string'           => [$string, 'FooBar', true],
+            'latin-string-lowercase' => [$string, 'foobar', false],
+            'cyrillic-string-class'  => [$string, $this->getObject('Тест'), false],
+            'cyrillic-string'        => [$string, 'Тест', false],
+            'invalid-pattern'        => [$string, 666, false],
+        ];
+    }
+
+    public function dataProviderCopyValueOf() : array
+    {
+        $stringA = $this->getObject();
+        $stringB = $this->getObject('Тест');
+
+        return [
+            'latin-string-class'    => [$stringA, $stringA],
+            'latin-string'          => ['FooBar', $stringA],
+            'cyrillic-string-class' => [$stringB, $stringB],
+            'cyrillic-string'       => ['Тест', $stringB],
+            'char-list'             => [['F', 'o', 'o', 'B', 'a', 'r'], $stringA],
+            'invalid-char-list'     => [666, $stringA, InvalidArgumentException::class],
+        ];
+    }
+
+    public function dataProviderEndsWith() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'default'          => [$string, 'Bar', false, true],
+            'case-insensitive' => [$string, 'bar', true, true],
+            'case-sensitive'   => [$string, 'bar', false, false],
+            'invalid-pattern'  => [$string, null, false, false],
+            'pattern-too-long' => [$string, 'FooBarBar', false, false],
+        ];
+    }
+
+    public function dataProviderEqualsIgnoreCase() : array
+    {
+        $stringA = $this->getObject();
+        $stringB = $this->getObject('Тест');
+
+        return [
+            'latin-string-class'             => [$stringA, $this->getObject('foobar'), true],
+            'latin-string'                   => [$stringA, 'foobar', true],
+            'latin-string-class-no-match'    => [$stringA, $this->getObject('f00bar'), false],
+            'latin-string-no-match'          => [$stringA, 'f00bar', false],
+            'cyrillic-string-class'          => [$stringB, $this->getObject('тест'), true],
+            'cyrillic-string'                => [$stringB, 'тест', true],
+            'cyrillic-string-class-no-match' => [$stringB, $this->getObject('теcт'), false], // With latin 'c'
+            'cyrillic-string-no-match'       => [$stringB, 'теcт', false], // With latin 'c'
+            'invalid-pattern'                => [$stringB, 666, false],
+        ];
+    }
+
+    public function dataProviderExplode() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'default'         => [$string, 'oo', ['F', 'Bar']],
+            'invalid-pattern' => [$string, 666, ['F', 'Bar'], InvalidArgumentException::class],
+            'empty-pattern'   => [$string, '', ['F', 'Bar'], RuntimeException::class], // Should give us an warning
+        ];
+    }
+
+    public function dataProviderRegionMatches() : array
+    {
+        $stringA = $this->getObject();
+        $stringB = $this->getObject('ФооБарТест');
+
+        return [
+            'latin-string-class'          => [$stringA, 3, $this->getObject('TestBar'), 4, 3, false, true],
+            'latin-string'                => [$stringA, 3, 'TestBar', 4, 3, false, true],
+            'latin-case-insensitive'      => [$stringA, 3, 'Testbar', 4, 3, true, true],
+            'latin-case-sensitive'        => [$stringA, 3, 'Testbar', 4, 3, false, false],
+            'latin-case-sensitive-obj'    => [$stringA, 3, $this->getObject('Testbar'), 4, 3, false, false],
+            'cyrillic-string-class'       => [$stringB, 6, $this->getObject('ФооТест'), 3, 4, false, true],
+            'cyrillic-string'             => [$stringB, 6, 'ФооТест', 3, 4, false, true],
+            'cyrillic-case-insensitive'   => [$stringB, 6, 'фоотест', 3, 4, true, true],
+            'cyrillic-case-sensitive'     => [$stringB, 6, 'фоотест', 3, 4, false, false],
+            'cyrillic-case-sensitive-obj' => [$stringB, 6, $this->getObject('фоотест'), 3, 4, false, false],
+            'negative-offset'             => [$stringA, -1, 'TestBar', 4, 3, false, false],
+            'negative-pattern-offset'     => [$stringA, 3, 'TestBar', -1, 3, false, false],
+            'pattern-offset-too-high'     => [$stringA, 3, 'TestBar', 5, 3, false, false],
+            'string-offset-too-high'      => [$stringA, 4, 'TestBar', 4, 3, false, false],
+        ];
     }
 
     public function dataProviderReplace() : array
@@ -87,13 +210,20 @@ class StdStringTest extends TestCase
         self::assertEquals('FooBar', (string) $string);
     }
 
-    public function testCharAt()
+    /**
+     * @param   StdString   $string
+     * @param   int         $index
+     * @param   StdString   $expectation
+     * @param   string      $exception
+     * @dataProvider    dataProviderCharAt
+     */
+    public function testCharAt(StdString $string, int $index, StdString $expectation, string $exception = null)
     {
-        $stringA = $this->getObject();
-        $stringB = $this->getObject('Тест');
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals($this->getObject('B'), $stringA->charAt(3));
-        self::assertEquals($this->getObject('с'), $stringB->charAt(2));
+        self::assertEquals($expectation, $string->charAt($index));
     }
 
     public function testCodePointAt()
@@ -151,47 +281,53 @@ class StdStringTest extends TestCase
         self::assertEquals($this->getObject('FooBarТест'), $string->concat('Тест'));
     }
 
-    public function testContains()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $pattern
+     * @param   boolean             $expectation
+     * @dataProvider    dataProviderContains
+     */
+    public function testContains(StdString $string, $pattern, bool $expectation)
     {
-        $string = $this->getObject();
-
-        self::assertTrue($string->contains('oo')); // Latin
-        self::assertFalse($string->contains('оо')); // Cyrillic
+        self::assertEquals($expectation, $string->contains($pattern));
     }
 
-    public function testContentEquals()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $pattern
+     * @param   boolean             $expectation
+     * @dataProvider    dataProviderContentEquals
+     */
+    public function testContentEquals(StdString $string, $pattern, bool $expectation)
     {
-        $string = $this->getObject();
-
-        self::assertTrue($string->contentEquals('FooBar'));
-        self::assertTrue($string->contentEquals($this->getObject()));
-
-        self::assertFalse($string->contentEquals('foobar'));
-        self::assertFalse($string->contentEquals('Тест'));
+        self::assertEquals($expectation, $string->contentEquals($pattern));
     }
 
-    public function testCopyValueOf()
+    /**
+     * @param   StdString|string|array $charList
+     * @param   StdString              $expectation
+     * @param   string                  $exception
+     * @dataProvider    dataProviderCopyValueOf
+     */
+    public function testCopyValueOf($charList, StdString $expectation, string $exception = null)
     {
-        $stringA = $this->getObject();
-        $stringB = $this->getObject('Тест');
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals($stringA, StdString::copyValueOf((string) $stringA));
-        self::assertEquals($stringA, StdString::copyValueOf($stringA));
-
-        self::assertEquals($stringB, StdString::copyValueOf((string) $stringB));
-        self::assertEquals($stringB, StdString::copyValueOf($stringB));
-
-        self::assertEquals('FooBar', StdString::copyValueOf(['F', 'o', 'o', 'B', 'a', 'r']));
+        self::assertEquals($expectation, StdString::copyValueOf($charList));
     }
 
-    public function testEndsWith()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $pattern
+     * @param   boolean             $caseInsensitive
+     * @param   boolean             $expectation
+     * @dataProvider    dataProviderEndsWith
+     */
+    public function testEndsWith(StdString $string, $pattern, bool $caseInsensitive, bool $expectation)
     {
-        $string = $this->getObject();
-
-        self::assertTrue($string->endsWith('Bar'));
-        self::assertTrue($string->endsWith('bar', true));
-        self::assertFalse($string->endsWith('bar'));
-        self::assertFalse($string->endsWith(null));
+        self::assertEquals($expectation, $string->endsWith($pattern, $caseInsensitive));
     }
 
     public function testEquals()
@@ -206,26 +342,31 @@ class StdStringTest extends TestCase
         self::assertFalse($objA->equals($objD));
     }
 
-    public function testEqualsIgnoreCase()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $pattern
+     * @param   boolean             $expectation
+     * @dataProvider    dataProviderEqualsIgnoreCase
+     */
+    public function testEqualsIgnoreCase(StdString $string, $pattern, bool $expectation)
     {
-        $stringA = $this->getObject();
-        $stringB = $this->getObject('Тест');
-
-        self::assertTrue($stringA->equalsIgnoreCase('foobar'));
-        self::assertTrue($stringA->equalsIgnoreCase($this->getObject('foobar')));
-        self::assertFalse($stringA->equalsIgnoreCase('f00bar'));
-        self::assertFalse($stringA->equalsIgnoreCase($this->getObject('f00bar')));
-
-        self::assertTrue($stringB->equalsIgnoreCase('тест'));
-        self::assertTrue($stringB->equalsIgnoreCase($this->getObject('тест')));
-        self::assertFalse($stringB->equalsIgnoreCase('теcт')); // With latin 'c'
-        self::assertFalse($stringB->equalsIgnoreCase($this->getObject('теcт'))); // With latin 'c'
+        self::assertEquals($expectation, $string->equalsIgnoreCase($pattern));
     }
 
-    public function testExplode()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $pattern
+     * @param   StdString[]         $expectation
+     * @param   string              $exception
+     * @dataProvider    dataProviderExplode
+     */
+    public function testExplode(StdString $string, $pattern, array $expectation, string $exception = null)
     {
-        $string = $this->getObject();
-        self::assertEquals(['F', 'Bar'], $string->explode('oo'));
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
+
+        self::assertEquals($expectation, $string->explode($pattern));
     }
 
     public function testFormat()
@@ -329,22 +470,32 @@ class StdStringTest extends TestCase
         self::assertFalse($stringB->matches($this->getObject('/Те$/')));
     }
 
-    public function testRegionMatches()
-    {
-        $stringA = $this->getObject();
-        $stringB = $this->getObject('ФооБарТест');
+    /**
+     * @param   StdString           $stringA
+     * @param   int                 $offset
+     * @param   StdString|string    $pattern
+     * @param   int                 $strOffset
+     * @param   int                 $length
+     * @param   boolean             $ignoreCase
+     * @param   boolean             $expectation
+     * @param   string              $exception
+     * @dataProvider    dataProviderRegionMatches
+     */
+    public function testRegionMatches(
+        StdString $stringA,
+        int $offset,
+        $pattern,
+        int $strOffset,
+        int $length,
+        bool $ignoreCase,
+        bool $expectation,
+        string $exception = null
+    ) {
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertTrue($stringA->regionMatches(3, 'TestBar', 4, 3));
-        self::assertTrue($stringA->regionMatches(3, $this->getObject('TestBar'), 4, 3));
-        self::assertTrue($stringA->regionMatches(3, 'Testbar', 4, 3, true));
-        self::assertFalse($stringA->regionMatches(3, 'Testbar', 4, 3));
-        self::assertFalse($stringA->regionMatches(3, $this->getObject('Testbar'), 4, 3));
-
-        self::assertTrue($stringB->regionMatches(6, 'ФооТест', 3, 4));
-        self::assertTrue($stringB->regionMatches(6, $this->getObject('ФооТест'), 3, 4));
-        self::assertTrue($stringB->regionMatches(6, 'фоотест', 3, 4, true));
-        self::assertFalse($stringB->regionMatches(6, 'фоотест', 3, 4));
-        self::assertFalse($stringB->regionMatches(6, $this->getObject('фоотест'), 3, 4));
+        self::assertEquals($expectation, $stringA->regionMatches($offset, $pattern, $strOffset, $length, $ignoreCase));
     }
 
     /**
@@ -487,7 +638,7 @@ class StdStringTest extends TestCase
     public function testValueOf($value, StdString $expected, bool $throwsException)
     {
         if ($throwsException) {
-            $this->expectException(\InvalidArgumentException::class);
+            $this->expectException(InvalidArgumentException::class);
         }
 
         self::assertEquals($expected, StdString::valueOf($value));

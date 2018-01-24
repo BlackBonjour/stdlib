@@ -3,7 +3,8 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.0/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          backupGlobals="false"
-         verbose="true">
+         verbose="true"
+         convertWarningsToExceptions="false">
     <testsuite name="Stdlib">
         <directory suffix="Test.php">test</directory>
     </testsuite>

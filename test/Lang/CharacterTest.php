@@ -29,8 +29,16 @@ class CharacterTest extends TestCase
         $charR = $this->getObject('r');
 
         return [
-            [97, [$charF, $charO, $charO, $charB, $charA, $charR], 4],
-            [97, new StdString('FooBar'), 4],
+            'char-array'         => [97, [$charF, $charO, $charO, $charB, $charA, $charR], 4],
+            'char-sequence'      => [97, new StdString('FooBar'), 4],
+            'with-limit'         => [97, new StdString('FooBar'), 4, 5],
+            'invalid-char'       => [0, 666, 2, null, InvalidArgumentException::class],
+            'empty-char-array'   => [0, [], 2, null, InvalidArgumentException::class],
+            'invalid-char-array' => [0, [666, 333, 223], 2, null, InvalidArgumentException::class],
+            'invalid-index'      => [0, new StdString('topkek'), -1, null, InvalidArgumentException::class],
+            'limit-below-index'  => [97, new StdString('FooBar'), 4, 3, InvalidArgumentException::class],
+            'invalid-limit'      => [97, new StdString('FooBar'), 4, -1, InvalidArgumentException::class],
+            'limit-above-length' => [97, new StdString('FooBar'), 4, 7, InvalidArgumentException::class],
         ];
     }
 
@@ -43,8 +51,12 @@ class CharacterTest extends TestCase
         $charR = $this->getObject('r');
 
         return [
-            [97, [$charF, $charO, $charO, $charB, $charA, $charR], 5],
-            [97, new StdString('FooBar'), 5],
+            'char-array'         => [97, [$charF, $charO, $charO, $charB, $charA, $charR], 5],
+            'char-sequence'      => [97, new StdString('FooBar'), 5],
+            'with-start'         => [97, new StdString('FooBar'), 5, 1],
+            'invalid-start'      => [97, new StdString('FooBar'), 5, -1, InvalidArgumentException::class],
+            'index-below-start'  => [97, new StdString('FooBar'), 2, 3, InvalidArgumentException::class],
+            'index-equals-start' => [97, new StdString('FooBar'), 2, 3, InvalidArgumentException::class],
         ];
     }
 
@@ -55,16 +67,16 @@ class CharacterTest extends TestCase
 
         return [
             // Latin test
-            [$charA, 'c', 0],
-            [$charA, $this->getObject(), 0],
-            [$charA, 'd', -1],
-            [$charA, 'b', 1],
+            'latin-string' => [$charA, 'c', 0],
+            'latin-char'   => [$charA, $this->getObject(), 0],
+            'latin-higher' => [$charA, 'd', -1],
+            'latin-lower'  => [$charA, 'b', 1],
 
             // Cyrillic test
-            [$charB, 'в', 0],
-            [$charB, $this->getObject('в'), 0],
-            [$charB, 'г', -1],
-            [$charB, 'б', 1],
+            'cyrillic-string' => [$charB, 'в', 0],
+            'cyrillic-char'   => [$charB, $this->getObject('в'), 0],
+            'cyrillic-higher' => [$charB, 'г', -1],
+            'cyrillic-lower'  => [$charB, 'б', 1],
         ];
     }
 
@@ -113,6 +125,12 @@ class CharacterTest extends TestCase
         return new Character($char);
     }
 
+    public function test__construct()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->getObject('cc');
+    }
+
     public function test__toString()
     {
         self::assertEquals('c', (string) $this->getObject()); // Latin
@@ -138,10 +156,15 @@ class CharacterTest extends TestCase
      * @param   CharSequence|array  $chars
      * @param   int                 $index
      * @param   int                 $limit
+     * @param   string              $exception
      * @dataProvider    dataProviderCodePointAt
      */
-    public function testCodePointAt(int $expected, $chars, int $index, int $limit = null)
+    public function testCodePointAt(int $expected, $chars, int $index, int $limit = null, string $exception = null)
     {
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
+
         self::assertEquals($expected, Character::codePointAt($chars, $index, $limit));
     }
 
@@ -150,10 +173,15 @@ class CharacterTest extends TestCase
      * @param   CharSequence|array  $chars
      * @param   int                 $index
      * @param   int                 $start
+     * @param   string              $exception
      * @dataProvider    dataProviderCodePointBefore
      */
-    public function testCodePointBefore(int $expected, $chars, int $index, int $start = null)
+    public function testCodePointBefore(int $expected, $chars, int $index, int $start = null, string $exception = null)
     {
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
+
         self::assertEquals($expected, Character::codePointBefore($chars, $index, $start));
     }
 
