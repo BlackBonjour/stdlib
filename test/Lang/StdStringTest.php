@@ -119,7 +119,45 @@ class StdStringTest extends TestCase
         return [
             'default'         => [$string, 'oo', ['F', 'Bar']],
             'invalid-pattern' => [$string, 666, ['F', 'Bar'], InvalidArgumentException::class],
-            'empty-pattern'   => [$string, '', ['F', 'Bar'], RuntimeException::class], // Should give us an warning
+            'empty-pattern'   => [$string, '', ['F', 'Bar'], RuntimeException::class], // Should trigger a warning
+        ];
+    }
+
+    public function dataProviderOffsetExists() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'offset-does-exist'     => [$string, 3, true],
+            'offset-does-not-exist' => [$string, 6, false],
+            'offset-numeric-string' => [$string, '3', true],
+            'offset-illegal'        => [$string, 'o', false],
+            'offset-negative'       => [$string, -2, false],
+        ];
+    }
+
+    public function dataProviderOffsetGet() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'offset-does-exist'     => [$string, 3, 'B'],
+            'offset-does-not-exist' => [$string, 6, '', OutOfBoundsException::class],
+            'offset-numeric-string' => [$string, '3', 'B'],
+            'offset-illegal'        => [$string, 'o', 'F'], // Should trigger a warning and return first letter
+            'offset-negative'       => [$string, -2, '', OutOfBoundsException::class],
+        ];
+    }
+
+    public function dataProviderOffsetSet() : array
+    {
+        return [
+            'offset-does-exist'     => [$this->getObject(), 3, 'C', 'FooCar'],
+            'offset-does-not-exist' => [$this->getObject(), 7, 'Donald Duck', 'FooBar Donald Duck'],
+            'offset-numeric-string' => [$this->getObject(), '3', 'C', 'FooCar'],
+            'offset-illegal'        => [$this->getObject(), 'o', '', 'FooBar'], // Should trigger a warning
+            'offset-negative'       => [$this->getObject(), -2, '', 'FooBar'], // Should trigger a warning
+            'offset-set-last-index' => [$this->getObject(), 5, 'zz', 'FooBazz'],
         ];
     }
 
@@ -320,6 +358,12 @@ class StdStringTest extends TestCase
         self::assertEquals($expectation, StdString::copyValueOf($charList));
     }
 
+    public function testCount()
+    {
+        self::assertCount(6, $this->getObject()); // Latin
+        self::assertCount(6, $this->getObject('ФооБар')); // Cyrillic
+    }
+
     /**
      * @param   StdString           $string
      * @param   StdString|string    $pattern
@@ -470,6 +514,45 @@ class StdStringTest extends TestCase
         self::assertTrue($stringB->matches($this->getObject('/ст$/')));
         self::assertFalse($stringB->matches('/Те$/'));
         self::assertFalse($stringB->matches($this->getObject('/Те$/')));
+    }
+
+    /**
+     * @param   StdString   $string
+     * @param   mixed       $offset
+     * @param   boolean     $expectation
+     * @dataProvider    dataProviderOffsetExists
+     */
+    public function testOffsetExists(StdString $string, $offset, bool $expectation)
+    {
+        self::assertEquals($expectation, isset($string[$offset]));
+    }
+
+    /**
+     * @param   StdString   $string
+     * @param   mixed       $offset
+     * @param   string      $expectation
+     * @dataProvider    dataProviderOffsetGet
+     */
+    public function testOffsetGet(StdString $string, $offset, string $expectation, string $exception = null)
+    {
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
+
+        self::assertEquals($expectation, $string[$offset]);
+    }
+
+    /**
+     * @param   StdString   $string
+     * @param   mixed       $offset
+     * @param   mixed       $value
+     * @param   string      $expectation
+     * @dataProvider    dataProviderOffsetSet
+     */
+    public function testOffsetSet(StdString $string, $offset, $value, string $expectation)
+    {
+        $string[$offset] = $value;
+        self::assertEquals($expectation, (string) $string);
     }
 
     /**

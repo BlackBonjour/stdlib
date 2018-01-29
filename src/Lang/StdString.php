@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
 
+use ArrayAccess;
+use Countable;
 use InvalidArgumentException;
 use OutOfBoundsException;
 use RuntimeException;
@@ -15,7 +17,7 @@ use RuntimeException;
  * @package     BlackBonjour\Stdlib\Lang
  * @copyright   Copyright (c) 2017 Erick Dyck
  */
-class StdString extends StdObject implements Comparable, CharSequence
+class StdString extends StdObject implements Comparable, CharSequence, Countable, ArrayAccess
 {
     const DEFAULT_VALUE = '';
 
@@ -180,6 +182,14 @@ class StdString extends StdObject implements Comparable, CharSequence
         }
 
         return new self($string);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function count() : int
+    {
+        return $this->length();
     }
 
     /**
@@ -370,6 +380,75 @@ class StdString extends StdObject implements Comparable, CharSequence
     {
         self::handleIncomingString($pattern);
         return preg_match((string) $pattern, $this->data) === 1;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function offsetExists($offset) : bool
+    {
+        if (is_numeric($offset) === false) {
+            return false;
+        }
+
+        $offset = (int) $offset;
+        return $offset >= 0 && $this->length() > $offset;
+    }
+
+    /**
+     * @inheritdoc
+     * @throws  OutOfBoundsException
+     */
+    public function offsetGet($offset)
+    {
+        if (is_numeric($offset) === false) {
+            trigger_error('Illegal string offset \'' . $offset . '\'', E_USER_WARNING);
+            return $this->charAt(0);
+        }
+
+        $offset = (int) $offset;
+
+        if ($offset < 0 || $this->length() <= $offset) {
+            throw new OutOfBoundsException('Negative values and values greater or equal object length are not allowed!');
+        }
+
+        return $this->charAt($offset);
+    }
+
+    /**
+     * @inheritdoc
+     * @throws  InvalidArgumentException
+     */
+    public function offsetSet($offset, $value)
+    {
+        if (is_numeric($offset) === false || (int) $offset < 0) {
+            trigger_error('Illegal string offset \'' . $offset . '\'', E_USER_WARNING);
+            return;
+        }
+
+        $length       = $this->length();
+        $offset       = (int) $offset;
+        $prefix       = $this->substr(0, $offset);
+        $suffix       = '';
+        $suffixOffset = $offset + mb_strlen($value);
+
+        if ($length < $offset) {
+            $prefix .= str_repeat(' ', $offset - $length);
+        }
+
+        if ($suffixOffset < $length) {
+            $suffix = $this->substr($suffixOffset);
+        }
+
+        $this->data = $prefix . $value . $suffix;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function offsetUnset($offset)
+    {
+        trigger_error('Cannot unset string offsets', E_USER_ERROR);
     }
 
     /**
