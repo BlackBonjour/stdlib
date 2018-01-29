@@ -18,7 +18,7 @@ class Character extends StdObject implements Comparable
     const DEFAULT_VALUE = '';
 
     /** @var string */
-    protected $data = self::DEFAULT_VALUE;
+    protected $data;
 
     /**
      * Constructor
@@ -26,7 +26,7 @@ class Character extends StdObject implements Comparable
      * @param   string  $char
      * @throws  InvalidArgumentException
      */
-    public function __construct(string $char)
+    public function __construct(string $char = self::DEFAULT_VALUE)
     {
         if (mb_strlen($char) > 1) {
             throw new InvalidArgumentException('Only one character can be represented!');

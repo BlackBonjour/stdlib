@@ -20,16 +20,21 @@ class StdString extends StdObject implements Comparable, CharSequence
     const DEFAULT_VALUE = '';
 
     /** @var string */
-    protected $data = self::DEFAULT_VALUE;
+    protected $data;
+
+    /** @var string */
+    protected $encoding;
 
     /**
      * Constructor
      *
      * @param   string  $string
+     * @param   string  $encoding
      */
-    public function __construct(string $string = self::DEFAULT_VALUE)
+    public function __construct(string $string = self::DEFAULT_VALUE, string $encoding = null)
     {
-        $this->data = $string;
+        $this->data     = $string;
+        $this->encoding = $encoding ?: mb_internal_encoding();
     }
 
     /**
@@ -53,7 +58,7 @@ class StdString extends StdObject implements Comparable, CharSequence
             throw new OutOfBoundsException('Negative values and values greater or equal object length are not allowed!');
         }
 
-        return new self(mb_substr($this->data, $index, 1));
+        return new self(mb_substr($this->data, $index, 1, $this->encoding), $this->encoding);
     }
 
     /**
@@ -66,7 +71,7 @@ class StdString extends StdObject implements Comparable, CharSequence
     public function codePointAt(int $index) : int
     {
         $char = (string) $this->charAt($index);
-        return unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'))[1];
+        return unpack('N', mb_convert_encoding($char, 'UCS-4BE', $this->encoding))[1];
     }
 
     /**
@@ -117,7 +122,7 @@ class StdString extends StdObject implements Comparable, CharSequence
     public function concat($string) : self
     {
         self::handleIncomingString($string);
-        return new self($this->data . (string) $string);
+        return new self($this->data . (string) $string, $this->encoding);
     }
 
     /**
@@ -132,7 +137,7 @@ class StdString extends StdObject implements Comparable, CharSequence
             return false;
         }
 
-        return mb_strpos($this->data, (string) $string) !== false;
+        return mb_strpos($this->data, (string) $string, 0, $this->encoding) !== false;
     }
 
     /**
@@ -191,7 +196,7 @@ class StdString extends StdObject implements Comparable, CharSequence
         }
 
         $value  = (string) $string;
-        $strLen = mb_strlen($value);
+        $strLen = mb_strlen($value, $this->encoding);
         $length = $this->length();
 
         if ($strLen > $length) {
@@ -213,7 +218,10 @@ class StdString extends StdObject implements Comparable, CharSequence
             return false;
         }
 
-        return strcmp(mb_strtolower($this->data), mb_strtolower((string) $string)) === 0;
+        return 0 === strcmp(
+            mb_strtolower($this->data, $this->encoding),
+            mb_strtolower((string) $string, $this->encoding)
+        );
     }
 
     /**
@@ -236,7 +244,7 @@ class StdString extends StdObject implements Comparable, CharSequence
         }
 
         foreach ($results as $result) {
-            $response[] = new self($result);
+            $response[] = new self($result, $this->encoding);
         }
 
         return $response;
@@ -312,7 +320,7 @@ class StdString extends StdObject implements Comparable, CharSequence
     public function indexOf($string, int $offset = 0) : int
     {
         self::handleIncomingString($string);
-        $pos = mb_strpos($this->data, (string) $string, $offset);
+        $pos = mb_strpos($this->data, (string) $string, $offset, $this->encoding);
 
         return $pos > -1 ? $pos : -1;
     }
@@ -338,7 +346,7 @@ class StdString extends StdObject implements Comparable, CharSequence
     public function lastIndexOf($string, int $offset = 0) : int
     {
         self::handleIncomingString($string);
-        $pos = mb_strrpos($this->data, (string) $string, $offset);
+        $pos = mb_strrpos($this->data, (string) $string, $offset, $this->encoding);
 
         return $pos > -1 ? $pos : -1;
     }
@@ -348,7 +356,7 @@ class StdString extends StdObject implements Comparable, CharSequence
      */
     public function length() : int
     {
-        return mb_strlen($this->data);
+        return mb_strlen($this->data, $this->encoding);
     }
 
     /**
@@ -378,18 +386,18 @@ class StdString extends StdObject implements Comparable, CharSequence
     public function regionMatches(int $offset, $string, int $strOffset, int $len, bool $ignoreCase = false) : bool
     {
         self::handleIncomingString($string);
-        $strLen = \is_string($string) ? mb_strlen($string) : $string->length();
+        $strLen = \is_string($string) ? mb_strlen($string, $this->encoding) : $string->length();
 
         if ($offset < 0 || $strOffset < 0 || ($strOffset + $len) > $strLen || ($offset + $len) > $this->length()) {
             return false;
         }
 
-        $stringA = mb_substr($this->data, $offset, $len);
-        $stringB = mb_substr((string) $string, $strOffset, $len);
+        $stringA = mb_substr($this->data, $offset, $len, $this->encoding);
+        $stringB = mb_substr((string) $string, $strOffset, $len, $this->encoding);
 
         // Compare strings
         if ($ignoreCase) {
-            $result = strcmp(mb_strtolower($stringA), mb_strtolower($stringB));
+            $result = strcmp(mb_strtolower($stringA, $this->encoding), mb_strtolower($stringB, $this->encoding));
         } else {
             $result = strcmp($stringA, $stringB);
         }
@@ -408,7 +416,7 @@ class StdString extends StdObject implements Comparable, CharSequence
     public function replace($old, $new) : self
     {
         self::handleIncomingString($old, $new);
-        return new self(str_replace((string) $old, (string) $new, $this->data));
+        return new self(str_replace((string) $old, (string) $new, $this->data), $this->encoding);
     }
 
     /**
@@ -422,13 +430,9 @@ class StdString extends StdObject implements Comparable, CharSequence
     public function replaceAll($pattern, $replacement) : self
     {
         self::handleIncomingString($pattern, $replacement);
+
         $result = preg_replace($pattern, $replacement, $this->data);
-
-        if ($result !== null) {
-            return new self($result);
-        }
-
-        return new self($this->data);
+        return new self($result ?: $this->data, $this->encoding);
     }
 
     /**
@@ -442,13 +446,9 @@ class StdString extends StdObject implements Comparable, CharSequence
     public function replaceFirst($pattern, $replacement) : self
     {
         self::handleIncomingString($pattern, $replacement);
+
         $result = preg_replace($pattern, $replacement, $this->data, 1);
-
-        if ($result !== null) {
-            return new self($result);
-        }
-
-        return new self($this->data);
+        return new self($result ?: $this->data, $this->encoding);
     }
 
     /**
@@ -472,7 +472,7 @@ class StdString extends StdObject implements Comparable, CharSequence
         }
 
         foreach ($results as $result) {
-            $response[] = new self($result);
+            $response[] = new self($result, $this->encoding);
         }
 
         return $response;
@@ -491,7 +491,7 @@ class StdString extends StdObject implements Comparable, CharSequence
             return false;
         }
 
-        return mb_strpos($this->data, (string) $string, $offset) === 0;
+        return mb_strpos($this->data, (string) $string, $offset, $this->encoding) === 0;
     }
 
     /**
@@ -523,7 +523,7 @@ class StdString extends StdObject implements Comparable, CharSequence
             throw new InvalidArgumentException('Negative index is not allowed!');
         }
 
-        return new self(mb_substr($this->data, $start, $length));
+        return new self(mb_substr($this->data, $start, $length, $this->encoding), $this->encoding);
     }
 
     /**
@@ -560,7 +560,7 @@ class StdString extends StdObject implements Comparable, CharSequence
      */
     public function toLowerCase() : self
     {
-        return new self(mb_strtolower($this->data));
+        return new self(mb_strtolower($this->data, $this->encoding), $this->encoding);
     }
 
     /**
@@ -570,7 +570,7 @@ class StdString extends StdObject implements Comparable, CharSequence
      */
     public function toUpperCase() : self
     {
-        return new self(mb_strtoupper($this->data));
+        return new self(mb_strtoupper($this->data, $this->encoding), $this->encoding);
     }
 
     /**
@@ -603,25 +603,26 @@ class StdString extends StdObject implements Comparable, CharSequence
      */
     public static function valueOf($value) : self
     {
-        $strVal = '';
+        $strVal = null;
 
         switch (\gettype($value)) {
             case 'object':
-                if ($value instanceof StdObject) {
+                if ($value instanceof StdObject || (\is_object($value) && method_exists($value, '__toString'))) {
                     $strVal = (string) $value;
                 }
                 break;
             case 'boolean':
                 $strVal = $value ? 'true' : 'false';
                 break;
-            case 'array':
-            case 'resource':
-            case 'NULL':
-                throw new InvalidArgumentException('Unsupported value type!');
-                break;
-            default:
+            case 'double':
+            case 'integer':
+            case 'string':
                 $strVal = (string) $value;
                 break;
+        }
+
+        if ($strVal === null) {
+            throw new InvalidArgumentException('Unsupported value type!');
         }
 
         return new self($strVal);

@@ -195,12 +195,14 @@ class StdStringTest extends TestCase
         $obj = new StdObject;
 
         return [
-            'boolean-true'  => [true, $this->getObject('true'), false],
-            'boolean-false' => [false, $this->getObject('false'), false],
-            'array'         => [[], $this->getObject(''), true],
-            'float'         => [1.25, $this->getObject('1.25'), false],
-            'integer'       => [125, $this->getObject('125'), false],
-            'object'        => [$obj, $this->getObject(StdObject::class . '@' . spl_object_hash($obj)), false],
+            'boolean-true'   => [true, $this->getObject('true')],
+            'boolean-false'  => [false, $this->getObject('false')],
+            'array'          => [[], null, true],
+            'float'          => [1.25, $this->getObject('1.25')],
+            'integer'        => [125, $this->getObject('125')],
+            'std-object'     => [$obj, $this->getObject(StdObject::class . '@' . spl_object_hash($obj))],
+            'invalid-object' => [new \stdClass(), null, true],
+            'object'         => [new class {public function __toString() { return 'FooBar'; }}, $this->getObject()],
         ];
     }
 
@@ -635,7 +637,7 @@ class StdStringTest extends TestCase
      * @param   boolean     $throwsException
      * @dataProvider    dataProviderValueOf
      */
-    public function testValueOf($value, StdString $expected, bool $throwsException)
+    public function testValueOf($value, $expected, bool $throwsException = false)
     {
         if ($throwsException) {
             $this->expectException(InvalidArgumentException::class);
