@@ -30,12 +30,28 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Constructor
      *
-     * @param   string  $string
+     * @param   mixed   $string
      * @param   string  $encoding
+     * @throws  InvalidArgumentException
      */
-    public function __construct(string $string = self::DEFAULT_VALUE, string $encoding = null)
+    public function __construct($string = self::DEFAULT_VALUE, string $encoding = null)
     {
-        $this->data     = $string;
+        if (\is_string($string)) {
+            $this->data = $string;
+        } elseif ($string instanceof self) {
+            $this->data = (string) $string;
+        } elseif (\is_array($string)) {
+            foreach ($string as $char) {
+                if (($char instanceof Character) === false) {
+                    throw new InvalidArgumentException('Only chars are allowed inside array!');
+                }
+
+                $this->data .= (string) $char;
+            }
+        } else {
+            throw new InvalidArgumentException('First parameter must by of type string, StdString or an array of Character!');
+        }
+
         $this->encoding = $encoding ?: mb_internal_encoding();
     }
 
@@ -51,16 +67,17 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * Returns the character at specified index
      *
      * @param   int $index
-     * @return  self
+     * @return  Character
+     * @throws  InvalidArgumentException
      * @throws  OutOfBoundsException
      */
-    public function charAt(int $index) : self
+    public function charAt(int $index) : Character
     {
         if ($index < 0 || $index > $this->length() - 1) {
             throw new OutOfBoundsException('Negative values and values greater or equal object length are not allowed!');
         }
 
-        return new self(mb_substr($this->data, $index, 1, $this->encoding), $this->encoding);
+        return new Character(mb_substr($this->data, $index, 1, $this->encoding));
     }
 
     /**
@@ -68,6 +85,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      *
      * @param   int $index
      * @return  int
+     * @throws  InvalidArgumentException
      * @throws  OutOfBoundsException
      */
     public function codePointAt(int $index) : int
@@ -81,6 +99,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      *
      * @param   int $index
      * @return  int
+     * @throws  InvalidArgumentException
      * @throws  OutOfBoundsException
      */
     public function codePointBefore(int $index) : int
@@ -287,11 +306,12 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Copies characters from this string into the destination array
      *
-     * @param   int     $begin
-     * @param   int     $end
-     * @param   self[]  $destination
-     * @param   int     $dstBegin
+     * @param   int         $begin
+     * @param   int         $end
+     * @param   Character[] $destination
+     * @param   int         $dstBegin
      * @return  void
+     * @throws  InvalidArgumentException
      * @throws  OutOfBoundsException
      */
     public function getChars(int $begin, int $end, array &$destination, int $dstBegin)
@@ -397,6 +417,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
 
     /**
      * @inheritdoc
+     * @throws  InvalidArgumentException
      * @throws  OutOfBoundsException
      */
     public function offsetGet($offset)
@@ -575,6 +596,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
 
     /**
      * @inheritdoc
+     * @throws  InvalidArgumentException
      */
     public function subSequence(int $begin, int $end) : array
     {
@@ -619,9 +641,10 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     }
 
     /**
-     * Converts this string to a new string (character) array
+     * Converts this string to a character array
      *
-     * @return  self[]
+     * @return  Character[]
+     * @throws  InvalidArgumentException
      * @throws  OutOfBoundsException
      */
     public function toCharArray() : array
@@ -636,6 +659,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * Converts all characters in this string to lower case
      *
      * @return  self
+     * @throws  InvalidArgumentException
      */
     public function toLowerCase() : self
     {
@@ -646,6 +670,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * Converts all characters in this string to upper case
      *
      * @return  self
+     * @throws  InvalidArgumentException
      */
     public function toUpperCase() : self
     {
@@ -656,6 +681,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * Removes leading and ending whitespaces in this string
      *
      * @return  self
+     * @throws  InvalidArgumentException
      */
     public function trim() : self
     {

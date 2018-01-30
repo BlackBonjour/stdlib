@@ -26,10 +26,9 @@ interface CharSequence
      * Returns the character at specified index
      *
      * @param   int $index
-     * @return  mixed
-     * @todo    Should return class Character
+     * @return  Character
      */
-    public function charAt(int $index);
+    public function charAt(int $index) : Character;
 
     /**
      * Returns the length of this character sequence
@@ -43,7 +42,7 @@ interface CharSequence
      *
      * @param   int $begin
      * @param   int $end
-     * @return  array
+     * @return  Character[]
      * @throws  OutOfBoundsException
      */
     public function subSequence(int $begin, int $end) : array;

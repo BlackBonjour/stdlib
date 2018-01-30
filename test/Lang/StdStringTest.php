@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Lang;
 
+use BlackBonjour\Stdlib\Lang\Character;
 use BlackBonjour\Stdlib\Lang\StdObject;
 use BlackBonjour\Stdlib\Lang\StdString;
 use InvalidArgumentException;
@@ -26,16 +27,39 @@ class StdStringTest extends TestCase
         return new StdString($string);
     }
 
+    public function dataProvider__construct() : array
+    {
+        $charArray = function (string $string) : array {
+            $chars  = [];
+            $length = \strlen($string);
+
+            for ($i = 0; $i < $length; $i++) {
+                $chars[] = new Character($string[$i]);
+            }
+
+            return $chars;
+        };
+
+        return [
+            'valid-string'  => ['FooBar', 'FooBar'],
+            'valid-class'   => [$this->getObject(), 'FooBar'],
+            'valid-array'   => [$charArray('FooBar'), 'FooBar'],
+            'invalid-input' => [true, '', InvalidArgumentException::class],
+            'invalid-class' => [new class { public function __toString() { return 'FooBar'; }}, '', InvalidArgumentException::class],
+            'invalid-array' => [['F', 'o', 'o'], '', InvalidArgumentException::class],
+        ];
+    }
+
     public function dataProviderCharAt() : array
     {
         $string = $this->getObject();
 
         return [
-            'latin'               => [$string, 3, $this->getObject('B')],
-            'cyrillic'            => [$this->getObject('Тест'), 2, $this->getObject('с')],
-            'negative-index'      => [$string, -1, $string, OutOfBoundsException::class],
-            'index-equals-length' => [$string, 6, $string, OutOfBoundsException::class],
-            'index-above-length'  => [$string, 7, $string, OutOfBoundsException::class],
+            'latin'               => [$string, 3, new Character('B')],
+            'cyrillic'            => [$this->getObject('Тест'), 2, new Character('с')],
+            'negative-index'      => [$string, -1, null, OutOfBoundsException::class],
+            'index-equals-length' => [$string, 6, null, OutOfBoundsException::class],
+            'index-above-length'  => [$string, 7, null, OutOfBoundsException::class],
         ];
     }
 
@@ -76,7 +100,8 @@ class StdStringTest extends TestCase
             'latin-string'          => ['FooBar', $stringA],
             'cyrillic-string-class' => [$stringB, $stringB],
             'cyrillic-string'       => ['Тест', $stringB],
-            'char-list'             => [['F', 'o', 'o', 'B', 'a', 'r'], $stringA],
+            'string-list'           => [['F', 'o', 'o', 'B', 'a', 'r'], $stringA],
+            'char-list'             => [[new Character('F'), new Character('o'), new Character('o'), new Character('B'), new Character('a'), new Character('r')], $stringA],
             'invalid-char-list'     => [666, $stringA, InvalidArgumentException::class],
         ];
     }
@@ -244,6 +269,22 @@ class StdStringTest extends TestCase
         ];
     }
 
+    /**
+     * @param   StdString|Character[]|string    $string
+     * @param   string                          $expectation
+     * @param   string                          $exception
+     * @dataProvider    dataProvider__construct
+     */
+    public function test__construct($string, string $expectation, string $exception = null)
+    {
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
+
+        $stdString = new StdString($string);
+        self::assertEquals($expectation, (string) $stdString);
+    }
+
     public function test__toString()
     {
         $string = $this->getObject();
@@ -253,11 +294,11 @@ class StdStringTest extends TestCase
     /**
      * @param   StdString   $string
      * @param   int         $index
-     * @param   StdString   $expectation
+     * @param   Character   $expectation
      * @param   string      $exception
      * @dataProvider    dataProviderCharAt
      */
-    public function testCharAt(StdString $string, int $index, StdString $expectation, string $exception = null)
+    public function testCharAt(StdString $string, int $index, Character $expectation = null, string $exception = null)
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -442,20 +483,20 @@ class StdStringTest extends TestCase
 
         self::assertEquals(
             [
-                $this->getObject('F'),
-                $this->getObject('o'),
-                $this->getObject('o'),
-                $this->getObject('B'),
-                $this->getObject('a'),
-                $this->getObject('r'),
+                new Character('F'),
+                new Character('o'),
+                new Character('o'),
+                new Character('B'),
+                new Character('a'),
+                new Character('r'),
             ],
             $result1
         );
 
         self::assertEquals(
             [
-                6 => $this->getObject('o'),
-                7 => $this->getObject('o'),
+                6 => new Character('o'),
+                7 => new Character('o'),
             ],
             $result2
         );
@@ -531,6 +572,7 @@ class StdStringTest extends TestCase
      * @param   StdString   $string
      * @param   mixed       $offset
      * @param   string      $expectation
+     * @param   string      $exception
      * @dataProvider    dataProviderOffsetGet
      */
     public function testOffsetGet(StdString $string, $offset, string $expectation, string $exception = null)
@@ -656,20 +698,20 @@ class StdStringTest extends TestCase
     {
         self::assertEquals(
             [
-                $this->getObject('o'),
-                $this->getObject('o'),
-                $this->getObject('B'),
-                $this->getObject('a'),
+                new Character('o'),
+                new Character('o'),
+                new Character('B'),
+                new Character('a'),
             ],
             $this->getObject()->subSequence(1, 4)
         );
 
         self::assertEquals(
             [
-                $this->getObject('о'),
-                $this->getObject('о'),
-                $this->getObject('Б'),
-                $this->getObject('а'),
+                new Character('о'),
+                new Character('о'),
+                new Character('Б'),
+                new Character('а'),
             ],
             $this->getObject('ФооБар')->subSequence(1, 4)
         );
@@ -691,8 +733,31 @@ class StdStringTest extends TestCase
 
     public function testToCharArray()
     {
-        self::assertEquals(['F', 'o', 'o', 'B', 'a', 'r'], $this->getObject()->toCharArray());
-        self::assertEquals(['Ф', 'о', 'о', 'Б', 'а', 'р'], $this->getObject('ФооБар')->toCharArray());
+        // Latin
+        $result = $this->getObject()->toCharArray();
+
+        self::assertInstanceOf(Character::class, reset($result));
+        self::assertEquals([
+            new Character('F'),
+            new Character('o'),
+            new Character('o'),
+            new Character('B'),
+            new Character('a'),
+            new Character('r'),
+        ], $result);
+
+        // Cyrillic
+        $result = $this->getObject('ФооБар')->toCharArray();
+
+        self::assertInstanceOf(Character::class, reset($result));
+        self::assertEquals([
+            new Character('Ф'),
+            new Character('о'),
+            new Character('о'),
+            new Character('Б'),
+            new Character('а'),
+            new Character('р'),
+        ], $result);
     }
 
     public function testToLowercase()
