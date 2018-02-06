@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
 
+use BlackBonjour\Stdlib\Util\Assert;
 use InvalidArgumentException;
+use TypeError;
 
 /**
  * Represents a single character
@@ -51,6 +53,7 @@ class Character extends StdObject implements Comparable
      * @param   Character|string    $char
      * @return  int
      * @throws  InvalidArgumentException
+     * @throws  TypeError
      */
     public static function charCount($char) : int
     {
@@ -129,6 +132,7 @@ class Character extends StdObject implements Comparable
      * @param   Character|string    $charB
      * @return  int
      * @throws  InvalidArgumentException
+     * @throws  TypeError
      */
     public static function compare($charA, $charB) : int
     {
@@ -142,6 +146,7 @@ class Character extends StdObject implements Comparable
      * @param   Character|string    $char
      * @return  int
      * @throws  InvalidArgumentException
+     * @throws  TypeError
      */
     public function compareTo($char) : int
     {
@@ -155,12 +160,15 @@ class Character extends StdObject implements Comparable
      * @param   mixed[] $chars
      * @return  void
      * @throws  InvalidArgumentException
+     * @throws  TypeError
      */
     private static function handleIncomingChar(...$chars)
     {
         foreach ($chars as $char) {
-            if (self::validateChar($char) === false) {
-                throw new InvalidArgumentException('Given value must be of type string or a character related object!');
+            Assert::typeOf(['string', __CLASS__], $char);
+
+            if (mb_strlen((string) $char) !== 1) {
+                throw new InvalidArgumentException('Only one character can be represented!');
             }
         }
     }
@@ -171,6 +179,7 @@ class Character extends StdObject implements Comparable
      * @param   Character|string    $char
      * @return  boolean
      * @throws  InvalidArgumentException
+     * @throws  TypeError
      */
     public static function isLowerCase($char) : bool
     {
@@ -184,6 +193,7 @@ class Character extends StdObject implements Comparable
      * @param   Character|string    $char
      * @return  boolean
      * @throws  InvalidArgumentException
+     * @throws  TypeError
      */
     public static function isUpperCase($char) : bool
     {
@@ -197,6 +207,7 @@ class Character extends StdObject implements Comparable
      * @param   Character|string    $char
      * @return  Character
      * @throws  InvalidArgumentException
+     * @throws  TypeError
      */
     public static function toLowerCase($char) : Character
     {
@@ -210,22 +221,12 @@ class Character extends StdObject implements Comparable
      * @param   Character|string    $char
      * @return  Character
      * @throws  InvalidArgumentException
+     * @throws  TypeError
      */
     public static function toUpperCase($char) : Character
     {
         self::handleIncomingChar($char);
         return new self(mb_strtoupper((string) $char));
-    }
-
-    /**
-     * Validates given character
-     *
-     * @param   Character|string    $char
-     * @return  boolean
-     */
-    private static function validateChar($char) : bool
-    {
-        return (\is_string($char) && mb_strlen($char) === 1) || $char instanceof self;
     }
 
     /**
@@ -241,6 +242,6 @@ class Character extends StdObject implements Comparable
             return new self((string) $char);
         }
 
-        throw new \InvalidArgumentException('Unsupported character type!');
+        throw new InvalidArgumentException('Unsupported character type!');
     }
 }

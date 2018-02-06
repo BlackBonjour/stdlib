@@ -8,6 +8,7 @@ use BlackBonjour\Stdlib\Lang\CharSequence;
 use BlackBonjour\Stdlib\Lang\StdString;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 /**
  * Test for StdString class
@@ -137,6 +138,9 @@ class CharacterTest extends TestCase
         self::assertEquals('с', (string) $this->getObject('с')); // Cyrillic
     }
 
+    /**
+     * @throws  TypeError
+     */
     public function testCharCount()
     {
         self::assertEquals(1, Character::charCount('c'));
@@ -189,6 +193,7 @@ class CharacterTest extends TestCase
      * @param   Character           $char
      * @param   Character|string    $compare
      * @param   int                 $expected
+     * @throws  TypeError
      * @dataProvider    dataProviderCompareTo
      */
     public function testCompareTo(Character $char, $compare, int $expected)
@@ -218,6 +223,9 @@ class CharacterTest extends TestCase
         self::assertEquals(spl_object_hash($charB), $charB->hashCode());
     }
 
+    /**
+     * @throws  TypeError
+     */
     public function testIsLowerCase()
     {
         self::assertTrue(Character::isLowerCase($this->getObject())); // Latin
@@ -228,6 +236,9 @@ class CharacterTest extends TestCase
         self::assertFalse(Character::isLowerCase('C'));
     }
 
+    /**
+     * @throws  TypeError
+     */
     public function testIsUpperCase()
     {
         self::assertTrue(Character::isUpperCase($this->getObject('C'))); // Latin
@@ -241,6 +252,7 @@ class CharacterTest extends TestCase
     /**
      * @param   Character           $expectation
      * @param   Character|string    $char
+     * @throws  TypeError
      * @dataProvider    dataProviderToLowerCase
      */
     public function testToLowerCase(Character $expectation, $char)
@@ -251,6 +263,7 @@ class CharacterTest extends TestCase
     /**
      * @param   Character           $expectation
      * @param   Character|string    $char
+     * @throws  TypeError
      * @dataProvider    dataProviderToUpperCase
      */
     public function testToUpperCase(Character $expectation, $char)

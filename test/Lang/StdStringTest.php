@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use TypeError;
 
 /**
  * Test for StdString class
@@ -63,6 +64,48 @@ class StdStringTest extends TestCase
         ];
     }
 
+    public function dataProviderCompareTo() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'string-is-greater'     => [$string, 'foobar', -1],
+            'object-is-greater'     => [$string, $this->getObject('foobar'), -1],
+            'string-equals'         => [$string, 'FooBar', 0],
+            'object-equals'         => [$string, $this->getObject(), 0],
+            'string-is-lower'       => [$string, 'Alpha', 1],
+            'object-is-lower'       => [$string, $this->getObject('Alpha'), 1],
+            'invalid-compare-value' => [$string, true, 0, TypeError::class],
+        ];
+    }
+
+    public function dataProviderCompareToIgnoreCase() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'string-is-greater'     => [$string, 'long johnson', -1],
+            'object-is-greater'     => [$string, $this->getObject('long johnson'), -1],
+            'string-equals'         => [$string, 'foobar', 0],
+            'object-equals'         => [$string, $this->getObject('foobar'), 0],
+            'string-is-lower'       => [$string, 'alpha', 1],
+            'object-is-lower'       => [$string, $this->getObject('alpha'), 1],
+            'invalid-compare-value' => [$string, true, 0, TypeError::class],
+        ];
+    }
+
+    public function dataProviderConcat() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'concatenation-with-string-latin'    => [$string, 'Test', $this->getObject('FooBarTest')],
+            'concatenation-with-string-cyrillic' => [$string, 'Тест', $this->getObject('FooBarТест')],
+            'concatenation-with-object'          => [$string, $this->getObject('Test'), $this->getObject('FooBarTest')],
+            'invalid-argument-type'              => [$string, 123, null, TypeError::class],
+        ];
+    }
+
     public function dataProviderContains() : array
     {
         $string = $this->getObject();
@@ -102,7 +145,7 @@ class StdStringTest extends TestCase
             'cyrillic-string'       => ['Тест', $stringB],
             'string-list'           => [['F', 'o', 'o', 'B', 'a', 'r'], $stringA],
             'char-list'             => [[new Character('F'), new Character('o'), new Character('o'), new Character('B'), new Character('a'), new Character('r')], $stringA],
-            'invalid-char-list'     => [666, $stringA, InvalidArgumentException::class],
+            'invalid-char-list'     => [666, $stringA, TypeError::class],
         ];
     }
 
@@ -143,8 +186,67 @@ class StdStringTest extends TestCase
 
         return [
             'default'         => [$string, 'oo', ['F', 'Bar']],
-            'invalid-pattern' => [$string, 666, ['F', 'Bar'], InvalidArgumentException::class],
+            'object-pattern'  => [$string, $this->getObject('oo'), ['F', 'Bar']],
+            'invalid-pattern' => [$string, 666, ['F', 'Bar'], TypeError::class],
             'empty-pattern'   => [$string, '', ['F', 'Bar'], RuntimeException::class], // Should trigger a warning
+        ];
+    }
+
+    public function dataProviderFormat() : array
+    {
+        return [
+            'string-pattern' => [
+                'There are %d cars in that %s.',
+                [5, $this->getObject('garage')],
+                $this->getObject('There are 5 cars in that garage.'),
+            ],
+            'object-pattern' => [
+                $this->getObject('%d chinese men with a %s'),
+                [3, $this->getObject('contrabass')],
+                $this->getObject('3 chinese men with a contrabass'),
+            ],
+            'invalid-pattern' => [123, [], null, TypeError::class],
+        ];
+    }
+
+    public function dataProviderIndexOf() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'string-needle'       => [$string, 'o', 1],
+            'object-needle'       => [$string, $this->getObject('o'), 1],
+            'with-offset'         => [$string, 'o', 2, 2],
+            'negative-offset'     => [$string, 'F', -1, -2],
+            'needle-non-existent' => [$string, 'z', -1],
+            'invalid-needle'      => [$string, 123, -1, 0, TypeError::class],
+        ];
+    }
+
+    public function dataProviderLastIndexOf() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'string-needle'       => [$string, 'o', 2],
+            'object-needle'       => [$string, $this->getObject('o'), 2],
+            'with-offset'         => [$string, 'o', 2, 1],
+            'negative-offset'     => [$string, 'o', 1, -5],
+            'needle-non-existent' => [$string, 'z', -1],
+            'invalid-needle'      => [$string, 123, -1, 0, TypeError::class],
+        ];
+    }
+
+    public function dataProviderMatches() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'string-pattern'         => [$string, '/Bar$/', true],
+            'object-pattern'         => [$string, $this->getObject('/Bar$/'), true],
+            'cyrillic-pattern'       => [$this->getObject('Тест'), '/ст$/', true],
+            'pattern-does-not-match' => [$string, '/Foo$/', false],
+            'invalid-pattern'        => [$string, 123, false, TypeError::class],
         ];
     }
 
@@ -206,31 +308,57 @@ class StdStringTest extends TestCase
             'negative-pattern-offset'     => [$stringA, 3, 'TestBar', -1, 3, false, false],
             'pattern-offset-too-high'     => [$stringA, 3, 'TestBar', 5, 3, false, false],
             'string-offset-too-high'      => [$stringA, 4, 'TestBar', 4, 3, false, false],
+            'invalid-string'              => [$stringA, 3, 123, 4, 3, false, false, TypeError::class],
         ];
     }
 
     public function dataProviderReplace() : array
     {
+        $string = $this->getObject();
+
         return [
-            'latin'    => ['FooBar', 'FooB', 'Saftb', $this->getObject('Saftbar')],
-            'cyrillic' => ['Тест', 'ест', 'ормоз', $this->getObject('Тормоз')],
+            'string-replacement'  => [$string, 'FooB', 'Saftb', $this->getObject('Saftbar')],
+            'object-replacement'  => [$string, $this->getObject('FooB'), $this->getObject('Saftb'), $this->getObject('Saftbar')],
+            'cyrillic'            => [$this->getObject('Тест'), 'ест', 'ормоз', $this->getObject('Тормоз')],
+            'invalid-needle'      => [$string, 123, 'Saftb', null, TypeError::class],
+            'invalid-replacement' => [$string, 'FooB', 123, null, TypeError::class],
         ];
     }
 
     public function dataProviderReplaceAll() : array
     {
         return [
-            'latin' => [
-                'She sells sea shells by the sea shore.',
+            'string-pattern-and-replacement' => [
+                $this->getObject('She sells sea shells by the sea shore.'),
                 '/sea/',
                 'ocean',
                 $this->getObject('She sells ocean shells by the ocean shore.'),
             ],
-            'cyrillic' => [
-                'Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Спейси из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.',
+            'object-pattern-and-replacement' => [
+                $this->getObject('She sells sea shells by the sea shore.'),
+                $this->getObject('/sea/'),
+                $this->getObject('ocean'),
+                $this->getObject('She sells ocean shells by the ocean shore.'),
+            ],
+            'cyrillic-pattern-and-replacement' => [
+                $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Спейси из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'),
                 '/Спейси/',
                 'Джеймс',
                 $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Джеймс секс-скандал, сообщает EW.'),
+            ],
+            'invalid-pattern' => [
+                $this->getObject('She sells sea shells by the sea shore.'),
+                123,
+                'ocean',
+                $this->getObject('She sells ocean shells by the ocean shore.'),
+                TypeError::class,
+            ],
+            'invalid-replacement' => [
+                $this->getObject('She sells sea shells by the sea shore.'),
+                '/sea/',
+                123,
+                $this->getObject('She sells ocean shells by the ocean shore.'),
+                TypeError::class,
             ],
         ];
     }
@@ -238,18 +366,63 @@ class StdStringTest extends TestCase
     public function dataProviderReplaceFirst() : array
     {
         return [
-            'latin' => [
-                'She sells sea shells by the sea shore.',
+            'string-pattern-and-replacement' => [
+                $this->getObject('She sells sea shells by the sea shore.'),
                 '/sea/',
                 'ocean',
                 $this->getObject('She sells ocean shells by the sea shore.'),
             ],
-            'cyrillic' => [
-                'Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Спейси из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.',
+            'object-pattern-and-replacement' => [
+                $this->getObject('She sells sea shells by the sea shore.'),
+                $this->getObject('/sea/'),
+                $this->getObject('ocean'),
+                $this->getObject('She sells ocean shells by the sea shore.'),
+            ],
+            'cyrillic-pattern-and-replacement' => [
+                $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Спейси из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'),
                 '/Спейси/',
                 'Джеймс',
                 $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'),
             ],
+            'invalid-pattern' => [
+                $this->getObject('She sells sea shells by the sea shore.'),
+                123,
+                'ocean',
+                $this->getObject('She sells ocean shells by the sea shore.'),
+                TypeError::class,
+            ],
+            'invalid-replacement' => [
+                $this->getObject('She sells sea shells by the sea shore.'),
+                '/sea/',
+                123,
+                $this->getObject('She sells ocean shells by the sea shore.'),
+                TypeError::class,
+            ],
+        ];
+    }
+
+    public function dataProviderSplit() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'string-pattern'       => [$string, '/oo/', [$this->getObject('F'), $this->getObject('Bar')]],
+            'object-pattern'       => [$string, $this->getObject('/oo/'), [$this->getObject('F'), $this->getObject('Bar')]],
+            'invalid-pattern'      => [$string, 'oo', [$this->getObject('F'), $this->getObject('Bar')], -1, RuntimeException::class],
+            'invalid-pattern-type' => [$string, 123, [$this->getObject('F'), $this->getObject('Bar')], -1, TypeError::class],
+        ];
+    }
+
+    public function dataProviderStartsWith() : array
+    {
+        $string = $this->getObject();
+
+        return [
+            'string-needle'        => [$string, 'Foo', true],
+            'object-needle'        => [$string, $this->getObject('Foo'), true],
+            'cyrillic'             => [$this->getObject('Тест'), 'Те', true],
+            'needled-non-existent' => [$string, 'baz', false],
+            'invalid-needle'       => [$string, 123, false],
         ];
     }
 
@@ -325,41 +498,55 @@ class StdStringTest extends TestCase
         self::assertInstanceOf(StdString::class, $string->clone());
     }
 
-    public function testCompareTo()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $compareValue
+     * @param   int                 $expectation
+     * @param   string              $exception
+     * @throws  TypeError
+     * @dataProvider    dataProviderCompareTo
+     */
+    public function testCompareTo(StdString $string, $compareValue, int $expectation, string $exception = null)
     {
-        $string = $this->getObject();
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals(-1, $string->compareTo('Тест'));
-        self::assertEquals(-1, $string->compareTo('foobar'));
-
-        self::assertEquals(0, $string->compareTo('FooBar'));
-        self::assertEquals(0, $string->compareTo($this->getObject()));
-
-        self::assertEquals(1, $string->compareTo('Alpha'));
-        self::assertEquals(1, $string->compareTo('Babushka'));
+        self::assertEquals($expectation, $string->compareTo($compareValue));
     }
 
-    public function testCompareToIgnoreCase()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $compareValue
+     * @param   int                 $expectation
+     * @param   string              $exception
+     * @throws  TypeError
+     * @dataProvider    dataProviderCompareToIgnoreCase
+     */
+    public function testCompareToIgnoreCase(StdString $string, $compareValue, int $expectation, string $exception = null)
     {
-        $string = $this->getObject();
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals(-1, $string->compareToIgnoreCase('тест'));
-        self::assertEquals(-1, $string->compareToIgnoreCase($this->getObject('тест')));
-
-        self::assertEquals(0, $string->compareToIgnoreCase('foobar'));
-        self::assertEquals(0, $string->compareToIgnoreCase($this->getObject('foobar')));
-
-        self::assertEquals(1, $string->compareToIgnoreCase('alpha'));
-        self::assertEquals(1, $string->compareToIgnoreCase($this->getObject('alpha')));
+        self::assertEquals($expectation, $string->compareToIgnoreCase($compareValue));
     }
 
-    public function testConcat()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $value
+     * @param   StdString           $expectation
+     * @param   string              $exception
+     * @throws  TypeError
+     * @dataProvider    dataProviderConcat
+     */
+    public function testConcat(StdString $string, $value, $expectation, string $exception = null)
     {
-        $string = $this->getObject();
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals($this->getObject('FooBarTest'), $string->concat('Test'));
-        self::assertEquals($this->getObject('FooBarTest'), $string->concat($this->getObject('Test')));
-        self::assertEquals($this->getObject('FooBarТест'), $string->concat('Тест'));
+        self::assertEquals($expectation, $string->concat($value));
     }
 
     /**
@@ -387,7 +574,8 @@ class StdStringTest extends TestCase
     /**
      * @param   StdString|string|array $charList
      * @param   StdString              $expectation
-     * @param   string                  $exception
+     * @param   string                 $exception
+     * @throws  TypeError
      * @dataProvider    dataProviderCopyValueOf
      */
     public function testCopyValueOf($charList, StdString $expectation, string $exception = null)
@@ -445,6 +633,7 @@ class StdStringTest extends TestCase
      * @param   StdString|string    $pattern
      * @param   StdString[]         $expectation
      * @param   string              $exception
+     * @throws  TypeError
      * @dataProvider    dataProviderExplode
      */
     public function testExplode(StdString $string, $pattern, array $expectation, string $exception = null)
@@ -456,14 +645,21 @@ class StdStringTest extends TestCase
         self::assertEquals($expectation, $string->explode($pattern));
     }
 
-    public function testFormat()
+    /**
+     * @param   StdString|string    $pattern
+     * @param   array               $arguments
+     * @param   StdString           $expectation
+     * @param   string              $exception
+     * @throws  TypeError
+     * @dataProvider    dataProviderFormat
+     */
+    public function testFormat($pattern, array $arguments, $expectation, string $exception = null)
     {
-        $arg1     = $this->getObject('5');
-        $arg2     = 'garage';
-        $expected = $this->getObject('There are 5 cars in that garage.');
-        $pattern  = $this->getObject('There are %s cars in that %s.');
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals($expected, StdString::format($pattern, $arg1, $arg2));
+        self::assertEquals($expectation, StdString::format($pattern, ...$arguments));
     }
 
     public function testGetBytes()
@@ -508,14 +704,22 @@ class StdStringTest extends TestCase
         self::assertEquals(spl_object_hash($string), $string->hashCode());
     }
 
-    public function testIndexOf()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $needle
+     * @param   int                 $expectation
+     * @param   int                 $offset
+     * @param   string              $exception
+     * @throws  TypeError
+     * @dataProvider    dataProviderIndexOf
+     */
+    public function testIndexOf(StdString $string, $needle, int $expectation, int $offset = 0, string $exception = null)
     {
-        $string = $this->getObject();
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals(1, $string->indexOf('o'));
-        self::assertEquals(1, $string->indexOf($this->getObject('o')));
-        self::assertEquals(-1, $string->indexOf('z'));
-        self::assertEquals(2, $string->indexOf('o', 2));
+        self::assertEquals($expectation, $string->indexOf($needle, $offset));
     }
 
     public function testIsEmpty()
@@ -524,15 +728,22 @@ class StdStringTest extends TestCase
         self::assertTrue($this->getObject('')->isEmpty());
     }
 
-    public function testLastIndexOf()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $needle
+     * @param   StdString           $expectation
+     * @param   int                 $offset
+     * @param   string              $exception
+     * @throws  TypeError
+     * @dataProvider    dataProviderLastIndexOf
+     */
+    public function testLastIndexOf(StdString $string, $needle, $expectation, int $offset = 0, string $exception = null)
     {
-        $string = $this->getObject();
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals(2, $string->lastIndexOf('o'));
-        self::assertEquals(2, $string->lastIndexOf($this->getObject('o')));
-        self::assertEquals(-1, $string->lastIndexOf('z'));
-        self::assertEquals(1, $string->lastIndexOf('o', -5));
-        self::assertEquals(2, $string->lastIndexOf('o', 1));
+        self::assertEquals($expectation, $string->lastIndexOf($needle, $offset));
     }
 
     public function testLength()
@@ -541,20 +752,21 @@ class StdStringTest extends TestCase
         self::assertEquals(4, $this->getObject('Тест')->length());
     }
 
-    public function testMatches()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $pattern
+     * @param   boolean             $expectation
+     * @param   string              $exception
+     * @throws  TypeError
+     * @dataProvider    dataProviderMatches
+     */
+    public function testMatches(StdString $string, $pattern, bool $expectation, string $exception = null)
     {
-        $stringA = $this->getObject();
-        $stringB = $this->getObject('Тест');
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertTrue($stringA->matches('/Bar$/'));
-        self::assertTrue($stringA->matches($this->getObject('/Bar$/')));
-        self::assertFalse($stringA->matches('/Foo$/'));
-        self::assertFalse($stringA->matches($this->getObject('/Foo$/')));
-
-        self::assertTrue($stringB->matches('/ст$/'));
-        self::assertTrue($stringB->matches($this->getObject('/ст$/')));
-        self::assertFalse($stringB->matches('/Те$/'));
-        self::assertFalse($stringB->matches($this->getObject('/Те$/')));
+        self::assertEquals($expectation, $string->matches($pattern));
     }
 
     /**
@@ -606,6 +818,7 @@ class StdStringTest extends TestCase
      * @param   boolean             $ignoreCase
      * @param   boolean             $expectation
      * @param   string              $exception
+     * @throws  TypeError
      * @dataProvider    dataProviderRegionMatches
      */
     public function testRegionMatches(
@@ -626,72 +839,87 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   string      $string
-     * @param   string      $old
-     * @param   string      $new
-     * @param   StdString   $expected
+     * @param   StdString           $string
+     * @param   StdString|string    $old
+     * @param   StdString|string    $new
+     * @param   StdString           $expected
+     * @param   string              $exception
+     * @throws  TypeError
      * @dataProvider    dataProviderReplace
      */
-    public function testReplace(string $string, string $old, string $new, StdString $expected)
+    public function testReplace(StdString $string, $old, $new, $expected, string $exception = null)
     {
-        $base = $this->getObject($string);
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals($expected, $base->replace($old, $new));
-        self::assertEquals($expected, $base->replace($this->getObject($old), $this->getObject($new)));
+        self::assertEquals($expected, $string->replace($old, $new));
     }
 
     /**
-     * @param   string      $string
-     * @param   string      $pattern
-     * @param   string      $replacement
-     * @param   StdString   $expected
+     * @param   StdString           $string
+     * @param   StdString|string    $pattern
+     * @param   StdString|string    $replacement
+     * @param   StdString           $expected
+     * @param   string              $exception
+     * @throws  TypeError
      * @dataProvider    dataProviderReplaceAll
      */
-    public function testReplaceAll(string $string, string $pattern, string $replacement, StdString $expected)
+    public function testReplaceAll(StdString $string, $pattern, $replacement, $expected, string $exception = null)
     {
-        $base = $this->getObject($string);
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals($expected, $base->replaceAll($pattern, $replacement));
-        self::assertEquals($expected, $base->replaceAll($this->getObject($pattern), $this->getObject($replacement)));
+        self::assertEquals($expected, $string->replaceAll($pattern, $replacement));
     }
 
     /**
-     * @param   string      $string
-     * @param   string      $pattern
-     * @param   string      $replacement
-     * @param   StdString   $expected
+     * @param   StdString           $string
+     * @param   StdString|string    $pattern
+     * @param   StdString|string    $replacement
+     * @param   StdString           $expected
+     * @param   string              $exception
+     * @throws  TypeError
      * @dataProvider    dataProviderReplaceFirst
      */
-    public function testReplaceFirst(string $string, string $pattern, string $replacement, StdString $expected)
+    public function testReplaceFirst(StdString $string, $pattern, $replacement, $expected, string $exception = null)
     {
-        $base = $this->getObject($string);
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
 
-        self::assertEquals($expected, $base->replaceFirst($pattern, $replacement));
-        self::assertEquals($expected, $base->replaceFirst($this->getObject($pattern), $this->getObject($replacement)));
+        self::assertEquals($expected, $string->replaceFirst($pattern, $replacement));
     }
 
-    public function testSplit()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $pattern
+     * @param   StdString|string    $expectation
+     * @param   int                 $limit
+     * @param   string              $exception
+     * @throws  TypeError
+     * @dataProvider    dataProviderSplit
+     */
+    public function testSplit(StdString $string, $pattern, $expectation, int $limit = -1, string $exception = null)
     {
-        self::assertEquals(
-            [
-                $this->getObject('F'),
-                $this->getObject('Bar'),
-            ],
-            $this->getObject()->split('/oo/')
-        );
+        if ($exception !== null) {
+            $this->expectException($exception);
+        }
+
+        self::assertEquals($expectation, $string->split($pattern, $limit));
     }
 
-    public function testStartsWith()
+    /**
+     * @param   StdString           $string
+     * @param   StdString|string    $needle
+     * @param   boolean             $expectation
+     * @param   int                 $offset
+     * @dataProvider    dataProviderStartsWith
+     */
+    public function testStartsWith(StdString $string, $needle, bool $expectation, int $offset = 0)
     {
-        self::assertTrue($this->getObject()->startsWith('Foo'));
-        self::assertTrue($this->getObject()->startsWith($this->getObject('Foo')));
-        self::assertFalse($this->getObject()->startsWith('Bar'));
-        self::assertFalse($this->getObject()->startsWith($this->getObject('Bar')));
-
-        self::assertTrue($this->getObject('Тест')->startsWith('Те'));
-        self::assertTrue($this->getObject('Тест')->startsWith($this->getObject('Те')));
-        self::assertFalse($this->getObject('Тест')->startsWith('ст'));
-        self::assertFalse($this->getObject('Тест')->startsWith($this->getObject('ст')));
+        self::assertEquals($expectation, $string->startsWith($needle, $offset));
     }
 
     public function testSubSequence()
