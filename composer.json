@@ -4,7 +4,7 @@
   "description": "",
   "keywords": ["PHP", "stdlib"],
   "homepage": "http://www.erickdyck.de",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "require": {
     "php": ">=7.0"
   },
