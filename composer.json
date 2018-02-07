@@ -1,15 +1,26 @@
 {
   "name": "blackbonjour/stdlib",
   "type": "library",
-  "description": "",
-  "keywords": ["PHP", "stdlib"],
-  "homepage": "http://www.erickdyck.de",
-  "version": "0.2.1",
+  "description": "Standard library for PHP",
+  "keywords": ["PHP", "stdlib", "string", "utf-8", "util", "utility", "assertion", "manipulation"],
+  "homepage": "https://github.com/BlackBonjour/stdlib",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Erick Dyck",
+      "email": "info@erickdyck.de",
+      "homepage": "http://www.erickdyck.de"
+    }
+  ],
   "require": {
     "php": ">=7.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.4"
+  },
+  "support": {
+    "issues": "https://github.com/BlackBonjour/stdlib/issues",
+    "source": "https://github.com/BlackBonjour/stdlib"
   },
   "autoload": {
     "psr-4": {
