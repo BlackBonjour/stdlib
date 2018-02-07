@@ -31,6 +31,7 @@ class AssertTest extends TestCase
             'multiple-types-multiple-values' => [['integer', 'double'], [12, 12.3]],
             'char-array'                     => [[Char::class], [new Char, new Char, new Char]],
             'string-array'                   => [[Char::class, StdString::class], [new Char, new StdString, new Char]],
+            'inheritance'                    => [[Char::class], [new class extends Char { /* Just a test */ }]],
 
             // Invalid
             'invalid-assertion'  => [null, ['FooBar'], InvalidArgumentException::class],
