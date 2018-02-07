@@ -1,3 +1,6 @@
+### 0.2.2 (2018-02-07)
+* Updated package information
+
 ### 0.2.1 (2018-02-06)
 * Added changelog
 * Made StdString and Character using Util\Assert
