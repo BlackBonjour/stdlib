@@ -1,3 +1,6 @@
+### 0.3.0 (2018-02-10)
+* Added Util\Assert::validate (same as Util\Assert::typeOf, but less aggressive)
+
 ### 0.2.2 (2018-02-07)
 * Updated package information
 

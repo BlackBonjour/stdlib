@@ -66,4 +66,23 @@ class Assert
 
         return true;
     }
+
+    /**
+     * Same as ::typeOf, but less aggressive
+     *
+     * @param   array|string    $types
+     * @param   array           $values
+     * @return  boolean
+     * @throws  InvalidArgumentException
+     */
+    public static function validate($types, ...$values) : bool
+    {
+        try {
+            self::typeOf($types, ...$values);
+        } catch (TypeError $t) {
+            return false;
+        }
+
+        return true;
+    }
 }
