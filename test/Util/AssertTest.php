@@ -62,15 +62,10 @@ class AssertTest extends TestCase
      * @param   mixed   $types
      * @param   array   $values
      * @param   string  $exception
-     * @throws  InvalidArgumentException
      * @dataProvider    dataProviderTypeOf
      */
     public function testValidate($types, array $values, string $exception = null)
     {
-        if ($exception !== null && $exception !== TypeError::class) {
-            $this->expectException($exception);
-        }
-
-        self::assertEquals($exception !== TypeError::class, Assert::validate($types, ...$values));
+        self::assertEquals($exception === null, Assert::validate($types, ...$values));
     }
 }

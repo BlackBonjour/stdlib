@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace BlackBonjour\Stdlib\Util;
 
 use InvalidArgumentException;
+use Throwable;
 use TypeError;
 
 /**
@@ -73,16 +74,15 @@ class Assert
      * @param   array|string    $types
      * @param   array           $values
      * @return  boolean
-     * @throws  InvalidArgumentException
      */
     public static function validate($types, ...$values) : bool
     {
         try {
-            self::typeOf($types, ...$values);
-        } catch (TypeError $t) {
-            return false;
+            return self::typeOf($types, ...$values);
+        } catch (Throwable $t) {
+            // We won't do anything
         }
 
-        return true;
+        return false;
     }
 }

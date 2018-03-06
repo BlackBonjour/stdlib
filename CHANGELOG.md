@@ -1,3 +1,6 @@
+### 0.3.1 (2018-03-06)
+* Made Util\Assert::validate catch all exceptions
+
 ### 0.3.0 (2018-02-10)
 * Added Util\Assert::validate (same as Util\Assert::typeOf, but less aggressive)
 
