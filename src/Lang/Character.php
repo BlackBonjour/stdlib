@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
 
+use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Util\Assert;
-use InvalidArgumentException;
 use TypeError;
 
 /**
@@ -17,7 +17,7 @@ use TypeError;
  */
 class Character extends StdObject implements Comparable
 {
-    const DEFAULT_VALUE = '';
+    public const DEFAULT_VALUE = '';
 
     /** @var string */
     protected $data;
@@ -162,7 +162,7 @@ class Character extends StdObject implements Comparable
      * @throws  InvalidArgumentException
      * @throws  TypeError
      */
-    private static function handleIncomingChar(...$chars)
+    private static function handleIncomingChar(...$chars) : void
     {
         foreach ($chars as $char) {
             Assert::typeOf(['string', __CLASS__], $char);

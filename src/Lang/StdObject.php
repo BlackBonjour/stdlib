@@ -13,7 +13,7 @@ namespace BlackBonjour\Stdlib\Lang;
  */
 class StdObject
 {
-    const DEFAULT_VALUE = null;
+    public const DEFAULT_VALUE = null;
 
     /**
      * Returns a string representation of this object
@@ -30,7 +30,7 @@ class StdObject
      *
      * @return  $this
      */
-    public function clone()
+    public function clone() : self
     {
         return clone $this;
     }

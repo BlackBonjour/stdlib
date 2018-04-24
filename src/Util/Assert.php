@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
-use InvalidArgumentException;
+use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use Throwable;
 use TypeError;
 

@@ -6,9 +6,9 @@ namespace BlackBonjour\Stdlib\Lang;
 use ArrayAccess;
 use BlackBonjour\Stdlib\Util\Assert;
 use Countable;
-use InvalidArgumentException;
-use OutOfBoundsException;
-use RuntimeException;
+use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
+use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
+use BlackBonjour\Stdlib\Exception\RuntimeException;
 use TypeError;
 
 /**
@@ -21,7 +21,7 @@ use TypeError;
  */
 class StdString extends StdObject implements Comparable, CharSequence, Countable, ArrayAccess
 {
-    const DEFAULT_VALUE = '';
+    public const DEFAULT_VALUE = '';
 
     /** @var string */
     protected $data;
@@ -336,7 +336,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * @throws  InvalidArgumentException
      * @throws  OutOfBoundsException
      */
-    public function getChars(int $begin, int $end, array &$destination, int $dstBegin)
+    public function getChars(int $begin, int $end, array &$destination, int $dstBegin) : void
     {
         $length = $end - $begin + 1;
 

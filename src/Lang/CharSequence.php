@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
 
-use OutOfBoundsException;
+use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 
 /**
  * Interface for readable sequences of char values
