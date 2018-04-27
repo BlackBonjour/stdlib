@@ -13,12 +13,12 @@ namespace BlackBonjour\Stdlib\Lang;
  */
 class StdObject
 {
-    const DEFAULT_VALUE = null;
+    public const DEFAULT_VALUE = null;
 
     /**
      * Returns a string representation of this object
      *
-     * @return  string
+     * @return string
      */
     public function __toString() : string
     {
@@ -28,9 +28,9 @@ class StdObject
     /**
      * Returns a copy of this object
      *
-     * @return  $this
+     * @return $this
      */
-    public function clone()
+    public function clone() : self
     {
         return clone $this;
     }
@@ -38,8 +38,8 @@ class StdObject
     /**
      * Checks if given object is equal to this one
      *
-     * @param   mixed   $obj
-     * @return  boolean
+     * @param mixed $obj
+     * @return boolean
      */
     public function equals($obj) : bool
     {
@@ -50,7 +50,7 @@ class StdObject
     /**
      * Returns a hash code value for this object
      *
-     * @return  string
+     * @return string
      */
     public function hashCode() : string
     {

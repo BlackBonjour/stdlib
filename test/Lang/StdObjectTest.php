@@ -17,19 +17,19 @@ use PHPUnit\Framework\TestCase;
  */
 class StdObjectTest extends TestCase
 {
-    public function test__toString()
+    public function test__toString() : void
     {
         $obj = new StdObject;
         self::assertEquals(StdObject::class . '@' . spl_object_hash($obj), (string) $obj);
     }
 
-    public function testClone()
+    public function testClone() : void
     {
         $obj = new StdObject;
         self::assertInstanceOf(StdObject::class, $obj->clone());
     }
 
-    public function testEquals()
+    public function testEquals() : void
     {
         $objA = new StdObject;
         $objB = new StdObject;
@@ -39,7 +39,7 @@ class StdObjectTest extends TestCase
         self::assertFalse($objA->equals($objC));
     }
 
-    public function testHashCode()
+    public function testHashCode() : void
     {
         $obj = new StdObject;
         self::assertEquals(spl_object_hash($obj), $obj->hashCode());

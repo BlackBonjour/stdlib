@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Lang;
 
+use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Lang\Character;
 use BlackBonjour\Stdlib\Lang\CharSequence;
 use BlackBonjour\Stdlib\Lang\StdString;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use TypeError;
 
@@ -126,22 +126,22 @@ class CharacterTest extends TestCase
         return new Character($char);
     }
 
-    public function test__construct()
+    public function test__construct() : void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->getObject('cc');
     }
 
-    public function test__toString()
+    public function test__toString() : void
     {
         self::assertEquals('c', (string) $this->getObject()); // Latin
         self::assertEquals('с', (string) $this->getObject('с')); // Cyrillic
     }
 
     /**
-     * @throws  TypeError
+     * @throws TypeError
      */
-    public function testCharCount()
+    public function testCharCount() : void
     {
         self::assertEquals(1, Character::charCount('c'));
         self::assertEquals(1, Character::charCount($this->getObject()));
@@ -149,22 +149,27 @@ class CharacterTest extends TestCase
         self::assertEquals(2, Character::charCount('😁'));
     }
 
-    public function testClone()
+    public function testClone() : void
     {
         $char = $this->getObject();
         self::assertInstanceOf(Character::class, $char->clone());
     }
 
     /**
-     * @param   int                 $expected
-     * @param   CharSequence|array  $chars
-     * @param   int                 $index
-     * @param   int                 $limit
-     * @param   string              $exception
-     * @dataProvider    dataProviderCodePointAt
+     * @param int                $expected
+     * @param CharSequence|array $chars
+     * @param int                $index
+     * @param int                $limit
+     * @param string             $exception
+     * @dataProvider dataProviderCodePointAt
      */
-    public function testCodePointAt(int $expected, $chars, int $index, int $limit = null, string $exception = null)
-    {
+    public function testCodePointAt(
+        int $expected,
+        $chars,
+        int $index,
+        int $limit = null,
+        string $exception = null
+    ) : void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -173,15 +178,20 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param   int                 $expected
-     * @param   CharSequence|array  $chars
-     * @param   int                 $index
-     * @param   int                 $start
-     * @param   string              $exception
-     * @dataProvider    dataProviderCodePointBefore
+     * @param int                $expected
+     * @param CharSequence|array $chars
+     * @param int                $index
+     * @param int                $start
+     * @param string             $exception
+     * @dataProvider dataProviderCodePointBefore
      */
-    public function testCodePointBefore(int $expected, $chars, int $index, int $start = null, string $exception = null)
-    {
+    public function testCodePointBefore(
+        int $expected,
+        $chars,
+        int $index,
+        int $start = null,
+        string $exception = null
+    ) : void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -190,18 +200,18 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param   Character           $char
-     * @param   Character|string    $compare
-     * @param   int                 $expected
-     * @throws  TypeError
-     * @dataProvider    dataProviderCompareTo
+     * @param Character        $char
+     * @param Character|string $compare
+     * @param int              $expected
+     * @throws TypeError
+     * @dataProvider dataProviderCompareTo
      */
-    public function testCompareTo(Character $char, $compare, int $expected)
+    public function testCompareTo(Character $char, $compare, int $expected) : void
     {
         self::assertEquals($expected, $char->compareTo($compare));
     }
 
-    public function testEquals()
+    public function testEquals() : void
     {
         // Latin base character
         self::assertTrue($this->getObject()->equals('c'));
@@ -214,7 +224,7 @@ class CharacterTest extends TestCase
         self::assertFalse($this->getObject('с')->equals('c')); // Latin
     }
 
-    public function testHashCode()
+    public function testHashCode() : void
     {
         $charA = $this->getObject();
         $charB = $this->getObject('с');
@@ -224,9 +234,9 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @throws  TypeError
+     * @throws TypeError
      */
-    public function testIsLowerCase()
+    public function testIsLowerCase() : void
     {
         self::assertTrue(Character::isLowerCase($this->getObject())); // Latin
         self::assertTrue(Character::isLowerCase($this->getObject('с'))); // Cyrillic
@@ -237,9 +247,9 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @throws  TypeError
+     * @throws TypeError
      */
-    public function testIsUpperCase()
+    public function testIsUpperCase() : void
     {
         self::assertTrue(Character::isUpperCase($this->getObject('C'))); // Latin
         self::assertTrue(Character::isUpperCase($this->getObject('С'))); // Cyrillic
@@ -250,35 +260,36 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param   Character           $expectation
-     * @param   Character|string    $char
-     * @throws  TypeError
-     * @dataProvider    dataProviderToLowerCase
+     * @param Character        $expectation
+     * @param Character|string $char
+     * @throws TypeError
+     * @dataProvider dataProviderToLowerCase
      */
-    public function testToLowerCase(Character $expectation, $char)
+    public function testToLowerCase(Character $expectation, $char) : void
     {
         self::assertEquals($expectation, Character::toLowerCase($char));
     }
 
     /**
-     * @param   Character           $expectation
-     * @param   Character|string    $char
-     * @throws  TypeError
-     * @dataProvider    dataProviderToUpperCase
+     * @param Character        $expectation
+     * @param Character|string $char
+     * @throws TypeError
+     * @dataProvider dataProviderToUpperCase
      */
-    public function testToUpperCase(Character $expectation, $char)
+    public function testToUpperCase(Character $expectation, $char) : void
     {
         self::assertEquals($expectation, Character::toUpperCase($char));
     }
 
     /**
-     * @param   Character   $expectation
-     * @param   mixed       $char
-     * @param   boolean     $expectException
-     * @param   string      $exception
-     * @dataProvider    dataProviderValueOf
+     * @param Character $expectation
+     * @param mixed     $char
+     * @param boolean   $expectException
+     * @param string    $exception
+     * @dataProvider dataProviderValueOf
      */
-    public function testValueOf($expectation, $char, bool $expectException = false, string $exception = null) {
+    public function testValueOf($expectation, $char, bool $expectException = false, string $exception = null) : void
+    {
         if ($expectException) {
             $this->expectException($exception);
         }

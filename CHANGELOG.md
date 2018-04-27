@@ -1,3 +1,12 @@
+### 0.4.0 (2018-04-28)
+* Added library specific exceptions
+* Added Util\HashMap and Util\Map (implementing Util\MapInterface)
+* Added Util\Number
+* Dropped support for PHP version 7.0
+
+### 0.3.2 (2018-04-12)
+* Hi hi hi...
+
 ### 0.3.1 (2018-03-06)
 * Made Util\Assert::validate catch all exceptions
 

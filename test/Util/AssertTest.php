@@ -42,14 +42,14 @@ class AssertTest extends TestCase
     }
 
     /**
-     * @param   mixed   $types
-     * @param   array   $values
-     * @param   string  $exception
-     * @throws  InvalidArgumentException
-     * @throws  TypeError
-     * @dataProvider    dataProviderTypeOf
+     * @param mixed  $types
+     * @param array  $values
+     * @param string $exception
+     * @throws InvalidArgumentException
+     * @throws TypeError
+     * @dataProvider dataProviderTypeOf
      */
-    public function testTypeOf($types, array $values, string $exception = null)
+    public function testTypeOf($types, array $values, string $exception = null) : void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -59,12 +59,12 @@ class AssertTest extends TestCase
     }
 
     /**
-     * @param   mixed   $types
-     * @param   array   $values
-     * @param   string  $exception
-     * @dataProvider    dataProviderTypeOf
+     * @param mixed  $types
+     * @param array  $values
+     * @param string $exception
+     * @dataProvider dataProviderTypeOf
      */
-    public function testValidate($types, array $values, string $exception = null)
+    public function testValidate($types, array $values, string $exception = null) : void
     {
         self::assertEquals($exception === null, Assert::validate($types, ...$values));
     }
