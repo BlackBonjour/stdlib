@@ -14,8 +14,8 @@ namespace BlackBonjour\Stdlib\Lang;
 interface Comparable
 {
     /**
-     * @param   mixed   $object
-     * @return  int
+     * @param mixed $object
+     * @return int
      */
     public function compareTo($object) : int;
 }

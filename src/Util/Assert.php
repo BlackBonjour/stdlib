@@ -20,12 +20,12 @@ class Assert
     /**
      * Checks if values are of specified types or instances
      *
-     * @param   array|string $types
-     * @param   mixed        $values
-     * @return  boolean
-     * @throws  InvalidArgumentException
-     * @throws  TypeError
-     * @see     http://php.net/manual/de/function.gettype.php
+     * @param array|string $types
+     * @param mixed        $values
+     * @return boolean
+     * @throws InvalidArgumentException
+     * @throws TypeError
+     * @see http://php.net/manual/de/function.gettype.php
      */
     public static function typeOf($types, ...$values) : bool
     {
@@ -71,9 +71,9 @@ class Assert
     /**
      * Same as ::typeOf, but less aggressive
      *
-     * @param   array|string    $types
-     * @param   array           $values
-     * @return  boolean
+     * @param array|string $types
+     * @param array        $values
+     * @return boolean
      */
     public static function validate($types, ...$values) : bool
     {

@@ -139,7 +139,7 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @throws  TypeError
+     * @throws TypeError
      */
     public function testCharCount() : void
     {
@@ -156,15 +156,20 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param   int                 $expected
-     * @param   CharSequence|array  $chars
-     * @param   int                 $index
-     * @param   int                 $limit
-     * @param   string              $exception
-     * @dataProvider    dataProviderCodePointAt
+     * @param int                $expected
+     * @param CharSequence|array $chars
+     * @param int                $index
+     * @param int                $limit
+     * @param string             $exception
+     * @dataProvider dataProviderCodePointAt
      */
-    public function testCodePointAt(int $expected, $chars, int $index, int $limit = null, string $exception = null) : void
-    {
+    public function testCodePointAt(
+        int $expected,
+        $chars,
+        int $index,
+        int $limit = null,
+        string $exception = null
+    ) : void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -173,15 +178,20 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param   int                 $expected
-     * @param   CharSequence|array  $chars
-     * @param   int                 $index
-     * @param   int                 $start
-     * @param   string              $exception
-     * @dataProvider    dataProviderCodePointBefore
+     * @param int                $expected
+     * @param CharSequence|array $chars
+     * @param int                $index
+     * @param int                $start
+     * @param string             $exception
+     * @dataProvider dataProviderCodePointBefore
      */
-    public function testCodePointBefore(int $expected, $chars, int $index, int $start = null, string $exception = null) : void
-    {
+    public function testCodePointBefore(
+        int $expected,
+        $chars,
+        int $index,
+        int $start = null,
+        string $exception = null
+    ) : void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -190,11 +200,11 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param   Character           $char
-     * @param   Character|string    $compare
-     * @param   int                 $expected
-     * @throws  TypeError
-     * @dataProvider    dataProviderCompareTo
+     * @param Character        $char
+     * @param Character|string $compare
+     * @param int              $expected
+     * @throws TypeError
+     * @dataProvider dataProviderCompareTo
      */
     public function testCompareTo(Character $char, $compare, int $expected) : void
     {
@@ -224,7 +234,7 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @throws  TypeError
+     * @throws TypeError
      */
     public function testIsLowerCase() : void
     {
@@ -237,7 +247,7 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @throws  TypeError
+     * @throws TypeError
      */
     public function testIsUpperCase() : void
     {
@@ -250,10 +260,10 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param   Character           $expectation
-     * @param   Character|string    $char
-     * @throws  TypeError
-     * @dataProvider    dataProviderToLowerCase
+     * @param Character        $expectation
+     * @param Character|string $char
+     * @throws TypeError
+     * @dataProvider dataProviderToLowerCase
      */
     public function testToLowerCase(Character $expectation, $char) : void
     {
@@ -261,10 +271,10 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param   Character           $expectation
-     * @param   Character|string    $char
-     * @throws  TypeError
-     * @dataProvider    dataProviderToUpperCase
+     * @param Character        $expectation
+     * @param Character|string $char
+     * @throws TypeError
+     * @dataProvider dataProviderToUpperCase
      */
     public function testToUpperCase(Character $expectation, $char) : void
     {
@@ -272,11 +282,11 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param   Character   $expectation
-     * @param   mixed       $char
-     * @param   boolean     $expectException
-     * @param   string      $exception
-     * @dataProvider    dataProviderValueOf
+     * @param Character $expectation
+     * @param mixed     $char
+     * @param boolean   $expectException
+     * @param string    $exception
+     * @dataProvider dataProviderValueOf
      */
     public function testValueOf($expectation, $char, bool $expectException = false, string $exception = null) : void
     {

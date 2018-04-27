@@ -445,10 +445,10 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString|Character[]|string    $string
-     * @param   string                          $expectation
-     * @param   string                          $exception
-     * @dataProvider    dataProvider__construct
+     * @param StdString|Character[]|string $string
+     * @param string                       $expectation
+     * @param string                       $exception
+     * @dataProvider dataProvider__construct
      */
     public function test__construct($string, string $expectation, string $exception = null) : void
     {
@@ -467,13 +467,13 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString   $string
-     * @param   int         $index
-     * @param   Character   $expectation
-     * @param   string      $exception
-     * @dataProvider    dataProviderCharAt
+     * @param StdString $string
+     * @param int       $index
+     * @param Character $expectation
+     * @param string    $exception
+     * @dataProvider dataProviderCharAt
      */
-    public function testCharAt(StdString $string, int $index, Character $expectation = null, string $exception = null) : void
+    public function testCharAt(StdString $string, int $index, ?Character $expectation, string $exception = null) : void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -501,12 +501,12 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $compareValue
-     * @param   int                 $expectation
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderCompareTo
+     * @param StdString        $string
+     * @param StdString|string $compareValue
+     * @param int              $expectation
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderCompareTo
      */
     public function testCompareTo(StdString $string, $compareValue, int $expectation, string $exception = null) : void
     {
@@ -518,15 +518,19 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $compareValue
-     * @param   int                 $expectation
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderCompareToIgnoreCase
+     * @param StdString        $string
+     * @param StdString|string $compareValue
+     * @param int              $expectation
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderCompareToIgnoreCase
      */
-    public function testCompareToIgnoreCase(StdString $string, $compareValue, int $expectation, string $exception = null) : void
-    {
+    public function testCompareToIgnoreCase(
+        StdString $string,
+        $compareValue,
+        int $expectation,
+        string $exception = null
+    ) : void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -535,12 +539,12 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $value
-     * @param   StdString           $expectation
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderConcat
+     * @param StdString        $string
+     * @param StdString|string $value
+     * @param StdString        $expectation
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderConcat
      */
     public function testConcat(StdString $string, $value, $expectation, string $exception = null) : void
     {
@@ -552,10 +556,10 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $pattern
-     * @param   boolean             $expectation
-     * @dataProvider    dataProviderContains
+     * @param StdString        $string
+     * @param StdString|string $pattern
+     * @param boolean          $expectation
+     * @dataProvider dataProviderContains
      */
     public function testContains(StdString $string, $pattern, bool $expectation) : void
     {
@@ -563,10 +567,10 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $pattern
-     * @param   boolean             $expectation
-     * @dataProvider    dataProviderContentEquals
+     * @param StdString        $string
+     * @param StdString|string $pattern
+     * @param boolean          $expectation
+     * @dataProvider dataProviderContentEquals
      */
     public function testContentEquals(StdString $string, $pattern, bool $expectation) : void
     {
@@ -574,11 +578,11 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString|string|array $charList
-     * @param   StdString              $expectation
-     * @param   string                 $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderCopyValueOf
+     * @param StdString|string|array $charList
+     * @param StdString              $expectation
+     * @param string                 $exception
+     * @throws TypeError
+     * @dataProvider dataProviderCopyValueOf
      */
     public function testCopyValueOf($charList, StdString $expectation, string $exception = null) : void
     {
@@ -596,11 +600,11 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $pattern
-     * @param   boolean             $caseInsensitive
-     * @param   boolean             $expectation
-     * @dataProvider    dataProviderEndsWith
+     * @param StdString        $string
+     * @param StdString|string $pattern
+     * @param boolean          $caseInsensitive
+     * @param boolean          $expectation
+     * @dataProvider dataProviderEndsWith
      */
     public function testEndsWith(StdString $string, $pattern, bool $caseInsensitive, bool $expectation) : void
     {
@@ -620,10 +624,10 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $pattern
-     * @param   boolean             $expectation
-     * @dataProvider    dataProviderEqualsIgnoreCase
+     * @param StdString        $string
+     * @param StdString|string $pattern
+     * @param boolean          $expectation
+     * @dataProvider dataProviderEqualsIgnoreCase
      */
     public function testEqualsIgnoreCase(StdString $string, $pattern, bool $expectation) : void
     {
@@ -631,12 +635,12 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $pattern
-     * @param   StdString[]         $expectation
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderExplode
+     * @param StdString        $string
+     * @param StdString|string $pattern
+     * @param StdString[]      $expectation
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderExplode
      */
     public function testExplode(StdString $string, $pattern, array $expectation, string $exception = null) : void
     {
@@ -648,12 +652,12 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString|string    $pattern
-     * @param   array               $arguments
-     * @param   StdString           $expectation
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderFormat
+     * @param StdString|string $pattern
+     * @param array            $arguments
+     * @param StdString        $expectation
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderFormat
      */
     public function testFormat($pattern, array $arguments, $expectation, string $exception = null) : void
     {
@@ -707,16 +711,21 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $needle
-     * @param   int                 $expectation
-     * @param   int                 $offset
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderIndexOf
+     * @param StdString        $string
+     * @param StdString|string $needle
+     * @param int              $expectation
+     * @param int              $offset
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderIndexOf
      */
-    public function testIndexOf(StdString $string, $needle, int $expectation, int $offset = 0, string $exception = null) : void
-    {
+    public function testIndexOf(
+        StdString $string,
+        $needle,
+        int $expectation,
+        int $offset = 0,
+        string $exception = null
+    ) : void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -731,16 +740,21 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $needle
-     * @param   StdString           $expectation
-     * @param   int                 $offset
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderLastIndexOf
+     * @param StdString        $string
+     * @param StdString|string $needle
+     * @param StdString        $expectation
+     * @param int              $offset
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderLastIndexOf
      */
-    public function testLastIndexOf(StdString $string, $needle, $expectation, int $offset = 0, string $exception = null) : void
-    {
+    public function testLastIndexOf(
+        StdString $string,
+        $needle,
+        $expectation,
+        int $offset = 0,
+        string $exception = null
+    ) : void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -755,12 +769,12 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $pattern
-     * @param   boolean             $expectation
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderMatches
+     * @param StdString        $string
+     * @param StdString|string $pattern
+     * @param boolean          $expectation
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderMatches
      */
     public function testMatches(StdString $string, $pattern, bool $expectation, string $exception = null) : void
     {
@@ -772,10 +786,10 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString   $string
-     * @param   mixed       $offset
-     * @param   boolean     $expectation
-     * @dataProvider    dataProviderOffsetExists
+     * @param StdString $string
+     * @param mixed     $offset
+     * @param boolean   $expectation
+     * @dataProvider dataProviderOffsetExists
      */
     public function testOffsetExists(StdString $string, $offset, bool $expectation) : void
     {
@@ -783,11 +797,11 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString   $string
-     * @param   mixed       $offset
-     * @param   string      $expectation
-     * @param   string      $exception
-     * @dataProvider    dataProviderOffsetGet
+     * @param StdString $string
+     * @param mixed     $offset
+     * @param string    $expectation
+     * @param string    $exception
+     * @dataProvider dataProviderOffsetGet
      */
     public function testOffsetGet(StdString $string, $offset, string $expectation, string $exception = null) : void
     {
@@ -799,11 +813,11 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString   $string
-     * @param   mixed       $offset
-     * @param   mixed       $value
-     * @param   string      $expectation
-     * @dataProvider    dataProviderOffsetSet
+     * @param StdString $string
+     * @param mixed     $offset
+     * @param mixed     $value
+     * @param string    $expectation
+     * @dataProvider dataProviderOffsetSet
      */
     public function testOffsetSet(StdString $string, $offset, $value, string $expectation) : void
     {
@@ -826,16 +840,16 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $stringA
-     * @param   int                 $offset
-     * @param   StdString|string    $pattern
-     * @param   int                 $strOffset
-     * @param   int                 $length
-     * @param   boolean             $ignoreCase
-     * @param   boolean             $expectation
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderRegionMatches
+     * @param StdString        $stringA
+     * @param int              $offset
+     * @param StdString|string $pattern
+     * @param int              $strOffset
+     * @param int              $length
+     * @param boolean          $ignoreCase
+     * @param boolean          $expectation
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderRegionMatches
      */
     public function testRegionMatches(
         StdString $stringA,
@@ -855,13 +869,13 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $old
-     * @param   StdString|string    $new
-     * @param   StdString           $expected
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderReplace
+     * @param StdString        $string
+     * @param StdString|string $old
+     * @param StdString|string $new
+     * @param StdString        $expected
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderReplace
      */
     public function testReplace(StdString $string, $old, $new, $expected, string $exception = null) : void
     {
@@ -873,16 +887,21 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $pattern
-     * @param   StdString|string    $replacement
-     * @param   StdString           $expected
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderReplaceAll
+     * @param StdString        $string
+     * @param StdString|string $pattern
+     * @param StdString|string $replacement
+     * @param StdString        $expected
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderReplaceAll
      */
-    public function testReplaceAll(StdString $string, $pattern, $replacement, $expected, string $exception = null) : void
-    {
+    public function testReplaceAll(
+        StdString $string,
+        $pattern,
+        $replacement,
+        $expected,
+        string $exception = null
+    ) : void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -891,16 +910,21 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $pattern
-     * @param   StdString|string    $replacement
-     * @param   StdString           $expected
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderReplaceFirst
+     * @param StdString        $string
+     * @param StdString|string $pattern
+     * @param StdString|string $replacement
+     * @param StdString        $expected
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderReplaceFirst
      */
-    public function testReplaceFirst(StdString $string, $pattern, $replacement, $expected, string $exception = null) : void
-    {
+    public function testReplaceFirst(
+        StdString $string,
+        $pattern,
+        $replacement,
+        $expected,
+        string $exception = null
+    ) : void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -909,16 +933,21 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $pattern
-     * @param   StdString|string    $expectation
-     * @param   int                 $limit
-     * @param   string              $exception
-     * @throws  TypeError
-     * @dataProvider    dataProviderSplit
+     * @param StdString        $string
+     * @param StdString|string $pattern
+     * @param StdString|string $expectation
+     * @param int              $limit
+     * @param string           $exception
+     * @throws TypeError
+     * @dataProvider dataProviderSplit
      */
-    public function testSplit(StdString $string, $pattern, $expectation, int $limit = -1, string $exception = null) : void
-    {
+    public function testSplit(
+        StdString $string,
+        $pattern,
+        $expectation,
+        int $limit = -1,
+        string $exception = null
+    ) : void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -927,11 +956,11 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   StdString           $string
-     * @param   StdString|string    $needle
-     * @param   boolean             $expectation
-     * @param   int                 $offset
-     * @dataProvider    dataProviderStartsWith
+     * @param StdString        $string
+     * @param StdString|string $needle
+     * @param boolean          $expectation
+     * @param int              $offset
+     * @dataProvider dataProviderStartsWith
      */
     public function testStartsWith(StdString $string, $needle, bool $expectation, int $offset = 0) : void
     {
@@ -1030,10 +1059,10 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param   mixed       $value
-     * @param   StdString   $expected
-     * @param   boolean     $throwsException
-     * @dataProvider    dataProviderValueOf
+     * @param mixed     $value
+     * @param StdString $expected
+     * @param boolean   $throwsException
+     * @dataProvider dataProviderValueOf
      */
     public function testValueOf($value, $expected, bool $throwsException = false) : void
     {

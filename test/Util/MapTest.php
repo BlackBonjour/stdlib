@@ -115,7 +115,9 @@ class MapTest extends TestCase
             usleep(100);
         }
 
+        /** @noinspection PhpUndefinedVariableInspection */
         self::assertEquals('baz', $key);
+        /** @noinspection PhpUndefinedVariableInspection */
         self::assertEquals('lorem', $value);
         self::assertNull($map->key());
         self::assertFalse($map->current());
