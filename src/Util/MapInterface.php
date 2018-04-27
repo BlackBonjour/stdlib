@@ -25,10 +25,10 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
     /**
      * Returns true if this map contains a mapping for the specified key
      *
-     * @param string $key
+     * @param mixed $key
      * @return boolean
      */
-    public function containsKey(string $key) : bool;
+    public function containsKey($key) : bool;
 
     /**
      * Returns true if this map maps one or more keys to the specified value
@@ -42,10 +42,10 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
      * Returns the value to which the specified key is mapped, or null if this
      * map contains no mapping for the key
      *
-     * @param string $key
+     * @param mixed $key
      * @return mixed
      */
-    public function get(string $key);
+    public function get($key);
 
     /**
      * Returns true if this map contains no key-value mappings
@@ -57,11 +57,11 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
     /**
      * Associates the specified value with the specified key in this map
      *
-     * @param string $key
+     * @param mixed $key
      * @param mixed  $value
      * @return $this
      */
-    public function put(string $key, $value);
+    public function put($key, $value);
 
     /**
      * Copies all of the mapping from the specified map to this map
@@ -74,10 +74,10 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
     /**
      * Removes the mapping for a key from this map if it is present
      *
-     * @param string $key
+     * @param mixed $key
      * @return mixed
      */
-    public function remove(string $key);
+    public function remove($key);
 
     /**
      * Returns the number of key-value mappings in this map

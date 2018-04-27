@@ -3,42 +3,36 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
-use TypeError;
-
 /**
- * Map
+ * Hash map
  *
  * @author      Erick Dyck <info@erickdyck.de>
- * @since       24.04.2018
+ * @since       27.04.2018
  * @package     BlackBonjour\Stdlib\Util
  * @copyright   Copyright (c) 2018 Erick Dyck
  */
-class Map implements MapInterface
+class HashMap implements MapInterface
 {
-    protected const TYPE_ERROR_MSG = 'Expected key to be of type string, %s given!';
+    /** @var array */
+    protected $keys = [];
 
     /** @var array */
-    protected $mapping = [];
+    protected $values = [];
 
     /**
      * @inheritdoc
      */
     public function clear() : void
     {
-        $this->mapping = [];
+        $this->keys = $this->values = [];
     }
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function containsKey($key) : bool
     {
-        if (\is_string($key) === false) {
-            throw new TypeError(sprintf(self::TYPE_ERROR_MSG, gettype($key)));
-        }
-
-        return array_key_exists($key, $this->mapping);
+        return isset($this->keys[self::stringifyKey($key)]);
     }
 
     /**
@@ -46,7 +40,7 @@ class Map implements MapInterface
      */
     public function containsValue($value) : bool
     {
-        return \in_array($value, $this->mapping, true);
+        return \in_array($value, $this->values, true);
     }
 
     /**
@@ -54,17 +48,16 @@ class Map implements MapInterface
      *
      * @param array $array
      * @return $this
-     * @throws TypeError
      */
     public static function createFromArray(array $array) : self
     {
-        $map = new self;
+        $hashMap = new self;
 
         foreach ($array as $key => $value) {
-            $map->put((string) $key, $value);
+            $hashMap->put($key, $value);
         }
 
-        return $map;
+        return $hashMap;
     }
 
     /**
@@ -80,20 +73,15 @@ class Map implements MapInterface
      */
     public function current()
     {
-        return current($this->mapping);
+        return $this->values[key($this->keys)];
     }
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function get($key)
     {
-        if (\is_string($key) === false) {
-            throw new TypeError(sprintf(self::TYPE_ERROR_MSG, gettype($key)));
-        }
-
-        return $this->mapping[$key] ?? null;
+        return $this->values[self::stringifyKey($key)] ?? null;
     }
 
     /**
@@ -101,7 +89,7 @@ class Map implements MapInterface
      */
     public function isEmpty() : bool
     {
-        return empty($this->mapping);
+        return empty($this->keys);
     }
 
     /**
@@ -109,8 +97,8 @@ class Map implements MapInterface
      */
     public function key() : ?string
     {
-        $key = key($this->mapping);
-        return $key === null ? null : (string) $key;
+        $key = current($this->keys);
+        return $key !== false ? $key : null;
     }
 
     /**
@@ -118,73 +106,69 @@ class Map implements MapInterface
      */
     public function next()
     {
-        return next($this->mapping);
+        $key = next($this->keys);
+
+        if ($key === false) {
+            return false;
+        }
+
+        return $this->values[key($this->keys)];
     }
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function offsetExists($offset) : bool
     {
-        return is_scalar($offset) ? $this->containsKey((string) $offset) : false;
+        return $this->containsKey($offset);
     }
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function offsetGet($offset)
     {
-        return is_scalar($offset) ? $this->get((string) $offset) : null;
+        return $this->get($offset);
     }
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function offsetSet($offset, $value)
     {
-        if (is_scalar($offset)) {
-            $this->put((string) $offset, $value);
-        }
-
-        return $this;
+        return $this->put($offset, $value);
     }
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function offsetUnset($offset) : void
     {
-        if (is_scalar($offset)) {
-            $this->remove((string) $offset);
-        }
+        $this->remove($offset);
     }
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function put($key, $value) : self
     {
-        if (\is_string($key) === false) {
-            throw new TypeError(sprintf(self::TYPE_ERROR_MSG, gettype($key)));
+        $index = self::stringifyKey($key);
+
+        if (isset($this->keys[$index]) === false) {
+            $this->keys[$index] = $key;
         }
 
-        $this->mapping[$key] = $value;
+        $this->values[$index] = $value;
         return $this;
     }
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function putAll(MapInterface $map) : self
     {
         foreach ($map as $key => $value) {
-            $this->put((string) $key, $value);
+            $this->put($key, $value);
         }
 
         return $this;
@@ -192,15 +176,11 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function remove($key) : void
     {
-        if (\is_string($key) === false) {
-            throw new TypeError(sprintf(self::TYPE_ERROR_MSG, gettype($key)));
-        }
-
-        unset($this->mapping[$key]);
+        $index = self::stringifyKey($key);
+        unset($this->keys[$index], $this->values[$index]);
     }
 
     /**
@@ -208,7 +188,7 @@ class Map implements MapInterface
      */
     public function rewind() : void
     {
-        reset($this->mapping);
+        reset($this->keys);
     }
 
     /**
@@ -216,7 +196,47 @@ class Map implements MapInterface
      */
     public function size() : int
     {
-        return count($this->mapping);
+        return count($this->keys);
+    }
+
+    /**
+     * Calculates string representing specified array key
+     *
+     * @param array $key
+     * @return string
+     */
+    private static function stringifyArrayKey(array $key) : string
+    {
+        ksort($key);
+
+        foreach ($key as &$value) {
+            if (\is_array($value)) {
+                $value = self::stringifyArrayKey($value);
+            } elseif (\is_object($value)) {
+                $value = self::stringifyKey($value);
+            }
+        }
+
+        return json_encode($key);
+    }
+
+    /**
+     * Calculates string representing specified key
+     *
+     * @param mixed $key
+     * @return string
+     */
+    private static function stringifyKey($key) : string
+    {
+        if ($key === null || is_scalar($key)) {
+            return (string) $key;
+        }
+
+        if (\is_object($key)) {
+            return spl_object_hash($key);
+        }
+
+        return self::stringifyArrayKey($key);
     }
 
     /**
@@ -232,6 +252,6 @@ class Map implements MapInterface
      */
     public function values() : array
     {
-        return array_values($this->mapping);
+        return array_values($this->values);
     }
 }
