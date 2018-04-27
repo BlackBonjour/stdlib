@@ -73,7 +73,7 @@ class HashMap implements MapInterface
      */
     public function current()
     {
-        return $this->values[key($this->keys)];
+        return $this->values[key($this->keys)] ?? false;
     }
 
     /**
@@ -244,7 +244,7 @@ class HashMap implements MapInterface
      */
     public function valid() : bool
     {
-        return key($this) !== null;
+        return $this->key() !== null;
     }
 
     /**

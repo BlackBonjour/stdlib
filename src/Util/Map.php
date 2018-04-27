@@ -224,7 +224,7 @@ class Map implements MapInterface
      */
     public function valid() : bool
     {
-        return key($this) !== null;
+        return key($this->mapping) !== null;
     }
 
     /**

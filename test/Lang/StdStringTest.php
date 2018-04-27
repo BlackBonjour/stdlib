@@ -9,7 +9,9 @@ use BlackBonjour\Stdlib\Exception\RuntimeException;
 use BlackBonjour\Stdlib\Lang\Character;
 use BlackBonjour\Stdlib\Lang\StdObject;
 use BlackBonjour\Stdlib\Lang\StdString;
+use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 use TypeError;
 
 /**
@@ -809,6 +811,20 @@ class StdStringTest extends TestCase
         self::assertEquals($expectation, (string) $string);
     }
 
+    public function testOffsetUnset() : void
+    {
+        $string = $this->getObject();
+
+        try {
+            unset($string[1]);
+        } catch (Throwable $t) {
+            self::assertInstanceOf(Error::class, $t);
+            return;
+        }
+
+        $this->fail('Shouldn\'t be reachable!');
+    }
+
     /**
      * @param   StdString           $stringA
      * @param   int                 $offset
@@ -943,6 +959,9 @@ class StdStringTest extends TestCase
             ],
             $this->getObject('ФооБар')->subSequence(1, 4)
         );
+
+        $this->expectException(OutOfBoundsException::class);
+        self::assertEquals([new Character('o'), new Character('o')], $this->getObject()->subSequence(-1, 2));
     }
 
     public function testSubstr() : void
@@ -950,6 +969,9 @@ class StdStringTest extends TestCase
         self::assertEquals($this->getObject('oBa'), $this->getObject()->substr(2, 3));
         self::assertEquals($this->getObject('oBar'), $this->getObject()->substr(2));
         self::assertEquals($this->getObject('ест'), $this->getObject('Тест')->substr(1, 3));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->getObject()->substr(-1, 3);
     }
 
     public function testSubstring() : void

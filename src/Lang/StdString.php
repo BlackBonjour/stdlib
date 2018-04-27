@@ -161,9 +161,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     {
         try {
             Assert::typeOf(['string', __CLASS__], $string);
-        } catch (TypeError $t) {
-            return false;
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException|TypeError $t) {
             return false;
         }
 
@@ -180,9 +178,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     {
         try {
             Assert::typeOf(['string', __CLASS__], $string);
-        } catch (TypeError $t) {
-            return false;
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException|TypeError $t) {
             return false;
         }
 
@@ -234,9 +230,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     {
         try {
             Assert::typeOf(['string', __CLASS__], $string);
-        } catch (TypeError $t) {
-            return false;
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException|TypeError $t) {
             return false;
         }
 
@@ -261,9 +255,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     {
         try {
             Assert::typeOf(['string', __CLASS__], $string);
-        } catch (TypeError $t) {
-            return false;
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException|TypeError $t) {
             return false;
         }
 
@@ -603,9 +595,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     {
         try {
             Assert::typeOf(['string', __CLASS__], $string);
-        } catch (TypeError $t) {
-            return false;
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException|TypeError $t) {
             return false;
         }
 
@@ -619,7 +609,9 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     public function subSequence(int $begin, int $end) : array
     {
         if ($begin < 0 || $end > $this->length() - 1) {
-            throw new OutOfBoundsException('Specified begin index is negative and/or end index is greater or equal string length!');
+            throw new OutOfBoundsException(
+                'Specified begin index is negative and/or end index is greater or equal string length!'
+            );
         }
 
         $charList = [];

@@ -3,24 +3,25 @@ declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
 
-use BlackBonjour\Stdlib\Util\Map;
+use ArrayObject;
+use BlackBonjour\Stdlib\Util\HashMap;
 use PHPUnit\Framework\TestCase;
-use TypeError;
+use stdClass;
 
 /**
- * Unit test for map
+ * Unit test for hash map
  *
  * @author      Erick Dyck <info@erickdyck.de>
- * @since       24.04.2018
+ * @since       28.04.2018
  * @package     BlackBonjourTest\Stdlib\Util
  * @copyright   Copyright (c) 2018 Erick Dyck
- * @covers      \BlackBonjour\Stdlib\Util\Map
+ * @covers      \BlackBonjour\Stdlib\Util\HashMap
  */
-class MapTest extends TestCase
+class HashMapTest extends TestCase
 {
     public function testArrayAccess() : void
     {
-        $map        = new Map;
+        $map        = new HashMap;
         $map['foo'] = 'bar';
         $map[12345] = 67890;
 
@@ -35,8 +36,8 @@ class MapTest extends TestCase
 
     public function testClearAndSize() : void
     {
-        $map        = new Map;
-        $map['foo'] = uniqid('foo_', false);
+        $map = new HashMap;
+        $map->put(new stdClass, new ArrayObject(['foo' => 'bar']));
 
         self::assertEquals(1, $map->size());
 
@@ -46,28 +47,27 @@ class MapTest extends TestCase
 
     public function testContainsKey() : void
     {
-        $map        = new Map;
-        $map['foo'] = 'bar';
+        $stdClass = new stdClass;
+        $map      = new HashMap;
+        $map->put($stdClass, new ArrayObject(['foo' => 'bar']));
 
-        self::assertTrue($map->containsKey('foo'));
-        self::assertFalse($map->containsKey('bar'));
-
-        $this->expectException(TypeError::class);
-        $map->containsKey(123);
+        self::assertTrue($map->containsKey($stdClass));
+        self::assertFalse($map->containsKey(new stdClass));
     }
 
     public function testContainsValue() : void
     {
-        $map        = new Map;
-        $map['foo'] = 'bar';
+        $arrayObject = new ArrayObject;
+        $map         = new HashMap;
+        $map->put(new stdClass, $arrayObject);
 
-        self::assertTrue($map->containsValue('bar'));
-        self::assertFalse($map->containsValue('baz'));
+        self::assertTrue($map->containsValue($arrayObject));
+        self::assertFalse($map->containsValue(new ArrayObject));
     }
 
     public function testCreateFromArray() : void
     {
-        $map = Map::createFromArray([
+        $map = HashMap::createFromArray([
             'foo' => 'bar',
             'baz' => 'lorem',
         ]);
@@ -80,19 +80,19 @@ class MapTest extends TestCase
 
     public function testGet() : void
     {
-        $map        = new Map;
-        $map['foo'] = 'bar';
+        $arrayObject = new ArrayObject;
+        $map         = new HashMap;
+        $stdClass    = new stdClass;
 
-        self::assertEquals('bar', $map->get('foo'));
-        self::assertNull($map->get('baz'));
+        $map->put($stdClass, $arrayObject);
 
-        $this->expectException(TypeError::class);
-        $map->get(123);
+        self::assertEquals($arrayObject, $map->get($stdClass));
+        self::assertNull($map->get(new stdClass));
     }
 
     public function testIsEmpty() : void
     {
-        $map = new Map;
+        $map = new HashMap;
         self::assertTrue($map->isEmpty());
 
         $map['foo'] = 'bar';
@@ -104,7 +104,7 @@ class MapTest extends TestCase
 
     public function testIterable() : void
     {
-        $map = Map::createFromArray([
+        $map = HashMap::createFromArray([
             'foo' => 'bar',
             'baz' => 'lorem',
         ]);
@@ -126,44 +126,45 @@ class MapTest extends TestCase
 
     public function testPut() : void
     {
-        $map = new Map;
+        $map = new HashMap;
         self::assertTrue($map->isEmpty());
 
         $map->put('foo', 'bar');
         self::assertTrue($map->containsKey('foo'));
         self::assertEquals('bar', $map->get('foo'));
 
-        $this->expectException(TypeError::class);
-        $map->put(123, 'bar');
+        $array    = ['foo', ['bar']];
+        $stdClass = new stdClass;
+
+        $map->put($array, $stdClass);
+        self::assertTrue($map->containsKey($array));
+        self::assertEquals($stdClass, $map->get($array));
     }
 
     public function testPutAll() : void
     {
-        $mapFoo = new Map;
+        $mapFoo = new HashMap;
         $mapFoo->put('foo', 'bar');
         self::assertCount(1, $mapFoo);
 
-        $mapFoo->putAll((new Map)->put('baz', 'lorem'));
+        $mapFoo->putAll((new HashMap)->put('baz', 'lorem'));
         self::assertCount(2, $mapFoo);
         self::assertEquals('lorem', $mapFoo->get('baz'));
     }
 
     public function testRemove() : void
     {
-        $map        = new Map;
+        $map        = new HashMap;
         $map['foo'] = 'bar';
 
         self::assertCount(1, $map);
 
         $map->remove('foo');
         self::assertCount(0, $map);
-
-        $this->expectException(TypeError::class);
-        $map->remove(123);
     }
 
     public function testValues() : void
     {
-        self::assertEquals(['bar', 'lorem'], (new Map)->put('foo', 'bar')->put('baz', 'lorem')->values());
+        self::assertEquals(['bar', 'lorem'], (new HashMap)->put('foo', 'bar')->put('baz', 'lorem')->values());
     }
 }
