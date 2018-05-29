@@ -95,7 +95,7 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function key() : ?string
+    public function key()
     {
         $key = current($this->keys);
         return $key !== false ? $key : null;

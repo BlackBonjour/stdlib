@@ -1,3 +1,6 @@
+### 0.4.1 (2018-05-29)
+* Fixed return type hint
+
 ### 0.4.0 (2018-04-28)
 * Added library specific exceptions
 * Added Util\HashMap and Util\Map (implementing Util\MapInterface)

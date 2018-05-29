@@ -124,6 +124,15 @@ class HashMapTest extends TestCase
         self::assertEquals($firstValue, $map->current());
     }
 
+    public function testKey() : void
+    {
+        $map = new HashMap;
+        self::assertNull($map->key());
+
+        $map->put(new stdClass, ['foo' => 'bar']);
+        self::assertInstanceOf(stdClass::class, $map->key());
+    }
+
     public function testPut() : void
     {
         $map = new HashMap;
