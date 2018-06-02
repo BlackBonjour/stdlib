@@ -61,7 +61,7 @@ var_dump($hashMap->key() instanceof StdString); // Returns `true`
 $hashMap->put(new stdClass, new StdString('NotFooBar'));
 
 foreach ($hashMap as $key => $value) {
-    echo StdString::format('%s => %s' . PHP_EOL, gettyppe($key), gettype($value));
+    echo StdString::format('%s => %s' . PHP_EOL, gettype($key), gettype($value));
 }
 
 /*
