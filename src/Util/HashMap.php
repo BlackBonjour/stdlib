@@ -192,6 +192,32 @@ class HashMap implements MapInterface
     }
 
     /**
+     * Sorts this hash map using retrieved callback
+     *
+     * @param callable $callback
+     * @param boolean  $keySort
+     * @return $this
+     */
+    public function sort(callable $callback, bool $keySort = false) : self
+    {
+        $keys   = $this->keys;
+        $values = $this->values;
+
+        if ($keySort) {
+            uasort($keys, $callback);
+            $values = array_replace($keys, $values);
+        } else {
+            uasort($values, $callback);
+            $keys = array_replace($values, $keys);
+        }
+
+        $this->keys   = array_values($keys);
+        $this->values = array_values($values);
+
+        return $this;
+    }
+
+    /**
      * @inheritdoc
      */
     public function size() : int

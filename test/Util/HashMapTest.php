@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace BlackBonjourTest\Stdlib\Util;
 
 use ArrayObject;
+use BlackBonjour\Stdlib\Lang\StdString;
 use BlackBonjour\Stdlib\Util\HashMap;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -170,6 +171,38 @@ class HashMapTest extends TestCase
 
         $map->remove('foo');
         self::assertCount(0, $map);
+    }
+
+    public function testSort() : void
+    {
+        $hashMap = new HashMap;
+        $hashMap
+            ->put(new StdString('FooBar'), [123, 456])
+            ->put(new StdString('BarFoo'), [456, 789])
+            ->put(new StdString('FooBaz'), [123, 789]);
+
+        // Key sort
+        $keySort = clone $hashMap;
+        $keySort->sort('strcmp', true);
+
+        foreach (['BarFoo', 'FooBar', 'FooBaz'] as $expectedKey) {
+            self::assertEquals($expectedKey, (string) $keySort->key());
+            $keySort->next();
+        }
+
+        // Value sort
+        $valueSort = clone $hashMap;
+        $valueSort->sort(function ($a, $b) : int {
+            [$a1, $a2] = $a;
+            [$b1, $b2] = $b;
+
+            return ($a1 + $a2) <=> ($b1 + $b2);
+        });
+
+        foreach (['FooBar', 'FooBaz', 'BarFoo'] as $expectedKey) {
+            self::assertEquals($expectedKey, (string) $valueSort->key());
+            $valueSort->next();
+        }
     }
 
     public function testValues() : void
