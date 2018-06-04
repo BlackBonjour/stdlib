@@ -10,10 +10,10 @@ use Iterator;
 /**
  * Map interface
  *
- * @author      Erick Dyck <info@erickdyck.de>
- * @since       24.04.2018
- * @package     BlackBonjour\Stdlib\Util
- * @copyright   Copyright (c) 2018 Erick Dyck
+ * @author    Erick Dyck <info@erickdyck.de>
+ * @since     24.04.2018
+ * @package   BlackBonjour\Stdlib\Util
+ * @copyright Copyright (c) 2018 Erick Dyck
  */
 interface MapInterface extends ArrayAccess, Countable, Iterator
 {

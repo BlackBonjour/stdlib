@@ -12,11 +12,11 @@ use stdClass;
 /**
  * Unit test for hash map
  *
- * @author      Erick Dyck <info@erickdyck.de>
- * @since       28.04.2018
- * @package     BlackBonjourTest\Stdlib\Util
- * @copyright   Copyright (c) 2018 Erick Dyck
- * @covers      \BlackBonjour\Stdlib\Util\HashMap
+ * @author    Erick Dyck <info@erickdyck.de>
+ * @since     28.04.2018
+ * @package   BlackBonjourTest\Stdlib\Util
+ * @copyright Copyright (c) 2018 Erick Dyck
+ * @covers    \BlackBonjour\Stdlib\Util\HashMap
  */
 class HashMapTest extends TestCase
 {

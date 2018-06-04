@@ -9,11 +9,11 @@ use PHPUnit\Framework\TestCase;
 /**
  * Test for Object class
  *
- * @author      Erick Dyck <info@erickdyck.de>
- * @since       29.11.2017
- * @package     BlackBonjourTest\Stdlib\Lang
- * @copyright   Copyright (c) 2017 Erick Dyck
- * @covers      \BlackBonjour\Stdlib\Lang\StdObject
+ * @author    Erick Dyck <info@erickdyck.de>
+ * @since     29.11.2017
+ * @package   BlackBonjourTest\Stdlib\Lang
+ * @copyright Copyright (c) 2017 Erick Dyck
+ * @covers    \BlackBonjour\Stdlib\Lang\StdObject
  */
 class StdObjectTest extends TestCase
 {

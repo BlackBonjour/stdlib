@@ -10,11 +10,11 @@ use TypeError;
 /**
  * Unit test for map
  *
- * @author      Erick Dyck <info@erickdyck.de>
- * @since       24.04.2018
- * @package     BlackBonjourTest\Stdlib\Util
- * @copyright   Copyright (c) 2018 Erick Dyck
- * @covers      \BlackBonjour\Stdlib\Util\Map
+ * @author    Erick Dyck <info@erickdyck.de>
+ * @since     24.04.2018
+ * @package   BlackBonjourTest\Stdlib\Util
+ * @copyright Copyright (c) 2018 Erick Dyck
+ * @covers    \BlackBonjour\Stdlib\Util\Map
  */
 class MapTest extends TestCase
 {

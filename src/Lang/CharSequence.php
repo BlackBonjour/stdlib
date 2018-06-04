@@ -8,10 +8,10 @@ use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 /**
  * Interface for readable sequences of char values
  *
- * @author      Erick Dyck <info@erickdyck.de>
- * @since       05.12.2017
- * @package     BlackBonjour\Stdlib
- * @copyright   Copyright (c) 2017 Erick Dyck
+ * @author    Erick Dyck <info@erickdyck.de>
+ * @since     05.12.2017
+ * @package   BlackBonjour\Stdlib
+ * @copyright Copyright (c) 2017 Erick Dyck
  */
 interface CharSequence
 {

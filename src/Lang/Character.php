@@ -10,10 +10,10 @@ use TypeError;
 /**
  * Represents a single character
  *
- * @author      Erick Dyck <info@erickdyck.de>
- * @since       04.12.2017
- * @package     BlackBonjour\Stdlib\Lang
- * @copyright   Copyright (c) 2017 Erick Dyck
+ * @author    Erick Dyck <info@erickdyck.de>
+ * @since     04.12.2017
+ * @package   BlackBonjour\Stdlib\Lang
+ * @copyright Copyright (c) 2017 Erick Dyck
  */
 class Character extends StdObject implements Comparable
 {

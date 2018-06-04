@@ -14,10 +14,10 @@ use TypeError;
 /**
  * Represents a string of characters
  *
- * @author      Erick Dyck <info@erickdyck.de>
- * @since       22.11.2017
- * @package     BlackBonjour\Stdlib\Lang
- * @copyright   Copyright (c) 2017 Erick Dyck
+ * @author    Erick Dyck <info@erickdyck.de>
+ * @since     22.11.2017
+ * @package   BlackBonjour\Stdlib\Lang
+ * @copyright Copyright (c) 2017 Erick Dyck
  */
 class StdString extends StdObject implements Comparable, CharSequence, Countable, ArrayAccess
 {

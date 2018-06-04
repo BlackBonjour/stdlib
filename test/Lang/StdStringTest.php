@@ -17,11 +17,11 @@ use TypeError;
 /**
  * Test for StdString class
  *
- * @author      Erick Dyck <info@erickdyck.de>
- * @since       29.11.2017
- * @package     BlackBonjourTest\Stdlib\Lang
- * @copyright   Copyright (c) 2017 Erick Dyck
- * @covers      \BlackBonjour\Stdlib\Lang\StdString
+ * @author    Erick Dyck <info@erickdyck.de>
+ * @since     29.11.2017
+ * @package   BlackBonjourTest\Stdlib\Lang
+ * @copyright Copyright (c) 2017 Erick Dyck
+ * @covers    \BlackBonjour\Stdlib\Lang\StdString
  */
 class StdStringTest extends TestCase
 {

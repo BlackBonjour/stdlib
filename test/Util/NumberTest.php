@@ -10,11 +10,11 @@ use TypeError;
 /**
  * Unit test for number util
  *
- * @author      Erick Dyck <info@erickdyck.de>
- * @since       28.04.2018
- * @package     BlackBonjourTest\Stdlib\Util
- * @copyright   Copyright (c) 2018 Erick Dyck
- * @covers      \BlackBonjour\Stdlib\Util\Number
+ * @author    Erick Dyck <info@erickdyck.de>
+ * @since     28.04.2018
+ * @package   BlackBonjourTest\Stdlib\Util
+ * @copyright Copyright (c) 2018 Erick Dyck
+ * @covers    \BlackBonjour\Stdlib\Util\Number
  */
 class NumberTest extends TestCase
 {

@@ -13,11 +13,11 @@ use TypeError;
 /**
  * Unit test for Assert class
  *
- * @author      Erick Dyck <info@erickdyck.de>
- * @since       06.02.2018
- * @package     BlackBonjourTest\Stdlib\Util
- * @copyright   Copyright (c) 2018 Erick Dyck
- * @covers      \BlackBonjour\Stdlib\Util\Assert
+ * @author    Erick Dyck <info@erickdyck.de>
+ * @since     06.02.2018
+ * @package   BlackBonjourTest\Stdlib\Util
+ * @copyright Copyright (c) 2018 Erick Dyck
+ * @covers    \BlackBonjour\Stdlib\Util\Assert
  */
 class AssertTest extends TestCase
 {
