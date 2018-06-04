@@ -41,6 +41,12 @@ class AssertTest extends TestCase
         ];
     }
 
+    public function testEmpty() : void
+    {
+        self::assertTrue(Assert::empty('', 0, false, []));
+        self::assertFalse(Assert::empty('', 1, false, []));
+    }
+
     /**
      * @param mixed  $types
      * @param array  $values

@@ -18,6 +18,27 @@ use TypeError;
 class Assert
 {
     /**
+     * Checks if specified values are empty
+     *
+     * @param mixed ...$values
+     * @return boolean
+     */
+    public static function empty(... $values) : bool
+    {
+        if ($values === []) {
+            throw new TypeError('At least one argument is required!');
+        }
+
+        foreach ($values as $value) {
+            if (empty($value) === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Checks if values are of specified types or instances
      *
      * @param array|string $types
