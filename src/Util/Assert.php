@@ -22,6 +22,7 @@ class Assert
      *
      * @param mixed ...$values
      * @return boolean
+     * @throws TypeError
      */
     public static function empty(... $values) : bool
     {

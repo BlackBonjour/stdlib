@@ -259,10 +259,10 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
             return false;
         }
 
-        return 0 === strcmp(
+        return strcmp(
             mb_strtolower($this->data, $this->encoding),
             mb_strtolower((string) $string, $this->encoding)
-        );
+        ) === 0;
     }
 
     /**

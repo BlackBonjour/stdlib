@@ -1,3 +1,8 @@
+### 0.5.0 (2018-06-xx)
+* Added Assert::empty (works like isset with multiple values)
+* Added HashMap::sort
+* Added library simple documentation
+
 ### 0.4.1 (2018-05-29)
 * Fixed return type hint
 
