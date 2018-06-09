@@ -27,7 +27,7 @@ if ($string->isEmpty() === false) {
     $translation = StdString::format($string, 4);
 }
 
-echo $string; // Returns `My vehicle has 4 wheels.`
+echo $translation; // Returns `My vehicle has 4 wheels.`
 ```
 
 ```StdString``` is also multibyte compatible.
