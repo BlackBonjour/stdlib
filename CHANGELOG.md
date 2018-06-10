@@ -1,8 +1,11 @@
+### 0.5.1 (2018-06-10)
+* Fix exception messages for Util\Arrays
+
 ### 0.5.0 (2018-06-04)
 * Added Assert::empty (works like isset with multiple values)
 * Added HashMap::sort
 * Added library simple documentation
-* Added Stdlib\Util\Arrays
+* Added Util\Arrays
 
 ### 0.4.1 (2018-05-29)
 * Fixed return type hint

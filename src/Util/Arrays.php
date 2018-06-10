@@ -95,7 +95,7 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
     public function offsetExists($offset) : bool
     {
         if (is_numeric($offset) === false) {
-            throw new TypeError(self::MSG_ILLEGAL_ARGUMENT_TYPE, 1, gettype($offset));
+            throw new TypeError(sprintf(self::MSG_ILLEGAL_ARGUMENT_TYPE, 1, gettype($offset)));
         }
 
         return array_key_exists($offset, $this->values);
@@ -109,11 +109,11 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
     public function offsetGet($offset)
     {
         if (is_numeric($offset) === false) {
-            throw new TypeError(self::MSG_ILLEGAL_ARGUMENT_TYPE, 1, gettype($offset));
+            throw new TypeError(sprintf(self::MSG_ILLEGAL_ARGUMENT_TYPE, 1, gettype($offset)));
         }
 
         if ($this->offsetExists($offset) === false) {
-            throw new OutOfBoundsException(self::MSG_UNDEFINED_OFFSET, $offset);
+            throw new OutOfBoundsException(sprintf(self::MSG_UNDEFINED_OFFSET, $offset));
         }
 
         return $this->values[$offset];
