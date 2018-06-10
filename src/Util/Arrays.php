@@ -140,8 +140,6 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
         }
 
         unset($this->values[$offset]);
-
-        $x = null;
     }
 
     /**
