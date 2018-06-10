@@ -5,10 +5,10 @@ namespace BlackBonjour\Stdlib\Lang;
 
 use ArrayAccess;
 use BlackBonjour\Stdlib\Util\Assert;
-use Countable;
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use BlackBonjour\Stdlib\Exception\RuntimeException;
+use Countable;
 use TypeError;
 
 /**

@@ -1,4 +1,5 @@
 ### 0.5.1 (2018-06-10)
+* Code style
 * Fix exception messages for Util\Arrays
 
 ### 0.5.0 (2018-06-04)
