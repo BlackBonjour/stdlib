@@ -25,7 +25,7 @@ class Number
      * @return string
      * @throws TypeError
      */
-    public static function ordinal($number) : string
+    public static function ordinal($number): string
     {
         if (is_numeric($number) === false) {
             throw new TypeError('Number must be of type string, float or integer!');
@@ -54,7 +54,7 @@ class Number
      * @return string
      * @throws TypeError
      */
-    public static function ordinalize($number) : string
+    public static function ordinalize($number): string
     {
         return $number . self::ordinal($number);
     }

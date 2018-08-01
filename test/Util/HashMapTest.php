@@ -20,7 +20,7 @@ use stdClass;
  */
 class HashMapTest extends TestCase
 {
-    public function testArrayAccess() : void
+    public function testArrayAccess(): void
     {
         $map        = new HashMap;
         $map['foo'] = 'bar';
@@ -35,7 +35,7 @@ class HashMapTest extends TestCase
         self::assertCount(1, $map);
     }
 
-    public function testClearAndSize() : void
+    public function testClearAndSize(): void
     {
         $map = new HashMap;
         $map->put(new stdClass, new ArrayObject(['foo' => 'bar']));
@@ -46,7 +46,7 @@ class HashMapTest extends TestCase
         self::assertEquals(0, $map->size());
     }
 
-    public function testContainsKey() : void
+    public function testContainsKey(): void
     {
         $stdClass = new stdClass;
         $map      = new HashMap;
@@ -56,7 +56,7 @@ class HashMapTest extends TestCase
         self::assertFalse($map->containsKey(new stdClass));
     }
 
-    public function testContainsValue() : void
+    public function testContainsValue(): void
     {
         $arrayObject = new ArrayObject;
         $map         = new HashMap;
@@ -66,7 +66,7 @@ class HashMapTest extends TestCase
         self::assertFalse($map->containsValue(new ArrayObject));
     }
 
-    public function testCreateFromArray() : void
+    public function testCreateFromArray(): void
     {
         $map = HashMap::createFromArray([
             'foo' => 'bar',
@@ -79,7 +79,7 @@ class HashMapTest extends TestCase
         self::assertFalse(isset($map['bar']));
     }
 
-    public function testGet() : void
+    public function testGet(): void
     {
         $arrayObject = new ArrayObject;
         $map         = new HashMap;
@@ -91,7 +91,7 @@ class HashMapTest extends TestCase
         self::assertNull($map->get(new stdClass));
     }
 
-    public function testIsEmpty() : void
+    public function testIsEmpty(): void
     {
         $map = new HashMap;
         self::assertTrue($map->isEmpty());
@@ -103,7 +103,7 @@ class HashMapTest extends TestCase
         self::assertTrue($map->isEmpty());
     }
 
-    public function testIterable() : void
+    public function testIterable(): void
     {
         $map = HashMap::createFromArray([
             'foo' => 'bar',
@@ -125,7 +125,7 @@ class HashMapTest extends TestCase
         self::assertEquals($firstValue, $map->current());
     }
 
-    public function testKey() : void
+    public function testKey(): void
     {
         $map = new HashMap;
         self::assertNull($map->key());
@@ -134,7 +134,7 @@ class HashMapTest extends TestCase
         self::assertInstanceOf(stdClass::class, $map->key());
     }
 
-    public function testPut() : void
+    public function testPut(): void
     {
         $map = new HashMap;
         self::assertTrue($map->isEmpty());
@@ -151,7 +151,7 @@ class HashMapTest extends TestCase
         self::assertEquals($stdClass, $map->get($array));
     }
 
-    public function testPutAll() : void
+    public function testPutAll(): void
     {
         $mapFoo = new HashMap;
         $mapFoo->put('foo', 'bar');
@@ -162,7 +162,7 @@ class HashMapTest extends TestCase
         self::assertEquals('lorem', $mapFoo->get('baz'));
     }
 
-    public function testRemove() : void
+    public function testRemove(): void
     {
         $map        = new HashMap;
         $map['foo'] = 'bar';
@@ -173,7 +173,7 @@ class HashMapTest extends TestCase
         self::assertCount(0, $map);
     }
 
-    public function testSort() : void
+    public function testSort(): void
     {
         $hashMap = new HashMap;
         $hashMap
@@ -192,7 +192,7 @@ class HashMapTest extends TestCase
 
         // Value sort
         $valueSort = clone $hashMap;
-        $valueSort->sort(function ($a, $b) : int {
+        $valueSort->sort(function ($a, $b): int {
             [$a1, $a2] = $a;
             [$b1, $b2] = $b;
 
@@ -205,7 +205,7 @@ class HashMapTest extends TestCase
         }
     }
 
-    public function testValues() : void
+    public function testValues(): void
     {
         self::assertEquals(['bar', 'lorem'], (new HashMap)->put('foo', 'bar')->put('baz', 'lorem')->values());
     }

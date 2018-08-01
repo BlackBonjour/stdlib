@@ -17,6 +17,8 @@ use TypeError;
  */
 class Assert
 {
+    private const MSG_TYPE_MISMATCH = 'Assertion value must be of type string or array, %s given!';
+
     /**
      * Checks if specified values are empty
      *
@@ -24,7 +26,7 @@ class Assert
      * @return boolean
      * @throws TypeError
      */
-    public static function empty(... $values) : bool
+    public static function empty(...$values): bool
     {
         if ($values === []) {
             throw new TypeError('At least one argument is required!');
@@ -49,16 +51,14 @@ class Assert
      * @throws TypeError
      * @see http://php.net/manual/de/function.gettype.php
      */
-    public static function typeOf($types, ...$values) : bool
+    public static function typeOf($types, ...$values): bool
     {
         if (\is_string($types)) {
             $types = [$types];
         }
 
         if (\is_array($types) === false) {
-            throw new InvalidArgumentException(
-                'Assertion value must be of type string or array, ' . \gettype($types) . ' given!'
-            );
+            throw new InvalidArgumentException(sprintf(static::MSG_TYPE_MISMATCH, \gettype($types)));
         }
 
         foreach ($values as $value) {
@@ -97,7 +97,7 @@ class Assert
      * @param array        $values
      * @return boolean
      */
-    public static function validate($types, ...$values) : bool
+    public static function validate($types, ...$values): bool
     {
         try {
             return self::typeOf($types, ...$values);

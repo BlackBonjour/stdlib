@@ -22,7 +22,7 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function clear() : void
+    public function clear(): void
     {
         $this->keys = $this->values = [];
     }
@@ -30,15 +30,15 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function containsKey($key) : bool
+    public function containsKey($key): bool
     {
-        return isset($this->keys[self::stringifyKey($key)]);
+        return isset($this->keys[static::stringifyKey($key)]);
     }
 
     /**
      * @inheritdoc
      */
-    public function containsValue($value) : bool
+    public function containsValue($value): bool
     {
         return \in_array($value, $this->values, true);
     }
@@ -47,11 +47,11 @@ class HashMap implements MapInterface
      * Returns a new map containing key-value mapping from specified array
      *
      * @param array $array
-     * @return $this
+     * @return static
      */
-    public static function createFromArray(array $array) : self
+    public static function createFromArray(array $array): self
     {
-        $hashMap = new self;
+        $hashMap = new static;
 
         foreach ($array as $key => $value) {
             $hashMap->put($key, $value);
@@ -63,7 +63,7 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function count() : int
+    public function count(): int
     {
         return $this->size();
     }
@@ -81,13 +81,13 @@ class HashMap implements MapInterface
      */
     public function get($key)
     {
-        return $this->values[self::stringifyKey($key)] ?? null;
+        return $this->values[static::stringifyKey($key)] ?? null;
     }
 
     /**
      * @inheritdoc
      */
-    public function isEmpty() : bool
+    public function isEmpty(): bool
     {
         return empty($this->keys);
     }
@@ -118,7 +118,7 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
         return $this->containsKey($offset);
     }
@@ -134,15 +134,15 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
-        return $this->put($offset, $value);
+        $this->put($offset, $value);
     }
 
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset) : void
+    public function offsetUnset($offset): void
     {
         $this->remove($offset);
     }
@@ -150,9 +150,9 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function put($key, $value) : self
+    public function put($key, $value): self
     {
-        $index = self::stringifyKey($key);
+        $index = static::stringifyKey($key);
 
         if (isset($this->keys[$index]) === false) {
             $this->keys[$index] = $key;
@@ -165,7 +165,7 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function putAll(MapInterface $map) : self
+    public function putAll(MapInterface $map): self
     {
         foreach ($map as $key => $value) {
             $this->put($key, $value);
@@ -177,16 +177,16 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function remove($key) : void
+    public function remove($key): void
     {
-        $index = self::stringifyKey($key);
+        $index = static::stringifyKey($key);
         unset($this->keys[$index], $this->values[$index]);
     }
 
     /**
      * @inheritdoc
      */
-    public function rewind() : void
+    public function rewind(): void
     {
         reset($this->keys);
     }
@@ -196,9 +196,9 @@ class HashMap implements MapInterface
      *
      * @param callable $callback
      * @param boolean  $keySort
-     * @return $this
+     * @return static
      */
-    public function sort(callable $callback, bool $keySort = false) : self
+    public function sort(callable $callback, bool $keySort = false): self
     {
         $keys   = $this->keys;
         $values = $this->values;
@@ -220,7 +220,7 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function size() : int
+    public function size(): int
     {
         return count($this->keys);
     }
@@ -231,15 +231,15 @@ class HashMap implements MapInterface
      * @param array $key
      * @return string
      */
-    private static function stringifyArrayKey(array $key) : string
+    private static function stringifyArrayKey(array $key): string
     {
         ksort($key);
 
         foreach ($key as &$value) {
             if (\is_array($value)) {
-                $value = self::stringifyArrayKey($value);
+                $value = static::stringifyArrayKey($value);
             } elseif (\is_object($value)) {
-                $value = self::stringifyKey($value);
+                $value = static::stringifyKey($value);
             }
         }
 
@@ -252,7 +252,7 @@ class HashMap implements MapInterface
      * @param mixed $key
      * @return string
      */
-    private static function stringifyKey($key) : string
+    private static function stringifyKey($key): string
     {
         if ($key === null || is_scalar($key)) {
             return (string) $key;
@@ -262,13 +262,13 @@ class HashMap implements MapInterface
             return spl_object_hash($key);
         }
 
-        return self::stringifyArrayKey($key);
+        return static::stringifyArrayKey($key);
     }
 
     /**
      * @inheritdoc
      */
-    public function valid() : bool
+    public function valid(): bool
     {
         return $this->key() !== null;
     }
@@ -276,7 +276,7 @@ class HashMap implements MapInterface
     /**
      * @inheritdoc
      */
-    public function values() : array
+    public function values(): array
     {
         return array_values($this->values);
     }

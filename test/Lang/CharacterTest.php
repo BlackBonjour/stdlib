@@ -21,7 +21,7 @@ use TypeError;
  */
 class CharacterTest extends TestCase
 {
-    public function dataProviderCodePointAt() : array
+    public function dataProviderCodePointAt(): array
     {
         $charA = $this->getObject('a');
         $charB = $this->getObject('B');
@@ -43,7 +43,7 @@ class CharacterTest extends TestCase
         ];
     }
 
-    public function dataProviderCodePointBefore() : array
+    public function dataProviderCodePointBefore(): array
     {
         $charA = $this->getObject('a');
         $charB = $this->getObject('B');
@@ -61,7 +61,7 @@ class CharacterTest extends TestCase
         ];
     }
 
-    public function dataProviderCompareTo() : array
+    public function dataProviderCompareTo(): array
     {
         $charA = $this->getObject();    // Latin
         $charB = $this->getObject('в'); // Cyrillic
@@ -81,7 +81,7 @@ class CharacterTest extends TestCase
         ];
     }
 
-    public function dataProviderToLowerCase() : array
+    public function dataProviderToLowerCase(): array
     {
         $charA = $this->getObject(); // Latin
         $charB = $this->getObject('б'); // Cyrillic
@@ -94,7 +94,7 @@ class CharacterTest extends TestCase
         ];
     }
 
-    public function dataProviderToUpperCase() : array
+    public function dataProviderToUpperCase(): array
     {
         $charA = $this->getObject('C'); // Latin
         $charB = $this->getObject('Б'); // Cyrillic
@@ -107,7 +107,7 @@ class CharacterTest extends TestCase
         ];
     }
 
-    public function dataProviderValueOf() : array
+    public function dataProviderValueOf(): array
     {
         $charA = $this->getObject(); // Latin
         $charB = $this->getObject('б'); // Cyrillic
@@ -121,18 +121,18 @@ class CharacterTest extends TestCase
         ];
     }
 
-    private function getObject(string $char = 'c') : Character
+    private function getObject(string $char = 'c'): Character
     {
         return new Character($char);
     }
 
-    public function test__construct() : void
+    public function test__construct(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->getObject('cc');
     }
 
-    public function test__toString() : void
+    public function test__toString(): void
     {
         self::assertEquals('c', (string) $this->getObject()); // Latin
         self::assertEquals('с', (string) $this->getObject('с')); // Cyrillic
@@ -141,7 +141,7 @@ class CharacterTest extends TestCase
     /**
      * @throws TypeError
      */
-    public function testCharCount() : void
+    public function testCharCount(): void
     {
         self::assertEquals(1, Character::charCount('c'));
         self::assertEquals(1, Character::charCount($this->getObject()));
@@ -149,7 +149,7 @@ class CharacterTest extends TestCase
         self::assertEquals(2, Character::charCount('😁'));
     }
 
-    public function testClone() : void
+    public function testClone(): void
     {
         $char = $this->getObject();
         self::assertInstanceOf(Character::class, $char->clone());
@@ -169,7 +169,7 @@ class CharacterTest extends TestCase
         int $index,
         int $limit = null,
         string $exception = null
-    ) : void {
+    ): void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -191,7 +191,7 @@ class CharacterTest extends TestCase
         int $index,
         int $start = null,
         string $exception = null
-    ) : void {
+    ): void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -206,12 +206,12 @@ class CharacterTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderCompareTo
      */
-    public function testCompareTo(Character $char, $compare, int $expected) : void
+    public function testCompareTo(Character $char, $compare, int $expected): void
     {
         self::assertEquals($expected, $char->compareTo($compare));
     }
 
-    public function testEquals() : void
+    public function testEquals(): void
     {
         // Latin base character
         self::assertTrue($this->getObject()->equals('c'));
@@ -224,7 +224,7 @@ class CharacterTest extends TestCase
         self::assertFalse($this->getObject('с')->equals('c')); // Latin
     }
 
-    public function testHashCode() : void
+    public function testHashCode(): void
     {
         $charA = $this->getObject();
         $charB = $this->getObject('с');
@@ -236,7 +236,7 @@ class CharacterTest extends TestCase
     /**
      * @throws TypeError
      */
-    public function testIsLowerCase() : void
+    public function testIsLowerCase(): void
     {
         self::assertTrue(Character::isLowerCase($this->getObject())); // Latin
         self::assertTrue(Character::isLowerCase($this->getObject('с'))); // Cyrillic
@@ -249,7 +249,7 @@ class CharacterTest extends TestCase
     /**
      * @throws TypeError
      */
-    public function testIsUpperCase() : void
+    public function testIsUpperCase(): void
     {
         self::assertTrue(Character::isUpperCase($this->getObject('C'))); // Latin
         self::assertTrue(Character::isUpperCase($this->getObject('С'))); // Cyrillic
@@ -265,7 +265,7 @@ class CharacterTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderToLowerCase
      */
-    public function testToLowerCase(Character $expectation, $char) : void
+    public function testToLowerCase(Character $expectation, $char): void
     {
         self::assertEquals($expectation, Character::toLowerCase($char));
     }
@@ -276,7 +276,7 @@ class CharacterTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderToUpperCase
      */
-    public function testToUpperCase(Character $expectation, $char) : void
+    public function testToUpperCase(Character $expectation, $char): void
     {
         self::assertEquals($expectation, Character::toUpperCase($char));
     }
@@ -288,7 +288,7 @@ class CharacterTest extends TestCase
      * @param string    $exception
      * @dataProvider dataProviderValueOf
      */
-    public function testValueOf($expectation, $char, bool $expectException = false, string $exception = null) : void
+    public function testValueOf($expectation, $char, bool $expectException = false, string $exception = null): void
     {
         if ($expectException) {
             $this->expectException($exception);

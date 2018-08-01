@@ -13,10 +13,11 @@ use PHPUnit\Framework\TestCase;
  * @since     04.06.2018
  * @package   BlackBonjourTest\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
+ * @covers    \BlackBonjour\Stdlib\Util\Arrays
  */
 class ArraysTest extends TestCase
 {
-    public function testArrayAccess() : void
+    public function testArrayAccess(): void
     {
         $arrays = new Arrays(['Foo', 'Bar', 'Baz']);
 
@@ -30,7 +31,7 @@ class ArraysTest extends TestCase
         self::assertCount(3, $arrays);
     }
 
-    public function testFill() : void
+    public function testFill(): void
     {
         $array = new Arrays(['Foo', 'Bar', 'Baz']);
         $array->fill('Lorem Ipsum');
@@ -38,7 +39,7 @@ class ArraysTest extends TestCase
         self::assertEquals(array_fill(0, 3, 'Lorem Ipsum'), $array->toArray());
     }
 
-    public function testPush() : void
+    public function testPush(): void
     {
         $array = new Arrays;
         $array->push('FooBar');
@@ -49,7 +50,7 @@ class ArraysTest extends TestCase
         self::assertEquals(['FooBar', 'Lorem Ipsum', 'Lorem Ipsum', 'Lorem Ipsum'], $array->toArray());
     }
 
-    public function testPushAll() : void
+    public function testPushAll(): void
     {
         $array = new Arrays;
         $array->pushAll(['Foo', 'Bar', 'Baz']);

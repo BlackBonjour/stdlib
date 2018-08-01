@@ -44,7 +44,7 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
     /**
      * @inheritdoc
      */
-    public function count() : int
+    public function count(): int
     {
         return count($this->values);
     }
@@ -61,9 +61,9 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
      * Fills array with specified value
      *
      * @param mixed $newValue
-     * @return $this
+     * @return static
      */
-    public function fill($newValue) : self
+    public function fill($newValue): self
     {
         foreach ($this->values as $index => $value) {
             $this->values[$index] = $newValue;
@@ -75,7 +75,7 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
     /**
      * @inheritdoc
      */
-    public function key() : int
+    public function key(): int
     {
         return key($this->values);
     }
@@ -83,7 +83,7 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
     /**
      * @inheritdoc
      */
-    public function next() : void
+    public function next(): void
     {
         next($this->values);
     }
@@ -92,10 +92,10 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
      * @inheritdoc
      * @throws TypeError
      */
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
         if (is_numeric($offset) === false) {
-            throw new TypeError(sprintf(self::MSG_ILLEGAL_ARGUMENT_TYPE, 1, gettype($offset)));
+            throw new TypeError(sprintf(static::MSG_ILLEGAL_ARGUMENT_TYPE, 1, gettype($offset)));
         }
 
         return array_key_exists($offset, $this->values);
@@ -109,11 +109,11 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
     public function offsetGet($offset)
     {
         if (is_numeric($offset) === false) {
-            throw new TypeError(sprintf(self::MSG_ILLEGAL_ARGUMENT_TYPE, 1, gettype($offset)));
+            throw new TypeError(sprintf(static::MSG_ILLEGAL_ARGUMENT_TYPE, 1, gettype($offset)));
         }
 
         if ($this->offsetExists($offset) === false) {
-            throw new OutOfBoundsException(sprintf(self::MSG_UNDEFINED_OFFSET, $offset));
+            throw new OutOfBoundsException(sprintf(static::MSG_UNDEFINED_OFFSET, $offset));
         }
 
         return $this->values[$offset];
@@ -123,7 +123,7 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
      * @inheritdoc
      * @throws InvalidArgumentException
      */
-    public function offsetSet($offset, $value) : void
+    public function offsetSet($offset, $value): void
     {
         $this->push($value);
     }
@@ -133,10 +133,10 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
      * @throws OutOfBoundsException
      * @throws TypeError
      */
-    public function offsetUnset($offset) : void
+    public function offsetUnset($offset): void
     {
         if ($this->offsetExists($offset) === false) {
-            throw new OutOfBoundsException(sprintf(self::MSG_UNDEFINED_OFFSET, $offset));
+            throw new OutOfBoundsException(sprintf(static::MSG_UNDEFINED_OFFSET, $offset));
         }
 
         unset($this->values[$offset]);
@@ -147,13 +147,13 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
      *
      * @param mixed    $value
      * @param int|null $repeat
-     * @return Arrays
+     * @return static
      * @throws InvalidArgumentException
      */
-    public function push($value, int $repeat = null) : self
+    public function push($value, int $repeat = null): self
     {
         if ($repeat !== null && $repeat <= 0) {
-            throw new InvalidArgumentException(sprintf(self::MSG_NEGATIVE_ARGUMENT_NOT_ALLOWED, 2, 1));
+            throw new InvalidArgumentException(sprintf(static::MSG_NEGATIVE_ARGUMENT_NOT_ALLOWED, 2, 1));
         }
 
         for ($i = 0; $i < ($repeat ?: 1); $i++) {
@@ -167,10 +167,10 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
      * Pushes multiple values to array
      *
      * @param array $values
-     * @return Arrays
+     * @return static
      * @throws InvalidArgumentException
      */
-    public function pushAll(array $values) : self
+    public function pushAll(array $values): self
     {
         if ($values !== []) {
             foreach ($values as $value) {
@@ -184,7 +184,7 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
     /**
      * @inheritdoc
      */
-    public function rewind() : void
+    public function rewind(): void
     {
         reset($this->values);
     }
@@ -192,7 +192,7 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
     /**
      * @return array
      */
-    public function toArray() : array
+    public function toArray(): array
     {
         return $this->values;
     }
@@ -200,7 +200,7 @@ class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
     /**
      * @inheritdoc
      */
-    public function valid() : bool
+    public function valid(): bool
     {
         return $this->key() !== null;
     }

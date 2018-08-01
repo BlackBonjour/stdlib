@@ -21,7 +21,7 @@ use TypeError;
  */
 class AssertTest extends TestCase
 {
-    public function dataProviderTypeOf() : array
+    public function dataProviderTypeOf(): array
     {
         return [
             // Valid
@@ -41,7 +41,7 @@ class AssertTest extends TestCase
         ];
     }
 
-    public function testEmpty() : void
+    public function testEmpty(): void
     {
         self::assertTrue(Assert::empty('', 0, false, []));
         self::assertFalse(Assert::empty('', 1, false, []));
@@ -55,7 +55,7 @@ class AssertTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderTypeOf
      */
-    public function testTypeOf($types, array $values, string $exception = null) : void
+    public function testTypeOf($types, array $values, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -70,7 +70,7 @@ class AssertTest extends TestCase
      * @param string $exception
      * @dataProvider dataProviderTypeOf
      */
-    public function testValidate($types, array $values, string $exception = null) : void
+    public function testValidate($types, array $values, string $exception = null): void
     {
         self::assertEquals($exception === null, Assert::validate($types, ...$values));
     }

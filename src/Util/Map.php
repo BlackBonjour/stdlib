@@ -23,7 +23,7 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
-    public function clear() : void
+    public function clear(): void
     {
         $this->mapping = [];
     }
@@ -32,10 +32,10 @@ class Map implements MapInterface
      * @inheritdoc
      * @throws TypeError
      */
-    public function containsKey($key) : bool
+    public function containsKey($key): bool
     {
         if (\is_string($key) === false) {
-            throw new TypeError(sprintf(self::TYPE_ERROR_MSG, gettype($key)));
+            throw new TypeError(sprintf(static::TYPE_ERROR_MSG, gettype($key)));
         }
 
         return array_key_exists($key, $this->mapping);
@@ -44,7 +44,7 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
-    public function containsValue($value) : bool
+    public function containsValue($value): bool
     {
         return \in_array($value, $this->mapping, true);
     }
@@ -53,12 +53,12 @@ class Map implements MapInterface
      * Returns a new map containing key-value mapping from specified array
      *
      * @param array $array
-     * @return $this
+     * @return static
      * @throws TypeError
      */
-    public static function createFromArray(array $array) : self
+    public static function createFromArray(array $array): self
     {
-        $map = new self;
+        $map = new static;
 
         foreach ($array as $key => $value) {
             $map->put((string) $key, $value);
@@ -70,7 +70,7 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
-    public function count() : int
+    public function count(): int
     {
         return $this->size();
     }
@@ -90,7 +90,7 @@ class Map implements MapInterface
     public function get($key)
     {
         if (\is_string($key) === false) {
-            throw new TypeError(sprintf(self::TYPE_ERROR_MSG, gettype($key)));
+            throw new TypeError(sprintf(static::TYPE_ERROR_MSG, gettype($key)));
         }
 
         return $this->mapping[$key] ?? null;
@@ -99,7 +99,7 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
-    public function isEmpty() : bool
+    public function isEmpty(): bool
     {
         return empty($this->mapping);
     }
@@ -107,7 +107,7 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
-    public function key() : ?string
+    public function key(): ?string
     {
         $key = key($this->mapping);
         return $key === null ? null : (string) $key;
@@ -125,9 +125,9 @@ class Map implements MapInterface
      * @inheritdoc
      * @throws TypeError
      */
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
-        return is_scalar($offset) ? $this->containsKey((string) $offset) : false;
+        return is_scalar($offset) ? $this->containsKey((string) $offset): false;
     }
 
     /**
@@ -136,27 +136,25 @@ class Map implements MapInterface
      */
     public function offsetGet($offset)
     {
-        return is_scalar($offset) ? $this->get((string) $offset) : null;
+        return is_scalar($offset) ? $this->get((string) $offset): null;
     }
 
     /**
      * @inheritdoc
      * @throws TypeError
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (is_scalar($offset)) {
             $this->put((string) $offset, $value);
         }
-
-        return $this;
     }
 
     /**
      * @inheritdoc
      * @throws TypeError
      */
-    public function offsetUnset($offset) : void
+    public function offsetUnset($offset): void
     {
         if (is_scalar($offset)) {
             $this->remove((string) $offset);
@@ -167,10 +165,10 @@ class Map implements MapInterface
      * @inheritdoc
      * @throws TypeError
      */
-    public function put($key, $value) : self
+    public function put($key, $value): self
     {
         if (\is_string($key) === false) {
-            throw new TypeError(sprintf(self::TYPE_ERROR_MSG, gettype($key)));
+            throw new TypeError(sprintf(static::TYPE_ERROR_MSG, gettype($key)));
         }
 
         $this->mapping[$key] = $value;
@@ -181,7 +179,7 @@ class Map implements MapInterface
      * @inheritdoc
      * @throws TypeError
      */
-    public function putAll(MapInterface $map) : self
+    public function putAll(MapInterface $map): self
     {
         foreach ($map as $key => $value) {
             $this->put((string) $key, $value);
@@ -194,10 +192,10 @@ class Map implements MapInterface
      * @inheritdoc
      * @throws TypeError
      */
-    public function remove($key) : void
+    public function remove($key): void
     {
         if (\is_string($key) === false) {
-            throw new TypeError(sprintf(self::TYPE_ERROR_MSG, gettype($key)));
+            throw new TypeError(sprintf(static::TYPE_ERROR_MSG, gettype($key)));
         }
 
         unset($this->mapping[$key]);
@@ -206,7 +204,7 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
-    public function rewind() : void
+    public function rewind(): void
     {
         reset($this->mapping);
     }
@@ -214,7 +212,7 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
-    public function size() : int
+    public function size(): int
     {
         return count($this->mapping);
     }
@@ -222,7 +220,7 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
-    public function valid() : bool
+    public function valid(): bool
     {
         return key($this->mapping) !== null;
     }
@@ -230,7 +228,7 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
-    public function values() : array
+    public function values(): array
     {
         return array_values($this->mapping);
     }

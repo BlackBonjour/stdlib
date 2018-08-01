@@ -20,7 +20,7 @@ class StdObject
      *
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return \get_class($this) . '@' . $this->hashCode();
     }
@@ -28,9 +28,9 @@ class StdObject
     /**
      * Returns a copy of this object
      *
-     * @return $this
+     * @return static
      */
-    public function clone() : self
+    public function clone(): self
     {
         return clone $this;
     }
@@ -41,7 +41,7 @@ class StdObject
      * @param mixed $obj
      * @return boolean
      */
-    public function equals($obj) : bool
+    public function equals($obj): bool
     {
         // We ain't gonna check for same reference here!
         return $this == $obj;
@@ -52,7 +52,7 @@ class StdObject
      *
      * @return string
      */
-    public function hashCode() : string
+    public function hashCode(): string
     {
         return spl_object_hash($this);
     }

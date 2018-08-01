@@ -18,7 +18,7 @@ use TypeError;
  */
 class MapTest extends TestCase
 {
-    public function testArrayAccess() : void
+    public function testArrayAccess(): void
     {
         $map        = new Map;
         $map['foo'] = 'bar';
@@ -33,7 +33,7 @@ class MapTest extends TestCase
         self::assertCount(1, $map);
     }
 
-    public function testClearAndSize() : void
+    public function testClearAndSize(): void
     {
         $map        = new Map;
         $map['foo'] = uniqid('foo_', false);
@@ -44,7 +44,7 @@ class MapTest extends TestCase
         self::assertEquals(0, $map->size());
     }
 
-    public function testContainsKey() : void
+    public function testContainsKey(): void
     {
         $map        = new Map;
         $map['foo'] = 'bar';
@@ -56,7 +56,7 @@ class MapTest extends TestCase
         $map->containsKey(123);
     }
 
-    public function testContainsValue() : void
+    public function testContainsValue(): void
     {
         $map        = new Map;
         $map['foo'] = 'bar';
@@ -65,7 +65,7 @@ class MapTest extends TestCase
         self::assertFalse($map->containsValue('baz'));
     }
 
-    public function testCreateFromArray() : void
+    public function testCreateFromArray(): void
     {
         $map = Map::createFromArray([
             'foo' => 'bar',
@@ -78,7 +78,7 @@ class MapTest extends TestCase
         self::assertFalse(isset($map['bar']));
     }
 
-    public function testGet() : void
+    public function testGet(): void
     {
         $map        = new Map;
         $map['foo'] = 'bar';
@@ -90,7 +90,7 @@ class MapTest extends TestCase
         $map->get(123);
     }
 
-    public function testIsEmpty() : void
+    public function testIsEmpty(): void
     {
         $map = new Map;
         self::assertTrue($map->isEmpty());
@@ -102,7 +102,7 @@ class MapTest extends TestCase
         self::assertTrue($map->isEmpty());
     }
 
-    public function testIterable() : void
+    public function testIterable(): void
     {
         $map = Map::createFromArray([
             'foo' => 'bar',
@@ -126,7 +126,7 @@ class MapTest extends TestCase
         self::assertEquals($firstValue, $map->current());
     }
 
-    public function testPut() : void
+    public function testPut(): void
     {
         $map = new Map;
         self::assertTrue($map->isEmpty());
@@ -139,7 +139,7 @@ class MapTest extends TestCase
         $map->put(123, 'bar');
     }
 
-    public function testPutAll() : void
+    public function testPutAll(): void
     {
         $mapFoo = new Map;
         $mapFoo->put('foo', 'bar');
@@ -150,7 +150,7 @@ class MapTest extends TestCase
         self::assertEquals('lorem', $mapFoo->get('baz'));
     }
 
-    public function testRemove() : void
+    public function testRemove(): void
     {
         $map        = new Map;
         $map['foo'] = 'bar';
@@ -164,7 +164,7 @@ class MapTest extends TestCase
         $map->remove(123);
     }
 
-    public function testValues() : void
+    public function testValues(): void
     {
         self::assertEquals(['bar', 'lorem'], (new Map)->put('foo', 'bar')->put('baz', 'lorem')->values());
     }

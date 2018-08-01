@@ -20,7 +20,7 @@ interface CharSequence
      *
      * @return string
      */
-    public function __toString() : string;
+    public function __toString(): string;
 
     /**
      * Returns the character at specified index
@@ -28,14 +28,14 @@ interface CharSequence
      * @param int $index
      * @return Character
      */
-    public function charAt(int $index) : Character;
+    public function charAt(int $index): Character;
 
     /**
      * Returns the length of this character sequence
      *
      * @return int
      */
-    public function length() : int;
+    public function length(): int;
 
     /**
      * Returns an array containing characters between specified start index and end index
@@ -45,5 +45,5 @@ interface CharSequence
      * @return Character[]
      * @throws OutOfBoundsException
      */
-    public function subSequence(int $begin, int $end) : array;
+    public function subSequence(int $begin, int $end): array;
 }

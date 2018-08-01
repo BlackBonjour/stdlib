@@ -11,6 +11,7 @@ use BlackBonjour\Stdlib\Lang\StdObject;
 use BlackBonjour\Stdlib\Lang\StdString;
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Throwable;
 use TypeError;
 
@@ -25,9 +26,9 @@ use TypeError;
  */
 class StdStringTest extends TestCase
 {
-    public function dataProvider__construct() : array
+    public function dataProvider__construct(): array
     {
-        $charArray = function (string $string) : array {
+        $charArray = function (string $string): array {
             $chars  = [];
             $length = \strlen($string);
 
@@ -48,7 +49,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderCharAt() : array
+    public function dataProviderCharAt(): array
     {
         $string = $this->getObject();
 
@@ -61,7 +62,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderCompareTo() : array
+    public function dataProviderCompareTo(): array
     {
         $string = $this->getObject();
 
@@ -76,7 +77,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderCompareToIgnoreCase() : array
+    public function dataProviderCompareToIgnoreCase(): array
     {
         $string = $this->getObject();
 
@@ -91,7 +92,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderConcat() : array
+    public function dataProviderConcat(): array
     {
         $string = $this->getObject();
 
@@ -103,7 +104,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderContains() : array
+    public function dataProviderContains(): array
     {
         $string = $this->getObject();
 
@@ -116,7 +117,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderContentEquals() : array
+    public function dataProviderContentEquals(): array
     {
         $string = $this->getObject();
 
@@ -130,7 +131,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderCopyValueOf() : array
+    public function dataProviderCopyValueOf(): array
     {
         $stringA = $this->getObject();
         $stringB = $this->getObject('Тест');
@@ -146,7 +147,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderEndsWith() : array
+    public function dataProviderEndsWith(): array
     {
         $string = $this->getObject();
 
@@ -159,7 +160,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderEqualsIgnoreCase() : array
+    public function dataProviderEqualsIgnoreCase(): array
     {
         $stringA = $this->getObject();
         $stringB = $this->getObject('Тест');
@@ -177,7 +178,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderExplode() : array
+    public function dataProviderExplode(): array
     {
         $string = $this->getObject();
 
@@ -189,7 +190,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderFormat() : array
+    public function dataProviderFormat(): array
     {
         return [
             'string-pattern' => [
@@ -206,7 +207,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderIndexOf() : array
+    public function dataProviderIndexOf(): array
     {
         $string = $this->getObject();
 
@@ -220,7 +221,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderLastIndexOf() : array
+    public function dataProviderLastIndexOf(): array
     {
         $string = $this->getObject();
 
@@ -234,7 +235,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderMatches() : array
+    public function dataProviderMatches(): array
     {
         $string = $this->getObject();
 
@@ -247,7 +248,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderOffsetExists() : array
+    public function dataProviderOffsetExists(): array
     {
         $string = $this->getObject();
 
@@ -260,7 +261,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderOffsetGet() : array
+    public function dataProviderOffsetGet(): array
     {
         $string = $this->getObject();
 
@@ -273,7 +274,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderOffsetSet() : array
+    public function dataProviderOffsetSet(): array
     {
         return [
             'offset-does-exist'     => [$this->getObject(), 3, 'C', 'FooCar'],
@@ -285,7 +286,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderRegionMatches() : array
+    public function dataProviderRegionMatches(): array
     {
         $stringA = $this->getObject();
         $stringB = $this->getObject('ФооБарТест');
@@ -309,7 +310,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderReplace() : array
+    public function dataProviderReplace(): array
     {
         $string = $this->getObject();
 
@@ -322,7 +323,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderReplaceAll() : array
+    public function dataProviderReplaceAll(): array
     {
         return [
             'string-pattern-and-replacement' => [
@@ -360,7 +361,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderReplaceFirst() : array
+    public function dataProviderReplaceFirst(): array
     {
         return [
             'string-pattern-and-replacement' => [
@@ -398,7 +399,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderSplit() : array
+    public function dataProviderSplit(): array
     {
         $string = $this->getObject();
 
@@ -410,7 +411,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderStartsWith() : array
+    public function dataProviderStartsWith(): array
     {
         $string = $this->getObject();
 
@@ -423,7 +424,7 @@ class StdStringTest extends TestCase
         ];
     }
 
-    public function dataProviderValueOf() : array
+    public function dataProviderValueOf(): array
     {
         $obj = new StdObject;
 
@@ -434,12 +435,12 @@ class StdStringTest extends TestCase
             'float'          => [1.25, $this->getObject('1.25')],
             'integer'        => [125, $this->getObject('125')],
             'std-object'     => [$obj, $this->getObject(StdObject::class . '@' . spl_object_hash($obj))],
-            'invalid-object' => [new \stdClass(), null, true],
+            'invalid-object' => [new stdClass(), null, true],
             'object'         => [new class {public function __toString() { return 'FooBar'; }}, $this->getObject()],
         ];
     }
 
-    private function getObject(string $string = 'FooBar') : StdString
+    private function getObject(string $string = 'FooBar'): StdString
     {
         return new StdString($string);
     }
@@ -450,7 +451,7 @@ class StdStringTest extends TestCase
      * @param string                       $exception
      * @dataProvider dataProvider__construct
      */
-    public function test__construct($string, string $expectation, string $exception = null) : void
+    public function test__construct($string, string $expectation, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -460,7 +461,7 @@ class StdStringTest extends TestCase
         self::assertEquals($expectation, (string) $stdString);
     }
 
-    public function test__toString() : void
+    public function test__toString(): void
     {
         $string = $this->getObject();
         self::assertEquals('FooBar', (string) $string);
@@ -473,7 +474,7 @@ class StdStringTest extends TestCase
      * @param string    $exception
      * @dataProvider dataProviderCharAt
      */
-    public function testCharAt(StdString $string, int $index, ?Character $expectation, string $exception = null) : void
+    public function testCharAt(StdString $string, int $index, ?Character $expectation, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -482,19 +483,19 @@ class StdStringTest extends TestCase
         self::assertEquals($expectation, $string->charAt($index));
     }
 
-    public function testCodePointAt() : void
+    public function testCodePointAt(): void
     {
         self::assertEquals(97, $this->getObject()->codePointAt(4));
         self::assertEquals(1041, $this->getObject('ФооБар')->codePointAt(3));
     }
 
-    public function testCodePointBefore() : void
+    public function testCodePointBefore(): void
     {
         self::assertEquals(97, $this->getObject()->codePointBefore(5));
         self::assertEquals(1041, $this->getObject('ФооБар')->codePointBefore(4));
     }
 
-    public function testClone() : void
+    public function testClone(): void
     {
         $string = $this->getObject();
         self::assertInstanceOf(StdString::class, $string->clone());
@@ -508,7 +509,7 @@ class StdStringTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderCompareTo
      */
-    public function testCompareTo(StdString $string, $compareValue, int $expectation, string $exception = null) : void
+    public function testCompareTo(StdString $string, $compareValue, int $expectation, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -530,7 +531,7 @@ class StdStringTest extends TestCase
         $compareValue,
         int $expectation,
         string $exception = null
-    ) : void {
+    ): void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -546,7 +547,7 @@ class StdStringTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderConcat
      */
-    public function testConcat(StdString $string, $value, $expectation, string $exception = null) : void
+    public function testConcat(StdString $string, $value, $expectation, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -561,7 +562,7 @@ class StdStringTest extends TestCase
      * @param boolean          $expectation
      * @dataProvider dataProviderContains
      */
-    public function testContains(StdString $string, $pattern, bool $expectation) : void
+    public function testContains(StdString $string, $pattern, bool $expectation): void
     {
         self::assertEquals($expectation, $string->contains($pattern));
     }
@@ -572,7 +573,7 @@ class StdStringTest extends TestCase
      * @param boolean          $expectation
      * @dataProvider dataProviderContentEquals
      */
-    public function testContentEquals(StdString $string, $pattern, bool $expectation) : void
+    public function testContentEquals(StdString $string, $pattern, bool $expectation): void
     {
         self::assertEquals($expectation, $string->contentEquals($pattern));
     }
@@ -584,7 +585,7 @@ class StdStringTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderCopyValueOf
      */
-    public function testCopyValueOf($charList, StdString $expectation, string $exception = null) : void
+    public function testCopyValueOf($charList, StdString $expectation, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -593,7 +594,7 @@ class StdStringTest extends TestCase
         self::assertEquals($expectation, StdString::copyValueOf($charList));
     }
 
-    public function testCount() : void
+    public function testCount(): void
     {
         self::assertCount(6, $this->getObject()); // Latin
         self::assertCount(6, $this->getObject('ФооБар')); // Cyrillic
@@ -606,12 +607,12 @@ class StdStringTest extends TestCase
      * @param boolean          $expectation
      * @dataProvider dataProviderEndsWith
      */
-    public function testEndsWith(StdString $string, $pattern, bool $caseInsensitive, bool $expectation) : void
+    public function testEndsWith(StdString $string, $pattern, bool $caseInsensitive, bool $expectation): void
     {
         self::assertEquals($expectation, $string->endsWith($pattern, $caseInsensitive));
     }
 
-    public function testEquals() : void
+    public function testEquals(): void
     {
         $objA = $this->getObject();
         $objB = clone $objA;
@@ -629,7 +630,7 @@ class StdStringTest extends TestCase
      * @param boolean          $expectation
      * @dataProvider dataProviderEqualsIgnoreCase
      */
-    public function testEqualsIgnoreCase(StdString $string, $pattern, bool $expectation) : void
+    public function testEqualsIgnoreCase(StdString $string, $pattern, bool $expectation): void
     {
         self::assertEquals($expectation, $string->equalsIgnoreCase($pattern));
     }
@@ -642,7 +643,7 @@ class StdStringTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderExplode
      */
-    public function testExplode(StdString $string, $pattern, array $expectation, string $exception = null) : void
+    public function testExplode(StdString $string, $pattern, array $expectation, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -659,7 +660,7 @@ class StdStringTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderFormat
      */
-    public function testFormat($pattern, array $arguments, $expectation, string $exception = null) : void
+    public function testFormat($pattern, array $arguments, $expectation, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -668,13 +669,13 @@ class StdStringTest extends TestCase
         self::assertEquals($expectation, StdString::format($pattern, ...$arguments));
     }
 
-    public function testGetBytes() : void
+    public function testGetBytes(): void
     {
         $string = $this->getObject();
         self::assertEquals([70, 111, 111, 66, 97, 114], $string->getBytes());
     }
 
-    public function testGetChars() : void
+    public function testGetChars(): void
     {
         $string  = $this->getObject();
         $result1 = [];
@@ -704,7 +705,7 @@ class StdStringTest extends TestCase
         );
     }
 
-    public function testHashCode() : void
+    public function testHashCode(): void
     {
         $string = $this->getObject();
         self::assertEquals(spl_object_hash($string), $string->hashCode());
@@ -725,7 +726,7 @@ class StdStringTest extends TestCase
         int $expectation,
         int $offset = 0,
         string $exception = null
-    ) : void {
+    ): void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -733,7 +734,7 @@ class StdStringTest extends TestCase
         self::assertEquals($expectation, $string->indexOf($needle, $offset));
     }
 
-    public function testIsEmpty() : void
+    public function testIsEmpty(): void
     {
         self::assertFalse($this->getObject()->isEmpty());
         self::assertTrue($this->getObject('')->isEmpty());
@@ -754,7 +755,7 @@ class StdStringTest extends TestCase
         $expectation,
         int $offset = 0,
         string $exception = null
-    ) : void {
+    ): void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -762,7 +763,7 @@ class StdStringTest extends TestCase
         self::assertEquals($expectation, $string->lastIndexOf($needle, $offset));
     }
 
-    public function testLength() : void
+    public function testLength(): void
     {
         self::assertEquals(6, $this->getObject()->length());
         self::assertEquals(4, $this->getObject('Тест')->length());
@@ -776,7 +777,7 @@ class StdStringTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderMatches
      */
-    public function testMatches(StdString $string, $pattern, bool $expectation, string $exception = null) : void
+    public function testMatches(StdString $string, $pattern, bool $expectation, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -791,7 +792,7 @@ class StdStringTest extends TestCase
      * @param boolean   $expectation
      * @dataProvider dataProviderOffsetExists
      */
-    public function testOffsetExists(StdString $string, $offset, bool $expectation) : void
+    public function testOffsetExists(StdString $string, $offset, bool $expectation): void
     {
         self::assertEquals($expectation, isset($string[$offset]));
     }
@@ -803,7 +804,7 @@ class StdStringTest extends TestCase
      * @param string    $exception
      * @dataProvider dataProviderOffsetGet
      */
-    public function testOffsetGet(StdString $string, $offset, string $expectation, string $exception = null) : void
+    public function testOffsetGet(StdString $string, $offset, string $expectation, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -819,13 +820,13 @@ class StdStringTest extends TestCase
      * @param string    $expectation
      * @dataProvider dataProviderOffsetSet
      */
-    public function testOffsetSet(StdString $string, $offset, $value, string $expectation) : void
+    public function testOffsetSet(StdString $string, $offset, $value, string $expectation): void
     {
         $string[$offset] = $value;
         self::assertEquals($expectation, (string) $string);
     }
 
-    public function testOffsetUnset() : void
+    public function testOffsetUnset(): void
     {
         $string = $this->getObject();
 
@@ -836,7 +837,7 @@ class StdStringTest extends TestCase
             return;
         }
 
-        $this->fail('Shouldn\'t be reachable!');
+        self::fail('Shouldn\'t be reachable!');
     }
 
     /**
@@ -860,7 +861,7 @@ class StdStringTest extends TestCase
         bool $ignoreCase,
         bool $expectation,
         string $exception = null
-    ) : void {
+    ): void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -877,7 +878,7 @@ class StdStringTest extends TestCase
      * @throws TypeError
      * @dataProvider dataProviderReplace
      */
-    public function testReplace(StdString $string, $old, $new, $expected, string $exception = null) : void
+    public function testReplace(StdString $string, $old, $new, $expected, string $exception = null): void
     {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -901,7 +902,7 @@ class StdStringTest extends TestCase
         $replacement,
         $expected,
         string $exception = null
-    ) : void {
+    ): void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -924,7 +925,7 @@ class StdStringTest extends TestCase
         $replacement,
         $expected,
         string $exception = null
-    ) : void {
+    ): void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -947,7 +948,7 @@ class StdStringTest extends TestCase
         $expectation,
         int $limit = -1,
         string $exception = null
-    ) : void {
+    ): void {
         if ($exception !== null) {
             $this->expectException($exception);
         }
@@ -962,12 +963,12 @@ class StdStringTest extends TestCase
      * @param int              $offset
      * @dataProvider dataProviderStartsWith
      */
-    public function testStartsWith(StdString $string, $needle, bool $expectation, int $offset = 0) : void
+    public function testStartsWith(StdString $string, $needle, bool $expectation, int $offset = 0): void
     {
         self::assertEquals($expectation, $string->startsWith($needle, $offset));
     }
 
-    public function testSubSequence() : void
+    public function testSubSequence(): void
     {
         self::assertEquals(
             [
@@ -993,7 +994,7 @@ class StdStringTest extends TestCase
         self::assertEquals([new Character('o'), new Character('o')], $this->getObject()->subSequence(-1, 2));
     }
 
-    public function testSubstr() : void
+    public function testSubstr(): void
     {
         self::assertEquals($this->getObject('oBa'), $this->getObject()->substr(2, 3));
         self::assertEquals($this->getObject('oBar'), $this->getObject()->substr(2));
@@ -1003,14 +1004,14 @@ class StdStringTest extends TestCase
         $this->getObject()->substr(-1, 3);
     }
 
-    public function testSubstring() : void
+    public function testSubstring(): void
     {
         self::assertEquals($this->getObject('oBa'), $this->getObject()->substring(2, 4));
         self::assertEquals($this->getObject('oBar'), $this->getObject()->substring(2));
         self::assertEquals($this->getObject('ест'), $this->getObject('Тест')->substring(1, 3));
     }
 
-    public function testToCharArray() : void
+    public function testToCharArray(): void
     {
         // Latin
         $result = $this->getObject()->toCharArray();
@@ -1039,19 +1040,19 @@ class StdStringTest extends TestCase
         ], $result);
     }
 
-    public function testToLowercase() : void
+    public function testToLowercase(): void
     {
         self::assertEquals($this->getObject('foobar'), $this->getObject()->toLowerCase());
         self::assertEquals($this->getObject('тест'), $this->getObject('Тест')->toLowerCase());
     }
 
-    public function testToUppercase() : void
+    public function testToUppercase(): void
     {
         self::assertEquals($this->getObject('FOOBAR'), $this->getObject()->toUpperCase());
         self::assertEquals($this->getObject('ТЕСТ'), $this->getObject('Тест')->toUpperCase());
     }
 
-    public function testTrim() : void
+    public function testTrim(): void
     {
         self::assertEquals($this->getObject(), $this->getObject(' FooBar ')->trim());
         self::assertEquals($this->getObject(), $this->getObject("FooBar\n")->trim());
@@ -1064,7 +1065,7 @@ class StdStringTest extends TestCase
      * @param boolean   $throwsException
      * @dataProvider dataProviderValueOf
      */
-    public function testValueOf($value, $expected, bool $throwsException = false) : void
+    public function testValueOf($value, $expected, bool $throwsException = false): void
     {
         if ($throwsException) {
             $this->expectException(InvalidArgumentException::class);

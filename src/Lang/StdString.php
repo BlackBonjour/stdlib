@@ -19,7 +19,7 @@ use TypeError;
  * @package   BlackBonjour\Stdlib\Lang
  * @copyright Copyright (c) 2017 Erick Dyck
  */
-class StdString extends StdObject implements Comparable, CharSequence, Countable, ArrayAccess
+class StdString extends StdObject implements ArrayAccess, CharSequence, Comparable, Countable
 {
     public const DEFAULT_VALUE = '';
 
@@ -32,15 +32,15 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Constructor
      *
-     * @param mixed  $string
-     * @param string $encoding
+     * @param static|Character[]|string $string
+     * @param string                    $encoding
      * @throws InvalidArgumentException
      */
     public function __construct($string = self::DEFAULT_VALUE, string $encoding = null)
     {
         if (\is_string($string)) {
             $this->data = $string;
-        } elseif ($string instanceof self) {
+        } elseif ($string instanceof static) {
             $this->data = (string) $string;
         } elseif (\is_array($string)) {
             foreach ($string as $char) {
@@ -48,7 +48,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
                     throw new InvalidArgumentException('Only chars are allowed inside array!');
                 }
 
-                $this->data .= (string) $char;
+                $this->data .= $char;
             }
         } else {
             throw new InvalidArgumentException('First parameter must by of type string, StdString or an array of Character!');
@@ -60,20 +60,17 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * @inheritdoc
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->data;
     }
 
     /**
-     * Returns the character at specified index
-     *
-     * @param int $index
-     * @return Character
+     * @inheritdoc
      * @throws InvalidArgumentException
      * @throws OutOfBoundsException
      */
-    public function charAt(int $index) : Character
+    public function charAt(int $index): Character
     {
         if ($index < 0 || $index > $this->length() - 1) {
             throw new OutOfBoundsException('Negative values and values greater or equal object length are not allowed!');
@@ -90,7 +87,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * @throws InvalidArgumentException
      * @throws OutOfBoundsException
      */
-    public function codePointAt(int $index) : int
+    public function codePointAt(int $index): int
     {
         $char = (string) $this->charAt($index);
         return unpack('N', mb_convert_encoding($char, 'UCS-4BE', $this->encoding))[1];
@@ -104,7 +101,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * @throws InvalidArgumentException
      * @throws OutOfBoundsException
      */
-    public function codePointBefore(int $index) : int
+    public function codePointBefore(int $index): int
     {
         return $this->codePointAt($index - 1);
     }
@@ -112,12 +109,11 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Compares given string with this string (not multibyte safe)
      *
-     * @param StdString|string $string
-     * @return int
+     * @inheritdoc
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public function compareTo($string) : int
+    public function compareTo($string): int
     {
         Assert::typeOf(['string', __CLASS__], $string);
         return strcmp($this->data, (string) $string) <=> 0;
@@ -126,12 +122,12 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Compares given string with this string case insensitive (not multibyte safe)
      *
-     * @param StdString|string $string
+     * @param static|string $string
      * @return int
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public function compareToIgnoreCase($string) : int
+    public function compareToIgnoreCase($string): int
     {
         Assert::typeOf(['string', __CLASS__], $string);
         return strcasecmp($this->data, (string) $string) <=> 0;
@@ -140,24 +136,24 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Concatenates given string to the end of this string
      *
-     * @param StdString|string $string
-     * @return self
+     * @param static|string $string
+     * @return static
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public function concat($string) : self
+    public function concat($string): self
     {
         Assert::typeOf(['string', __CLASS__], $string);
-        return new self($this->data . (string) $string, $this->encoding);
+        return new static($this->data . $string, $this->encoding);
     }
 
     /**
      * Checks if this string contains specified string
      *
-     * @param StdString|string $string
+     * @param static|string $string
      * @return boolean
      */
-    public function contains($string) : bool
+    public function contains($string): bool
     {
         try {
             Assert::typeOf(['string', __CLASS__], $string);
@@ -171,10 +167,10 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Checks if this string is equal to the given string
      *
-     * @param StdString|string $string
+     * @param static|string $string
      * @return boolean
      */
-    public function contentEquals($string) : bool
+    public function contentEquals($string): bool
     {
         try {
             Assert::typeOf(['string', __CLASS__], $string);
@@ -188,12 +184,12 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Returns a string that represents the character sequence in the array specified
      *
-     * @param StdString|string|array  $charList
-     * @return self
+     * @param static|string|array $charList
+     * @return static
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public static function copyValueOf($charList) : self
+    public static function copyValueOf($charList): self
     {
         Assert::typeOf(['string', 'array', __CLASS__], $charList);
 
@@ -202,19 +198,19 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
 
         if (\is_array($charList)) {
             foreach ($charList as $value) {
-                $string .= (string) self::valueOf($value);
+                $string .= static::valueOf($value);
             }
         } else {
             $string = (string) $charList;
         }
 
-        return new self($string);
+        return new static($string);
     }
 
     /**
      * @inheritdoc
      */
-    public function count() : int
+    public function count(): int
     {
         return $this->length();
     }
@@ -222,11 +218,11 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Checks if this string ends with specified string
      *
-     * @param StdString|string $string
-     * @param boolean          $caseInsensitive
+     * @param static|string $string
+     * @param boolean       $caseInsensitive
      * @return boolean
      */
-    public function endsWith($string, bool $caseInsensitive = false) : bool
+    public function endsWith($string, bool $caseInsensitive = false): bool
     {
         try {
             Assert::typeOf(['string', __CLASS__], $string);
@@ -248,10 +244,10 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Compares this string to the given string case insensitive
      *
-     * @param StdString|string $string
+     * @param static|string $string
      * @return boolean
      */
-    public function equalsIgnoreCase($string) : bool
+    public function equalsIgnoreCase($string): bool
     {
         try {
             Assert::typeOf(['string', __CLASS__], $string);
@@ -268,13 +264,13 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Explodes this string by specified delimiter
      *
-     * @param StdString|string $delimiter
-     * @return self[]
+     * @param static|string $delimiter
+     * @return static[]
      * @throws InvalidArgumentException
      * @throws RuntimeException
      * @throws TypeError
      */
-    public function explode($delimiter) : array
+    public function explode($delimiter): array
     {
         Assert::typeOf(['string', __CLASS__], $delimiter);
 
@@ -286,7 +282,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
         }
 
         foreach ($results as $result) {
-            $response[] = new self($result, $this->encoding);
+            $response[] = new static($result, $this->encoding);
         }
 
         return $response;
@@ -295,16 +291,16 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Returns a formatted string using the given format and arguments
      *
-     * @param StdString|string $format
-     * @param mixed            ...$args
-     * @return self
+     * @param static|string $format
+     * @param mixed         ...$args
+     * @return static
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public static function format($format, ...$args) : self
+    public static function format($format, ...$args): self
     {
         Assert::typeOf(['string', __CLASS__], $format);
-        return new self(sprintf((string) $format, ...$args));
+        return new static(sprintf((string) $format, ...$args));
     }
 
     /**
@@ -312,7 +308,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      *
      * @return int[]
      */
-    public function getBytes() : array
+    public function getBytes(): array
     {
         return array_values(unpack('C*', $this->data));
     }
@@ -328,7 +324,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * @throws InvalidArgumentException
      * @throws OutOfBoundsException
      */
-    public function getChars(int $begin, int $end, array &$destination, int $dstBegin) : void
+    public function getChars(int $begin, int $end, array &$destination, int $dstBegin): void
     {
         $length = $end - $begin + 1;
 
@@ -340,13 +336,13 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Returns the index within this string of the first occurrence of the specified string
      *
-     * @param StdString|string $string
-     * @param int              $offset
+     * @param static|string $string
+     * @param int           $offset
      * @return int
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public function indexOf($string, int $offset = 0) : int
+    public function indexOf($string, int $offset = 0): int
     {
         Assert::typeOf(['string', __CLASS__], $string);
         $pos = mb_strpos($this->data, (string) $string, $offset, $this->encoding);
@@ -359,7 +355,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      *
      * @return boolean
      */
-    public function isEmpty() : bool
+    public function isEmpty(): bool
     {
         return empty($this->data);
     }
@@ -367,13 +363,13 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Returns the index within this string of the last occurrence of the specified string
      *
-     * @param StdString|string $string
-     * @param int              $offset
+     * @param static|string $string
+     * @param int           $offset
      * @return int
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public function lastIndexOf($string, int $offset = 0) : int
+    public function lastIndexOf($string, int $offset = 0): int
     {
         Assert::typeOf(['string', __CLASS__], $string);
         $pos = mb_strrpos($this->data, (string) $string, $offset, $this->encoding);
@@ -384,7 +380,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * @inheritdoc
      */
-    public function length() : int
+    public function length(): int
     {
         return mb_strlen($this->data, $this->encoding);
     }
@@ -392,12 +388,12 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Checks if this string matches the given regex pattern
      *
-     * @param StdString|string $pattern
+     * @param static|string $pattern
      * @return boolean
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public function matches($pattern) : bool
+    public function matches($pattern): bool
     {
         Assert::typeOf(['string', __CLASS__], $pattern);
         return preg_match((string) $pattern, $this->data) === 1;
@@ -406,7 +402,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
         if (is_numeric($offset) === false) {
             return false;
@@ -424,14 +420,16 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     public function offsetGet($offset)
     {
         if (is_numeric($offset) === false) {
-            trigger_error('Illegal string offset \'' . $offset . '\'', E_USER_WARNING);
+            trigger_error(sprintf('Illegal string offset \'%s\'', $offset), E_USER_WARNING);
             return $this->charAt(0);
         }
 
         $offset = (int) $offset;
 
         if ($offset < 0 || $this->length() <= $offset) {
-            throw new OutOfBoundsException('Negative values and values greater or equal object length are not allowed!');
+            throw new OutOfBoundsException(
+                'Negative values and values greater or equal object length are not allowed!'
+            );
         }
 
         return $this->charAt($offset);
@@ -441,10 +439,10 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * @inheritdoc
      * @throws InvalidArgumentException
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (is_numeric($offset) === false || (int) $offset < 0) {
-            trigger_error('Illegal string offset \'' . $offset . '\'', E_USER_WARNING);
+            trigger_error(sprintf('Illegal string offset \'%s\'', $offset), E_USER_WARNING);
             return;
         }
 
@@ -468,7 +466,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         trigger_error('Cannot unset string offsets', E_USER_ERROR);
     }
@@ -476,16 +474,16 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Checks if two string regions are equal
      *
-     * @param int              $offset
-     * @param StdString|string $string
-     * @param int              $strOffset
-     * @param int              $len
-     * @param boolean          $ignoreCase
+     * @param int           $offset
+     * @param static|string $string
+     * @param int           $strOffset
+     * @param int           $len
+     * @param boolean       $ignoreCase
      * @return boolean
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public function regionMatches(int $offset, $string, int $strOffset, int $len, bool $ignoreCase = false) : bool
+    public function regionMatches(int $offset, $string, int $strOffset, int $len, bool $ignoreCase = false): bool
     {
         Assert::typeOf(['string', __CLASS__], $string);
         $strLen = \is_string($string) ? mb_strlen($string, $this->encoding) : $string->length();
@@ -510,63 +508,63 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Replaces all occurrences of $old in this string with $new
      *
-     * @param StdString|string $old
-     * @param StdString|string $new
-     * @return self
+     * @param static|string $old
+     * @param static|string $new
+     * @return static
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public function replace($old, $new) : self
+    public function replace($old, $new): self
     {
         Assert::typeOf(['string', __CLASS__], $old, $new);
-        return new self(str_replace((string) $old, (string) $new, $this->data), $this->encoding);
+        return new static(str_replace((string) $old, (string) $new, $this->data), $this->encoding);
     }
 
     /**
      * Replaces each substring of this string that matches the given regex pattern with the specified replacement
      *
-     * @param StdString|string $pattern
-     * @param StdString|string $replacement
-     * @return self
+     * @param static|string $pattern
+     * @param static|string $replacement
+     * @return static
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public function replaceAll($pattern, $replacement) : self
+    public function replaceAll($pattern, $replacement): self
     {
         Assert::typeOf(['string', __CLASS__], $pattern, $replacement);
         $result = preg_replace($pattern, $replacement, $this->data);
 
-        return new self($result ?: $this->data, $this->encoding);
+        return new static($result ?: $this->data, $this->encoding);
     }
 
     /**
      * Replaces the first substring of this string that matches the given regex pattern with the specified replacement
      *
-     * @param StdString|string $pattern
-     * @param StdString|string $replacement
-     * @return self
+     * @param static|string $pattern
+     * @param static|string $replacement
+     * @return static
      * @throws InvalidArgumentException
      * @throws TypeError
      */
-    public function replaceFirst($pattern, $replacement) : self
+    public function replaceFirst($pattern, $replacement): self
     {
         Assert::typeOf(['string', __CLASS__], $pattern, $replacement);
         $result = preg_replace($pattern, $replacement, $this->data, 1);
 
-        return new self($result ?: $this->data, $this->encoding);
+        return new static($result ?: $this->data, $this->encoding);
     }
 
     /**
      * Splits this string around matches of the given regex pattern
      *
-     * @param StdString|string $pattern
-     * @param int              $limit
-     * @return self[]
+     * @param static|string $pattern
+     * @param int           $limit
+     * @return static[]
      * @throws InvalidArgumentException
      * @throws RuntimeException
      * @throws TypeError
      */
-    public function split($pattern, int $limit = -1) : array
+    public function split($pattern, int $limit = -1): array
     {
         Assert::typeOf(['string', __CLASS__], $pattern);
 
@@ -578,7 +576,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
         }
 
         foreach ($results as $result) {
-            $response[] = new self($result, $this->encoding);
+            $response[] = new static($result, $this->encoding);
         }
 
         return $response;
@@ -587,11 +585,11 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Checks if this string starts with specified string
      *
-     * @param StdString|string $string
-     * @param int              $offset
+     * @param static|string $string
+     * @param int           $offset
      * @return boolean
      */
-    public function startsWith($string, int $offset = 0) : bool
+    public function startsWith($string, int $offset = 0): bool
     {
         try {
             Assert::typeOf(['string', __CLASS__], $string);
@@ -606,7 +604,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * @inheritdoc
      * @throws InvalidArgumentException
      */
-    public function subSequence(int $begin, int $end) : array
+    public function subSequence(int $begin, int $end): array
     {
         if ($begin < 0 || $end > $this->length() - 1) {
             throw new OutOfBoundsException(
@@ -625,16 +623,16 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      *
      * @param int $start
      * @param int $length
-     * @return self
+     * @return static
      * @throws InvalidArgumentException
      */
-    public function substr(int $start, int $length = null) : self
+    public function substr(int $start, int $length = null): self
     {
         if ($start < 0) {
             throw new InvalidArgumentException('Negative index is not allowed!');
         }
 
-        return new self(mb_substr($this->data, $start, $length, $this->encoding), $this->encoding);
+        return new static(mb_substr($this->data, $start, $length, $this->encoding), $this->encoding);
     }
 
     /**
@@ -642,10 +640,10 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      *
      * @param int $begin
      * @param int $end
-     * @return self
+     * @return static
      * @throws InvalidArgumentException
      */
-    public function substring(int $begin, int $end = null) : self
+    public function substring(int $begin, int $end = null): self
     {
         return $this->substr($begin, $end ? $end - $begin + 1 : null);
     }
@@ -657,7 +655,7 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
      * @throws InvalidArgumentException
      * @throws OutOfBoundsException
      */
-    public function toCharArray() : array
+    public function toCharArray(): array
     {
         $charList = [];
         $this->getChars(0, $this->length() - 1, $charList, 0);
@@ -668,44 +666,44 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
     /**
      * Converts all characters in this string to lower case
      *
-     * @return self
+     * @return static
      * @throws InvalidArgumentException
      */
-    public function toLowerCase() : self
+    public function toLowerCase(): self
     {
-        return new self(mb_strtolower($this->data, $this->encoding), $this->encoding);
+        return new static(mb_strtolower($this->data, $this->encoding), $this->encoding);
     }
 
     /**
      * Converts all characters in this string to upper case
      *
-     * @return self
+     * @return static
      * @throws InvalidArgumentException
      */
-    public function toUpperCase() : self
+    public function toUpperCase(): self
     {
-        return new self(mb_strtoupper($this->data, $this->encoding), $this->encoding);
+        return new static(mb_strtoupper($this->data, $this->encoding), $this->encoding);
     }
 
     /**
      * Removes leading and ending whitespaces in this string
      *
-     * @return self
+     * @return static
      * @throws InvalidArgumentException
      */
-    public function trim() : self
+    public function trim(): self
     {
-        return new self(trim($this->data));
+        return new static(trim($this->data));
     }
 
     /**
      * Returns the string representation of the given value
      *
      * @param mixed $value
-     * @return self
+     * @return static
      * @throws InvalidArgumentException
      */
-    public static function valueOf($value) : self
+    public static function valueOf($value): self
     {
         $strVal = null;
 
@@ -729,6 +727,6 @@ class StdString extends StdObject implements Comparable, CharSequence, Countable
             throw new InvalidArgumentException('Unsupported value type!');
         }
 
-        return new self($strVal);
+        return new static($strVal);
     }
 }

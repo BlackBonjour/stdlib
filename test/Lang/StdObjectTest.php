@@ -5,6 +5,7 @@ namespace BlackBonjourTest\Stdlib\Lang;
 
 use BlackBonjour\Stdlib\Lang\StdObject;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * Test for Object class
@@ -17,29 +18,29 @@ use PHPUnit\Framework\TestCase;
  */
 class StdObjectTest extends TestCase
 {
-    public function test__toString() : void
+    public function test__toString(): void
     {
         $obj = new StdObject;
         self::assertEquals(StdObject::class . '@' . spl_object_hash($obj), (string) $obj);
     }
 
-    public function testClone() : void
+    public function testClone(): void
     {
         $obj = new StdObject;
         self::assertInstanceOf(StdObject::class, $obj->clone());
     }
 
-    public function testEquals() : void
+    public function testEquals(): void
     {
         $objA = new StdObject;
         $objB = new StdObject;
-        $objC = new \stdClass;
+        $objC = new stdClass;
 
         self::assertTrue($objA->equals($objB));
         self::assertFalse($objA->equals($objC));
     }
 
-    public function testHashCode() : void
+    public function testHashCode(): void
     {
         $obj = new StdObject;
         self::assertEquals(spl_object_hash($obj), $obj->hashCode());
