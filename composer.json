@@ -18,15 +18,13 @@
     "source": "https://github.com/BlackBonjour/stdlib"
   },
   "require": {
-    "php": ">=7.1"
+    "php": ">=7.1",
+    "ext-mbstring": "*"
   },
   "require-dev": {
     "phpmd/phpmd": "2.*",
     "phpunit/phpunit": "7.*",
     "squizlabs/php_codesniffer": "3.*"
-  },
-  "suggest": {
-    "ext-mbstring": "If ext-mbstring is not available you MUST install symfony/polyfill-mbstring"
   },
   "autoload": {
     "psr-4": {
