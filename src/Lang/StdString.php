@@ -21,7 +21,8 @@ use TypeError;
  */
 class StdString extends StdObject implements ArrayAccess, CharSequence, Comparable, Countable
 {
-    public const DEFAULT_VALUE = '';
+    public const DEFAULT_VALUE       = '';
+    private const MSG_ILLEGAL_OFFSET = 'Illegal string offset \'%s\'';
 
     /** @var string */
     protected $data;
@@ -72,8 +73,8 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
      */
     public function charAt(int $index): Character
     {
-        if ($index < 0 || $index > $this->length() - 1) {
-            throw new OutOfBoundsException('Negative values and values greater or equal object length are not allowed!');
+        if (($index < 0 && $this->length() < (-1 * $index)) || ($index >= 0 && $this->length() <= $index)) {
+            throw new OutOfBoundsException('Offset greater or equal string length is not allowed!');
         }
 
         return new Character(mb_substr($this->data, $index, 1, $this->encoding));
@@ -409,7 +410,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
         }
 
         $offset = (int) $offset;
-        return $offset >= 0 && $this->length() > $offset;
+        return $offset < 0 ? $this->length() >= (-1 * $offset) : $this->length() > $offset;
     }
 
     /**
@@ -424,15 +425,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
             return $this->charAt(0);
         }
 
-        $offset = (int) $offset;
-
-        if ($offset < 0 || $this->length() <= $offset) {
-            throw new OutOfBoundsException(
-                'Negative values and values greater or equal object length are not allowed!'
-            );
-        }
-
-        return $this->charAt($offset);
+        return $this->charAt((int) $offset);
     }
 
     /**
@@ -441,13 +434,26 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
      */
     public function offsetSet($offset, $value): void
     {
-        if (is_numeric($offset) === false || (int) $offset < 0) {
-            trigger_error(sprintf('Illegal string offset \'%s\'', $offset), E_USER_WARNING);
+        if (is_numeric($offset) === false) {
+            trigger_error(sprintf(static::MSG_ILLEGAL_OFFSET, $offset), E_USER_WARNING);
             return;
         }
 
-        $length       = $this->length();
-        $offset       = (int) $offset;
+        $length = $this->length();
+        $offset = (int) $offset;
+
+        if ($offset < 0) {
+            // Convert to positive offset
+            $tmp = $length + $offset;
+
+            if ($tmp < 0) {
+                trigger_error(sprintf(static::MSG_ILLEGAL_OFFSET, $offset), E_USER_WARNING);
+                return;
+            }
+
+            $offset = $tmp;
+        }
+
         $prefix       = $this->substr(0, $offset);
         $suffix       = '';
         $suffixOffset = $offset + mb_strlen($value);

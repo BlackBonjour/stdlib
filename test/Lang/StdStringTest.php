@@ -56,7 +56,7 @@ class StdStringTest extends TestCase
         return [
             'latin'               => [$string, 3, new Character('B')],
             'cyrillic'            => [$this->getObject('Тест'), 2, new Character('с')],
-            'negative-index'      => [$string, -1, null, OutOfBoundsException::class],
+            'negative-index'      => [$string, -1, new Character('r')],
             'index-equals-length' => [$string, 6, null, OutOfBoundsException::class],
             'index-above-length'  => [$string, 7, null, OutOfBoundsException::class],
         ];
@@ -253,11 +253,12 @@ class StdStringTest extends TestCase
         $string = $this->getObject();
 
         return [
-            'offset-does-exist'     => [$string, 3, true],
-            'offset-does-not-exist' => [$string, 6, false],
-            'offset-numeric-string' => [$string, '3', true],
-            'offset-illegal'        => [$string, 'o', false],
-            'offset-negative'       => [$string, -2, false],
+            'offset-does-exist'             => [$string, 3, true],
+            'offset-does-not-exist'         => [$string, 6, false],
+            'offset-numeric-string'         => [$string, '3', true],
+            'offset-illegal'                => [$string, 'o', false],
+            'offset-negative'               => [$string, -2, true],
+            'offset-negative-out-of-bounce' => [$string, -7, false],
         ];
     }
 
@@ -266,11 +267,12 @@ class StdStringTest extends TestCase
         $string = $this->getObject();
 
         return [
-            'offset-does-exist'     => [$string, 3, 'B'],
-            'offset-does-not-exist' => [$string, 6, '', OutOfBoundsException::class],
-            'offset-numeric-string' => [$string, '3', 'B'],
-            'offset-illegal'        => [$string, 'o', 'F'], // Should trigger a warning and return first letter
-            'offset-negative'       => [$string, -2, '', OutOfBoundsException::class],
+            'offset-does-exist'             => [$string, 3, 'B'],
+            'offset-does-not-exist'         => [$string, 6, '', OutOfBoundsException::class],
+            'offset-numeric-string'         => [$string, '3', 'B'],
+            'offset-illegal'                => [$string, 'o', 'F'], // Should trigger a warning and return first letter
+            'offset-negative'               => [$string, -2, 'a'],
+            'offset-negative-out-of-bounce' => [$string, -7, '', OutOfBoundsException::class],
         ];
     }
 
