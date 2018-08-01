@@ -1,3 +1,9 @@
+### 1.0.0 (2018-08-01)
+* Added Assert::notEmpty
+* Added support for negative StdString offset
+* Code style
+* Made HashMap::offsetSet void
+
 ### 0.5.1 (2018-06-10)
 * Code style
 * Fix exception messages for Util\Arrays
@@ -18,7 +24,7 @@
 * Dropped support for PHP version 7.0
 
 ### 0.3.2 (2018-04-12)
-* Hi hi hi...
+* Mysterious release...
 
 ### 0.3.1 (2018-03-06)
 * Made Util\Assert::validate catch all exceptions
