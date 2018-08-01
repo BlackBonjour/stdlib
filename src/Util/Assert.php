@@ -42,6 +42,28 @@ class Assert
     }
 
     /**
+     * Checks if specified values are not empty
+     *
+     * @param mixed ...$values
+     * @return boolean
+     * @throws TypeError
+     */
+    public static function notEmpty(...$values): bool
+    {
+        if ($values === []) {
+            throw new TypeError('At least one argument is required!');
+        }
+
+        foreach ($values as $value) {
+            if (empty($value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Checks if values are of specified types or instances
      *
      * @param array|string $types
