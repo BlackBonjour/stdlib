@@ -1,3 +1,7 @@
+[![Latest Stable Version](https://poser.pugx.org/blackbonjour/stdlib/v/stable)](https://packagist.org/packages/blackbonjour/stdlib)
+[![Total Downloads](https://poser.pugx.org/blackbonjour/stdlib/downloads)](https://packagist.org/packages/blackbonjour/stdlib)
+[![License](https://poser.pugx.org/blackbonjour/stdlib/license)](https://packagist.org/packages/blackbonjour/stdlib)
+
 # stdlib
 Standard library for PHP.
 
