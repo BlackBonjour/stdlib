@@ -79,6 +79,14 @@ class HashMapTest extends TestCase
         self::assertFalse(isset($map['bar']));
     }
 
+    public function testCurrent(): void
+    {
+        $map = HashMap::createFromArray(['some-key' => null]);
+
+        self::assertEquals('some-key', $map->key());
+        self::assertNull($map->current());
+    }
+
     public function testGet(): void
     {
         $arrayObject = new ArrayObject;
@@ -110,6 +118,7 @@ class HashMapTest extends TestCase
             'baz' => 'lorem',
         ]);
 
+        $firstKey   = $map->key();
         $firstValue = $map->current();
 
         foreach ($map as $key => $value) {
@@ -122,6 +131,7 @@ class HashMapTest extends TestCase
         self::assertFalse($map->current());
 
         $map->rewind();
+        self::assertEquals($firstKey, $map->key());
         self::assertEquals($firstValue, $map->current());
     }
 

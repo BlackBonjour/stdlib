@@ -73,7 +73,13 @@ class HashMap implements MapInterface
      */
     public function current()
     {
-        return $this->values[key($this->keys)] ?? false;
+        $key = key($this->keys);
+
+        if (array_key_exists($key, $this->values)) {
+            return $this->values[$key];
+        }
+
+        return false;
     }
 
     /**
