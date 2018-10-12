@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpMissingDocCommentInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Lang;
@@ -460,12 +462,14 @@ class StdStringTest extends TestCase
         }
 
         $stdString = new StdString($string);
+
         self::assertEquals($expectation, (string) $stdString);
     }
 
     public function test__toString(): void
     {
         $string = $this->getObject();
+
         self::assertEquals('FooBar', (string) $string);
     }
 
@@ -500,6 +504,7 @@ class StdStringTest extends TestCase
     public function testClone(): void
     {
         $string = $this->getObject();
+
         self::assertInstanceOf(StdString::class, $string->clone());
     }
 
@@ -508,7 +513,6 @@ class StdStringTest extends TestCase
      * @param StdString|string $compareValue
      * @param int              $expectation
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderCompareTo
      */
     public function testCompareTo(StdString $string, $compareValue, int $expectation, string $exception = null): void
@@ -525,7 +529,6 @@ class StdStringTest extends TestCase
      * @param StdString|string $compareValue
      * @param int              $expectation
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderCompareToIgnoreCase
      */
     public function testCompareToIgnoreCase(
@@ -546,7 +549,6 @@ class StdStringTest extends TestCase
      * @param StdString|string $value
      * @param StdString        $expectation
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderConcat
      */
     public function testConcat(StdString $string, $value, $expectation, string $exception = null): void
@@ -584,7 +586,6 @@ class StdStringTest extends TestCase
      * @param StdString|string|array $charList
      * @param StdString              $expectation
      * @param string                 $exception
-     * @throws TypeError
      * @dataProvider dataProviderCopyValueOf
      */
     public function testCopyValueOf($charList, StdString $expectation, string $exception = null): void
@@ -642,7 +643,6 @@ class StdStringTest extends TestCase
      * @param StdString|string $pattern
      * @param StdString[]      $expectation
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderExplode
      */
     public function testExplode(StdString $string, $pattern, array $expectation, string $exception = null): void
@@ -659,7 +659,6 @@ class StdStringTest extends TestCase
      * @param array            $arguments
      * @param StdString        $expectation
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderFormat
      */
     public function testFormat($pattern, array $arguments, $expectation, string $exception = null): void
@@ -674,6 +673,7 @@ class StdStringTest extends TestCase
     public function testGetBytes(): void
     {
         $string = $this->getObject();
+
         self::assertEquals([70, 111, 111, 66, 97, 114], $string->getBytes());
     }
 
@@ -710,6 +710,7 @@ class StdStringTest extends TestCase
     public function testHashCode(): void
     {
         $string = $this->getObject();
+
         self::assertEquals(spl_object_hash($string), $string->hashCode());
     }
 
@@ -719,7 +720,6 @@ class StdStringTest extends TestCase
      * @param int              $expectation
      * @param int              $offset
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderIndexOf
      */
     public function testIndexOf(
@@ -748,7 +748,6 @@ class StdStringTest extends TestCase
      * @param StdString        $expectation
      * @param int              $offset
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderLastIndexOf
      */
     public function testLastIndexOf(
@@ -776,7 +775,6 @@ class StdStringTest extends TestCase
      * @param StdString|string $pattern
      * @param boolean          $expectation
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderMatches
      */
     public function testMatches(StdString $string, $pattern, bool $expectation, string $exception = null): void
@@ -825,6 +823,7 @@ class StdStringTest extends TestCase
     public function testOffsetSet(StdString $string, $offset, $value, string $expectation): void
     {
         $string[$offset] = $value;
+
         self::assertEquals($expectation, (string) $string);
     }
 
@@ -836,6 +835,7 @@ class StdStringTest extends TestCase
             unset($string[1]);
         } catch (Throwable $t) {
             self::assertInstanceOf(Error::class, $t);
+
             return;
         }
 
@@ -851,7 +851,6 @@ class StdStringTest extends TestCase
      * @param boolean          $ignoreCase
      * @param boolean          $expectation
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderRegionMatches
      */
     public function testRegionMatches(
@@ -877,7 +876,6 @@ class StdStringTest extends TestCase
      * @param StdString|string $new
      * @param StdString        $expected
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderReplace
      */
     public function testReplace(StdString $string, $old, $new, $expected, string $exception = null): void
@@ -895,7 +893,6 @@ class StdStringTest extends TestCase
      * @param StdString|string $replacement
      * @param StdString        $expected
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderReplaceAll
      */
     public function testReplaceAll(
@@ -918,7 +915,6 @@ class StdStringTest extends TestCase
      * @param StdString|string $replacement
      * @param StdString        $expected
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderReplaceFirst
      */
     public function testReplaceFirst(
@@ -941,7 +937,6 @@ class StdStringTest extends TestCase
      * @param StdString|string $expectation
      * @param int              $limit
      * @param string           $exception
-     * @throws TypeError
      * @dataProvider dataProviderSplit
      */
     public function testSplit(
@@ -993,6 +988,7 @@ class StdStringTest extends TestCase
         );
 
         $this->expectException(OutOfBoundsException::class);
+
         self::assertEquals([new Character('o'), new Character('o')], $this->getObject()->subSequence(-1, 2));
     }
 

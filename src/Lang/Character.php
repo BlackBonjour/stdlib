@@ -56,6 +56,7 @@ class Character extends StdObject implements Comparable
     public static function charCount($char): int
     {
         self::handleIncomingChar($char);
+
         return unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'))[1] > 0xFFFF ? 2 : 1;
     }
 
@@ -102,6 +103,7 @@ class Character extends StdObject implements Comparable
         }
 
         $char = \is_array($chars) ? $chars[$index] : $chars->charAt($index);
+
         return unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'))[1];
     }
 
@@ -135,6 +137,7 @@ class Character extends StdObject implements Comparable
     public static function compare($charA, $charB): int
     {
         self::handleIncomingChar($charA, $charB);
+
         return (string) $charA <=> (string) $charB;
     }
 
@@ -146,6 +149,7 @@ class Character extends StdObject implements Comparable
     public function compareTo($char): int
     {
         self::handleIncomingChar($char);
+
         return strcmp($this->data, (string) $char) <=> 0;
     }
 
@@ -179,6 +183,7 @@ class Character extends StdObject implements Comparable
     public static function isLowerCase($char): bool
     {
         self::handleIncomingChar($char);
+
         return static::compare($char, self::toLowerCase($char)) === 0;
     }
 
@@ -193,6 +198,7 @@ class Character extends StdObject implements Comparable
     public static function isUpperCase($char): bool
     {
         self::handleIncomingChar($char);
+
         return static::compare($char, self::toUpperCase($char)) === 0;
     }
 
@@ -207,6 +213,7 @@ class Character extends StdObject implements Comparable
     public static function toLowerCase($char): self
     {
         self::handleIncomingChar($char);
+
         return new static(mb_strtolower((string) $char));
     }
 
@@ -221,6 +228,7 @@ class Character extends StdObject implements Comparable
     public static function toUpperCase($char): self
     {
         self::handleIncomingChar($char);
+
         return new static(mb_strtoupper((string) $char));
     }
 

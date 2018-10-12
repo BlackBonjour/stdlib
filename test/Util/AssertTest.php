@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpMissingDocCommentInspection */
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
@@ -52,7 +54,6 @@ class AssertTest extends TestCase
      * @param array  $values
      * @param string $exception
      * @throws InvalidArgumentException
-     * @throws TypeError
      * @dataProvider dataProviderTypeOf
      */
     public function testTypeOf($types, array $values, string $exception = null): void

@@ -110,6 +110,7 @@ class Map implements MapInterface
     public function key(): ?string
     {
         $key = key($this->mapping);
+
         return $key === null ? null : (string) $key;
     }
 
@@ -172,6 +173,7 @@ class Map implements MapInterface
         }
 
         $this->mapping[$key] = $value;
+
         return $this;
     }
 

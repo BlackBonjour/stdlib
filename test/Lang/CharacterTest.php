@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpMissingDocCommentInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Lang;
@@ -138,9 +140,6 @@ class CharacterTest extends TestCase
         self::assertEquals('с', (string) $this->getObject('с')); // Cyrillic
     }
 
-    /**
-     * @throws TypeError
-     */
     public function testCharCount(): void
     {
         self::assertEquals(1, Character::charCount('c'));
@@ -152,6 +151,7 @@ class CharacterTest extends TestCase
     public function testClone(): void
     {
         $char = $this->getObject();
+
         self::assertInstanceOf(Character::class, $char->clone());
     }
 
@@ -203,7 +203,6 @@ class CharacterTest extends TestCase
      * @param Character        $char
      * @param Character|string $compare
      * @param int              $expected
-     * @throws TypeError
      * @dataProvider dataProviderCompareTo
      */
     public function testCompareTo(Character $char, $compare, int $expected): void
@@ -233,9 +232,6 @@ class CharacterTest extends TestCase
         self::assertEquals(spl_object_hash($charB), $charB->hashCode());
     }
 
-    /**
-     * @throws TypeError
-     */
     public function testIsLowerCase(): void
     {
         self::assertTrue(Character::isLowerCase($this->getObject())); // Latin
@@ -246,9 +242,6 @@ class CharacterTest extends TestCase
         self::assertFalse(Character::isLowerCase('C'));
     }
 
-    /**
-     * @throws TypeError
-     */
     public function testIsUpperCase(): void
     {
         self::assertTrue(Character::isUpperCase($this->getObject('C'))); // Latin
@@ -262,7 +255,6 @@ class CharacterTest extends TestCase
     /**
      * @param Character        $expectation
      * @param Character|string $char
-     * @throws TypeError
      * @dataProvider dataProviderToLowerCase
      */
     public function testToLowerCase(Character $expectation, $char): void

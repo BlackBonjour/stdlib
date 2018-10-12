@@ -21,7 +21,7 @@ use TypeError;
  */
 class StdString extends StdObject implements ArrayAccess, CharSequence, Comparable, Countable
 {
-    public const DEFAULT_VALUE       = '';
+    public const  DEFAULT_VALUE      = '';
     private const MSG_ILLEGAL_OFFSET = 'Illegal string offset \'%s\'';
 
     /** @var string */

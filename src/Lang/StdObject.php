@@ -43,7 +43,7 @@ class StdObject
      */
     public function equals($obj): bool
     {
-        // We ain't gonna check for same reference here!
+        /** @noinspection TypeUnsafeComparisonInspection We ain't gonna check for same reference here! */
         return $this == $obj;
     }
 

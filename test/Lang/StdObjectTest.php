@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Lang;
@@ -21,12 +22,14 @@ class StdObjectTest extends TestCase
     public function test__toString(): void
     {
         $obj = new StdObject;
+
         self::assertEquals(StdObject::class . '@' . spl_object_hash($obj), (string) $obj);
     }
 
     public function testClone(): void
     {
         $obj = new StdObject;
+
         self::assertInstanceOf(StdObject::class, $obj->clone());
     }
 
@@ -43,6 +46,7 @@ class StdObjectTest extends TestCase
     public function testHashCode(): void
     {
         $obj = new StdObject;
+
         self::assertEquals(spl_object_hash($obj), $obj->hashCode());
     }
 }

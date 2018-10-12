@@ -104,6 +104,7 @@ class HashMap implements MapInterface
     public function key()
     {
         $key = current($this->keys);
+
         return $key !== false ? $key : null;
     }
 
@@ -165,6 +166,7 @@ class HashMap implements MapInterface
         }
 
         $this->values[$index] = $value;
+
         return $this;
     }
 
@@ -186,6 +188,7 @@ class HashMap implements MapInterface
     public function remove($key): void
     {
         $index = static::stringifyKey($key);
+
         unset($this->keys[$index], $this->values[$index]);
     }
 
