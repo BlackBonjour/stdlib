@@ -80,13 +80,13 @@ class Assert
         }
 
         if (\is_array($types) === false) {
-            throw new InvalidArgumentException(sprintf(static::MSG_TYPE_MISMATCH, \gettype($types)));
+            throw new InvalidArgumentException(sprintf(static::MSG_TYPE_MISMATCH, gettype($types)));
         }
 
         foreach ($values as $value) {
             $isObject  = \is_object($value);
             $match     = false;
-            $valueType = \gettype($value);
+            $valueType = gettype($value);
 
             // Check if current value is one of the specified types or instances
             foreach ($types as $type) {

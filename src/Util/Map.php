@@ -61,6 +61,7 @@ class Map implements MapInterface
         $map = new static;
 
         foreach ($array as $key => $value) {
+            // Throws TypeError
             $map->put((string) $key, $value);
         }
 

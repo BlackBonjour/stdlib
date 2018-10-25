@@ -56,8 +56,9 @@ class Character extends StdObject implements Comparable
     public static function charCount($char): int
     {
         self::handleIncomingChar($char);
+        $stringChar = (string) $char;
 
-        return unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'))[1] > 0xFFFF ? 2 : 1;
+        return mb_ord($stringChar, mb_detect_encoding($stringChar)) > 0xFFFF ? 2 : 1;
     }
 
     /**
@@ -95,16 +96,17 @@ class Character extends StdObject implements Comparable
                 throw new InvalidArgumentException('Limit cannot be negative and index must be lower than specified limit!');
             }
 
-            $length = \is_array($chars) ? \count($chars) : $chars->length();
+            $length = \is_array($chars) ? count($chars) : $chars->length();
 
             if ($limit > $length) {
                 throw new InvalidArgumentException('Limit cannot be greater than char array/sequence!');
             }
         }
 
-        $char = \is_array($chars) ? $chars[$index] : $chars->charAt($index);
+        $char       = \is_array($chars) ? $chars[$index] : $chars->charAt($index);
+        $stringChar = (string) $char;
 
-        return unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'))[1];
+        return mb_ord($stringChar, mb_detect_encoding($stringChar));
     }
 
     /**
@@ -184,7 +186,7 @@ class Character extends StdObject implements Comparable
     {
         self::handleIncomingChar($char);
 
-        return static::compare($char, self::toLowerCase($char)) === 0;
+        return static::compare($char, static::toLowerCase($char)) === 0;
     }
 
     /**
@@ -199,7 +201,7 @@ class Character extends StdObject implements Comparable
     {
         self::handleIncomingChar($char);
 
-        return static::compare($char, self::toUpperCase($char)) === 0;
+        return static::compare($char, static::toUpperCase($char)) === 0;
     }
 
     /**
