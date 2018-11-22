@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpDocMissingThrowsInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpMissingDocCommentInspection */
 declare(strict_types=1);
@@ -53,7 +54,6 @@ class AssertTest extends TestCase
      * @param mixed  $types
      * @param array  $values
      * @param string $exception
-     * @throws InvalidArgumentException
      * @dataProvider dataProviderTypeOf
      */
     public function testTypeOf($types, array $values, string $exception = null): void

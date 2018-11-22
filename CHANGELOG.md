@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.0.0 - 2018-11-22
+
+### Added
+
+- CachedGenerator
+
+### Changed
+
+- Nothing
+
+### Deprecated
+
+- Nothing
+
+### Removed
+
+- [#23](https://github.com/BlackBonjour/stdlib/issues/23) Drop support for PHP 7.1
+
+### Fixed
+
+- Nothing
+
 ## 1.0.1 - 2018-10-12
 
 ### Added

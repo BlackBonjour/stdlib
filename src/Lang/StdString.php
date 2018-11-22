@@ -90,8 +90,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
      */
     public function codePointAt(int $index): int
     {
-        $char = (string) $this->charAt($index);
-        return unpack('N', mb_convert_encoding($char, 'UCS-4BE', $this->encoding))[1];
+        return mb_ord((string) $this->charAt($index), $this->encoding);
     }
 
     /**
@@ -117,6 +116,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     public function compareTo($string): int
     {
         Assert::typeOf(['string', __CLASS__], $string);
+
         return strcmp($this->data, (string) $string) <=> 0;
     }
 
@@ -131,6 +131,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     public function compareToIgnoreCase($string): int
     {
         Assert::typeOf(['string', __CLASS__], $string);
+
         return strcasecmp($this->data, (string) $string) <=> 0;
     }
 
@@ -145,6 +146,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     public function concat($string): self
     {
         Assert::typeOf(['string', __CLASS__], $string);
+
         return new static($this->data . $string, $this->encoding);
     }
 
@@ -301,6 +303,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     public static function format($format, ...$args): self
     {
         Assert::typeOf(['string', __CLASS__], $format);
+
         return new static(sprintf((string) $format, ...$args));
     }
 
@@ -397,6 +400,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     public function matches($pattern): bool
     {
         Assert::typeOf(['string', __CLASS__], $pattern);
+
         return preg_match((string) $pattern, $this->data) === 1;
     }
 
@@ -410,6 +414,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
         }
 
         $offset = (int) $offset;
+
         return $offset < 0 ? $this->length() >= (-1 * $offset) : $this->length() > $offset;
     }
 
@@ -422,6 +427,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     {
         if (is_numeric($offset) === false) {
             trigger_error(sprintf('Illegal string offset \'%s\'', $offset), E_USER_WARNING);
+
             return $this->charAt(0);
         }
 
@@ -436,6 +442,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     {
         if (is_numeric($offset) === false) {
             trigger_error(sprintf(static::MSG_ILLEGAL_OFFSET, $offset), E_USER_WARNING);
+
             return;
         }
 
@@ -448,6 +455,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
 
             if ($tmp < 0) {
                 trigger_error(sprintf(static::MSG_ILLEGAL_OFFSET, $offset), E_USER_WARNING);
+
                 return;
             }
 
@@ -523,6 +531,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     public function replace($old, $new): self
     {
         Assert::typeOf(['string', __CLASS__], $old, $new);
+
         return new static(str_replace((string) $old, (string) $new, $this->data), $this->encoding);
     }
 
@@ -713,7 +722,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     {
         $strVal = null;
 
-        switch (\gettype($value)) {
+        switch (gettype($value)) {
             case 'object':
                 if ($value instanceof StdObject || (\is_object($value) && method_exists($value, '__toString'))) {
                     $strVal = (string) $value;
