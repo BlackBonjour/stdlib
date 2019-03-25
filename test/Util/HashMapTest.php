@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace BlackBonjourTest\Stdlib\Util;
 
 use ArrayObject;
+use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use BlackBonjour\Stdlib\Lang\StdString;
 use BlackBonjour\Stdlib\Util\HashMap;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 /**
- * Unit test for hash map
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     28.04.2018
  * @package   BlackBonjourTest\Stdlib\Util
@@ -97,7 +96,13 @@ class HashMapTest extends TestCase
         $map->put($stdClass, $arrayObject);
 
         self::assertEquals($arrayObject, $map->get($stdClass));
-        self::assertNull($map->get(new stdClass));
+    }
+
+    public function testGetThrowsOutOfBoundsException(): void
+    {
+        $this->expectException(OutOfBoundsException::class);
+
+        self::assertNull((new HashMap)->get(new stdClass));
     }
 
     public function testIsEmpty(): void
@@ -214,6 +219,15 @@ class HashMapTest extends TestCase
             self::assertEquals($expectedKey, (string) $valueSort->key());
             $valueSort->next();
         }
+    }
+
+    public function testToArray(): void
+    {
+        $hashMap = (new HashMap)
+            ->put(123, 'foo')
+            ->put(456, 'bar');
+
+        self::assertEquals(['foo', 'bar'], $hashMap->toArray());
     }
 
     public function testValues(): void

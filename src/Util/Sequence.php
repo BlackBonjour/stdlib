@@ -133,9 +133,7 @@ class Sequence extends StdObject implements MapInterface
      */
     public function key(): ?int
     {
-        $key = key($this->values);
-
-        return $key === null ? $key : (int) $key;
+        return key($this->values);
     }
 
     /**
@@ -198,7 +196,7 @@ class Sequence extends StdObject implements MapInterface
             throw new InvalidArgumentException(sprintf(static::MSG_NEGATIVE_ARGUMENT_NOT_ALLOWED, 2, 1));
         }
 
-        for ($i = 0; $i < $repeat; $i++) {
+        for ($i = 0; $i < ($repeat ?? 1); $i++) {
             $this->values[] = $value;
         }
 
@@ -230,6 +228,8 @@ class Sequence extends StdObject implements MapInterface
         $this->handleInvalidKey($key);
 
         $this->values[$key] = $value;
+
+        return $this;
     }
 
     /**
@@ -247,14 +247,11 @@ class Sequence extends StdObject implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws OutOfBoundsException
      * @throws TypeError
      */
     public function remove($key)
     {
-        if ($this->offsetExists($key) === false) {
-            throw new OutOfBoundsException(sprintf(static::MSG_UNDEFINED_OFFSET, $key));
-        }
+        $this->handleInvalidKey($key);
 
         unset($this->values[$key]);
     }

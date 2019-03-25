@@ -14,8 +14,6 @@ use PHPUnit\Framework\TestCase;
 use TypeError;
 
 /**
- * Unit test for Assert class
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     06.02.2018
  * @package   BlackBonjourTest\Stdlib\Util
@@ -48,6 +46,19 @@ class AssertTest extends TestCase
     {
         self::assertTrue(Assert::empty('', 0, false, []));
         self::assertFalse(Assert::empty('', 1, false, []));
+    }
+
+    public function testHandleInvalidArguments(): void
+    {
+        $this->expectException(TypeError::class);
+
+        Assert::empty();
+    }
+
+    public function testNotEmpty(): void
+    {
+        self::assertTrue(Assert::notEmpty(123, '123', true));
+        self::assertFalse(Assert::notEmpty(123, 0, true));
     }
 
     /**

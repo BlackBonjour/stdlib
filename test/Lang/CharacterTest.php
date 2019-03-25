@@ -13,8 +13,6 @@ use PHPUnit\Framework\TestCase;
 use TypeError;
 
 /**
- * Test for StdString class
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     05.12.2017
  * @package   BlackBonjourTest\Stdlib\Lang

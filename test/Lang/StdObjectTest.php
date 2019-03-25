@@ -9,8 +9,6 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 
 /**
- * Test for Object class
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     29.11.2017
  * @package   BlackBonjourTest\Stdlib\Lang

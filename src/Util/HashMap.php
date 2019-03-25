@@ -91,7 +91,7 @@ class HashMap implements MapInterface
     public function get($key)
     {
         if ($this->containsKey($key) === false) {
-            throw new OutOfBoundsException(sprintf(self::MSG_UNDEFINED_OFFSET, $key));
+            throw new OutOfBoundsException(sprintf(self::MSG_UNDEFINED_OFFSET, self::stringifyKey($key)));
         }
 
         return $this->values[self::stringifyKey($key)];

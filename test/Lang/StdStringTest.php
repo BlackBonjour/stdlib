@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpDocMissingThrowsInspection */
 /** @noinspection PhpMissingDocCommentInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
@@ -18,8 +19,6 @@ use Throwable;
 use TypeError;
 
 /**
- * Test for StdString class
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     29.11.2017
  * @package   BlackBonjourTest\Stdlib\Lang
@@ -286,6 +285,7 @@ class StdStringTest extends TestCase
             'offset-numeric-string' => [$this->getObject(), '3', 'C', 'FooCar'],
             'offset-illegal'        => [$this->getObject(), 'o', '', 'FooBar'], // Should trigger a warning
             'offset-negative'       => [$this->getObject(), -2, '', 'FooBar'], // Should trigger a warning
+            'offset-negative-fail'  => [$this->getObject(), -7, '', 'FooBar'], // Should trigger a warning
             'offset-set-last-index' => [$this->getObject(), 5, 'zz', 'FooBazz'],
         ];
     }

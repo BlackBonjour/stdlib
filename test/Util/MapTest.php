@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
 
+use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use BlackBonjour\Stdlib\Util\Map;
 use PHPUnit\Framework\TestCase;
 use TypeError;
 
 /**
- * Unit test for map
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     24.04.2018
  * @package   BlackBonjourTest\Stdlib\Util
@@ -49,12 +48,18 @@ class MapTest extends TestCase
     {
         $map        = new Map;
         $map['foo'] = 'bar';
+        $map[123]   = 456;
 
         self::assertTrue($map->containsKey('foo'));
+        self::assertTrue($map->containsKey(123));
         self::assertFalse($map->containsKey('bar'));
+    }
 
+    public function testContainsKeyThrowsOutOfBoundsException(): void
+    {
         $this->expectException(TypeError::class);
-        $map->containsKey(123);
+
+        (new Map)->containsKey([]);
     }
 
     public function testContainsValue(): void
@@ -85,10 +90,20 @@ class MapTest extends TestCase
         $map['foo'] = 'bar';
 
         self::assertEquals('bar', $map->get('foo'));
-        self::assertNull($map->get('baz'));
+    }
 
+    public function testGetThrowsOutOfBoundsException(): void
+    {
+        $this->expectException(OutOfBoundsException::class);
+
+        (new Map)->get('baz');
+    }
+
+    public function testGetThrowsTypeError(): void
+    {
         $this->expectException(TypeError::class);
-        $map->get(123);
+
+        (new Map)->get([]);
     }
 
     public function testIsEmpty(): void
@@ -135,9 +150,13 @@ class MapTest extends TestCase
         $map->put('foo', 'bar');
         self::assertTrue($map->containsKey('foo'));
         self::assertEquals('bar', $map->get('foo'));
+    }
 
+    public function testPutThrowsTypeError(): void
+    {
         $this->expectException(TypeError::class);
-        $map->put(123, 'bar');
+
+        (new Map)->put([], 'bar');
     }
 
     public function testPutAll(): void
@@ -162,7 +181,16 @@ class MapTest extends TestCase
         self::assertCount(0, $map);
 
         $this->expectException(TypeError::class);
-        $map->remove(123);
+        $map->remove([]);
+    }
+
+    public function testToArray(): void
+    {
+        $map = (new Map)
+            ->put(123, 'foo')
+            ->put('bar', 'baz');
+
+        self::assertEquals(['123' => 'foo', 'bar' => 'baz'], $map->toArray());
     }
 
     public function testValues(): void

@@ -10,8 +10,6 @@ use Generator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * PHPUnit test for cached generator
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     13.11.2018
  * @package   BlackBonjourTest\Stdlib\Util

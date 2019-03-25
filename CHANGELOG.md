@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.1.0 - 2019-03-25
+
+### Added
+
+- ArrayUtils
+- Sequence
+- toArray() to MapInterface and all classes implementing that interface
+
+### Changed
+
+- Nothing
+
+### Deprecated
+
+- Arrays
+
+### Removed
+
+- Nothing
+
+### Fixed
+
+- Nothing
+
 ## 2.0.0 - 2018-11-22
 
 ### Added

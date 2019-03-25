@@ -163,7 +163,6 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws OutOfBoundsException
      * @throws TypeError
      */
     public function offsetUnset($offset): void
@@ -199,14 +198,11 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws OutOfBoundsException
      * @throws TypeError
      */
     public function remove($key): void
     {
-        if ($this->containsKey($key) === false) {
-            throw new OutOfBoundsException(sprintf(static::MSG_UNDEFINED_OFFSET, $key));
-        }
+        $this->handleInvalidKey($key);
 
         unset($this->mapping[$key]);
     }

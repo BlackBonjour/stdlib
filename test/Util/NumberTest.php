@@ -9,8 +9,6 @@ use PHPUnit\Framework\TestCase;
 use TypeError;
 
 /**
- * Unit test for number util
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     28.04.2018
  * @package   BlackBonjourTest\Stdlib\Util
