@@ -8,8 +8,6 @@ use Countable;
 use Iterator;
 
 /**
- * Map interface
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     24.04.2018
  * @package   BlackBonjour\Stdlib\Util

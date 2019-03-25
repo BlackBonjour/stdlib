@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
+use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
+
 /**
- * Hash map
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     27.04.2018
  * @package   BlackBonjour\Stdlib\Util
@@ -13,11 +13,13 @@ namespace BlackBonjour\Stdlib\Util;
  */
 class HashMap implements MapInterface
 {
-    /** @var array */
-    protected $keys = [];
+    private const MSG_UNDEFINED_OFFSET = 'Offset %s does not exist!';
 
     /** @var array */
-    protected $values = [];
+    private $keys = [];
+
+    /** @var array */
+    private $values = [];
 
     /**
      * @inheritdoc
@@ -32,7 +34,7 @@ class HashMap implements MapInterface
      */
     public function containsKey($key): bool
     {
-        return isset($this->keys[static::stringifyKey($key)]);
+        return isset($this->keys[self::stringifyKey($key)]);
     }
 
     /**
@@ -40,7 +42,7 @@ class HashMap implements MapInterface
      */
     public function containsValue($value): bool
     {
-        return \in_array($value, $this->values, true);
+        return in_array($value, $this->values, true);
     }
 
     /**
@@ -51,7 +53,7 @@ class HashMap implements MapInterface
      */
     public static function createFromArray(array $array): self
     {
-        $hashMap = new static;
+        $hashMap = new self;
 
         foreach ($array as $key => $value) {
             $hashMap->put($key, $value);
@@ -84,10 +86,15 @@ class HashMap implements MapInterface
 
     /**
      * @inheritdoc
+     * @throws OutOfBoundsException
      */
     public function get($key)
     {
-        return $this->values[static::stringifyKey($key)] ?? null;
+        if ($this->containsKey($key) === false) {
+            throw new OutOfBoundsException(sprintf(self::MSG_UNDEFINED_OFFSET, $key));
+        }
+
+        return $this->values[self::stringifyKey($key)];
     }
 
     /**
@@ -132,6 +139,7 @@ class HashMap implements MapInterface
 
     /**
      * @inheritdoc
+     * @throws OutOfBoundsException
      */
     public function offsetGet($offset)
     {
@@ -159,7 +167,7 @@ class HashMap implements MapInterface
      */
     public function put($key, $value): self
     {
-        $index = static::stringifyKey($key);
+        $index = self::stringifyKey($key);
 
         if (isset($this->keys[$index]) === false) {
             $this->keys[$index] = $key;
@@ -187,7 +195,7 @@ class HashMap implements MapInterface
      */
     public function remove($key): void
     {
-        $index = static::stringifyKey($key);
+        $index = self::stringifyKey($key);
 
         unset($this->keys[$index], $this->values[$index]);
     }
@@ -245,10 +253,10 @@ class HashMap implements MapInterface
         ksort($key);
 
         foreach ($key as &$value) {
-            if (\is_array($value)) {
-                $value = static::stringifyArrayKey($value);
-            } elseif (\is_object($value)) {
-                $value = static::stringifyKey($value);
+            if (is_array($value)) {
+                $value = self::stringifyArrayKey($value);
+            } elseif (is_object($value)) {
+                $value = self::stringifyKey($value);
             }
         }
 
@@ -267,7 +275,7 @@ class HashMap implements MapInterface
             return (string) $key;
         }
 
-        if (\is_object($key)) {
+        if (is_object($key)) {
             return spl_object_hash($key);
         }
 

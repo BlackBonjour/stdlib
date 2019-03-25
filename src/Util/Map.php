@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
+use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use TypeError;
 
 /**
- * Map
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     24.04.2018
  * @package   BlackBonjour\Stdlib\Util
@@ -15,10 +14,11 @@ use TypeError;
  */
 class Map implements MapInterface
 {
-    protected const TYPE_ERROR_MSG = 'Expected key to be of type string, %s given!';
+    private const MSG_ILLEGAL_ARGUMENT_TYPE = 'Expected argument %d to be numeric, %s given!';
+    private const MSG_UNDEFINED_OFFSET      = 'Offset %s does not exist!';
 
     /** @var array */
-    protected $mapping = [];
+    private $mapping = [];
 
     /**
      * @inheritdoc
@@ -34,9 +34,7 @@ class Map implements MapInterface
      */
     public function containsKey($key): bool
     {
-        if (\is_string($key) === false) {
-            throw new TypeError(sprintf(static::TYPE_ERROR_MSG, gettype($key)));
-        }
+        $this->handleInvalidKey($key);
 
         return array_key_exists($key, $this->mapping);
     }
@@ -46,7 +44,7 @@ class Map implements MapInterface
      */
     public function containsValue($value): bool
     {
-        return \in_array($value, $this->mapping, true);
+        return in_array($value, $this->mapping, true);
     }
 
     /**
@@ -58,11 +56,10 @@ class Map implements MapInterface
      */
     public static function createFromArray(array $array): self
     {
-        $map = new static;
+        $map = new self;
 
         foreach ($array as $key => $value) {
-            // Throws TypeError
-            $map->put((string) $key, $value);
+            $map->put($key, $value);
         }
 
         return $map;
@@ -86,15 +83,28 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
+     * @throws OutOfBoundsException
      * @throws TypeError
      */
     public function get($key)
     {
-        if (\is_string($key) === false) {
-            throw new TypeError(sprintf(static::TYPE_ERROR_MSG, gettype($key)));
+        if ($this->containsKey($key) === false) {
+            throw new OutOfBoundsException(sprintf(self::MSG_UNDEFINED_OFFSET, $key));
         }
 
-        return $this->mapping[$key] ?? null;
+        return $this->mapping[$key];
+    }
+
+    /**
+     * @param mixed $key
+     * @param int   $parameterIndex
+     * @throws TypeError
+     */
+    private function handleInvalidKey($key, int $parameterIndex = 1): void
+    {
+        if (is_scalar($key) === false) {
+            throw new TypeError(sprintf(self::MSG_ILLEGAL_ARGUMENT_TYPE, $parameterIndex, gettype($key)));
+        }
     }
 
     /**
@@ -118,9 +128,9 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
-    public function next()
+    public function next(): void
     {
-        return next($this->mapping);
+        next($this->mapping);
     }
 
     /**
@@ -129,16 +139,17 @@ class Map implements MapInterface
      */
     public function offsetExists($offset): bool
     {
-        return is_scalar($offset) ? $this->containsKey((string) $offset): false;
+        return $this->containsKey($offset);
     }
 
     /**
      * @inheritdoc
+     * @throws OutOfBoundsException
      * @throws TypeError
      */
     public function offsetGet($offset)
     {
-        return is_scalar($offset) ? $this->get((string) $offset): null;
+        return $this->get($offset);
     }
 
     /**
@@ -147,20 +158,17 @@ class Map implements MapInterface
      */
     public function offsetSet($offset, $value): void
     {
-        if (is_scalar($offset)) {
-            $this->put((string) $offset, $value);
-        }
+        $this->put($offset, $value);
     }
 
     /**
      * @inheritdoc
+     * @throws OutOfBoundsException
      * @throws TypeError
      */
     public function offsetUnset($offset): void
     {
-        if (is_scalar($offset)) {
-            $this->remove((string) $offset);
-        }
+        $this->remove($offset);
     }
 
     /**
@@ -169,9 +177,7 @@ class Map implements MapInterface
      */
     public function put($key, $value): self
     {
-        if (\is_string($key) === false) {
-            throw new TypeError(sprintf(static::TYPE_ERROR_MSG, gettype($key)));
-        }
+        $this->handleInvalidKey($key);
 
         $this->mapping[$key] = $value;
 
@@ -185,7 +191,7 @@ class Map implements MapInterface
     public function putAll(MapInterface $map): self
     {
         foreach ($map as $key => $value) {
-            $this->put((string) $key, $value);
+            $this->put($key, $value);
         }
 
         return $this;
@@ -193,12 +199,13 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
+     * @throws OutOfBoundsException
      * @throws TypeError
      */
     public function remove($key): void
     {
-        if (\is_string($key) === false) {
-            throw new TypeError(sprintf(static::TYPE_ERROR_MSG, gettype($key)));
+        if ($this->containsKey($key) === false) {
+            throw new OutOfBoundsException(sprintf(static::MSG_UNDEFINED_OFFSET, $key));
         }
 
         unset($this->mapping[$key]);
@@ -233,7 +240,7 @@ class Map implements MapInterface
      */
     public function valid(): bool
     {
-        return key($this->mapping) !== null;
+        return $this->key() !== null;
     }
 
     /**
