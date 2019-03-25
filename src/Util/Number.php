@@ -6,8 +6,6 @@ namespace BlackBonjour\Stdlib\Util;
 use TypeError;
 
 /**
- * Number util
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     27.04.2018
  * @package   BlackBonjour\Stdlib\Util

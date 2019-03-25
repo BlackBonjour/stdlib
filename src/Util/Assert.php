@@ -15,7 +15,8 @@ use TypeError;
  */
 class Assert
 {
-    private const MSG_TYPE_MISMATCH = 'Assertion value must be of type string or array, %s given!';
+    private const MSG_NO_ARGS_RECEIVED = 'At least one argument is required!';
+    private const MSG_TYPE_MISMATCH    = 'Assertion value must be of type string or array, %s given!';
 
     /**
      * Checks if specified values are empty
@@ -26,9 +27,7 @@ class Assert
      */
     public static function empty(...$values): bool
     {
-        if ($values === []) {
-            throw new TypeError('At least one argument is required!');
-        }
+        self::handleInvalidArguments($values);
 
         foreach ($values as $value) {
             if (empty($value) === false) {
@@ -40,6 +39,17 @@ class Assert
     }
 
     /**
+     * @param array $values
+     * @throws TypeError
+     */
+    private static function handleInvalidArguments(array $values): void
+    {
+        if (empty($values)) {
+            throw new TypeError(self::MSG_NO_ARGS_RECEIVED);
+        }
+    }
+
+    /**
      * Checks if specified values are not empty
      *
      * @param mixed ...$values
@@ -48,9 +58,7 @@ class Assert
      */
     public static function notEmpty(...$values): bool
     {
-        if ($values === []) {
-            throw new TypeError('At least one argument is required!');
-        }
+        self::handleInvalidArguments($values);
 
         foreach ($values as $value) {
             if (empty($value)) {

@@ -7,8 +7,6 @@ use Generator;
 use IteratorAggregate;
 
 /**
- * Cached generator
- *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     13.11.2018
  * @package   BlackBonjour\Stdlib\Util
@@ -23,8 +21,6 @@ class CachedGenerator implements IteratorAggregate
     private $items = [];
 
     /**
-     * Constructor
-     *
      * @param Generator $generator
      */
     public function __construct(Generator $generator)
