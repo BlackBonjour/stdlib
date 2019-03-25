@@ -87,6 +87,11 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
     public function size(): int;
 
     /**
+     * @return array
+     */
+    public function toArray(): array;
+
+    /**
      * Returns an array with all values contained in this map
      *
      * @return array

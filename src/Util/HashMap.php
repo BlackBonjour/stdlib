@@ -276,6 +276,15 @@ class HashMap implements MapInterface
 
     /**
      * @inheritdoc
+     * @see HashMap::values()
+     */
+    public function toArray(): array
+    {
+        return $this->values();
+    }
+
+    /**
+     * @inheritdoc
      */
     public function valid(): bool
     {

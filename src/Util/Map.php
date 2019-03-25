@@ -223,6 +223,14 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      */
+    public function toArray(): array
+    {
+        return $this->mapping;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function valid(): bool
     {
         return key($this->mapping) !== null;
