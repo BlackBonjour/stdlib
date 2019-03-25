@@ -18,6 +18,7 @@ use TypeError;
  * @since     04.06.2018
  * @package   BlackBonjour\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
+ * @deprecated Will be removed with Stdlib 3.0 - Use Sequence instead!
  */
 class Arrays extends StdObject implements ArrayAccess, Countable, Iterator
 {
