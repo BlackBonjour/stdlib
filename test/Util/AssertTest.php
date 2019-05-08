@@ -11,6 +11,7 @@ use BlackBonjour\Stdlib\Lang\StdString;
 use BlackBonjour\Stdlib\Util\Assert;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use TypeError;
 
 /**
@@ -33,6 +34,7 @@ class AssertTest extends TestCase
             'char-array'                     => [[Char::class], [new Char, new Char, new Char]],
             'string-array'                   => [[Char::class, StdString::class], [new Char, new StdString, new Char]],
             'inheritance'                    => [[Char::class], [new class extends Char { /* Just a test */ }]],
+            'issue-33-simple-object-check'   => ['object', [new stdClass]],
 
             // Invalid
             'invalid-assertion'  => [null, ['FooBar'], InvalidArgumentException::class],

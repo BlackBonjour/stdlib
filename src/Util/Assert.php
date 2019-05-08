@@ -97,7 +97,9 @@ class Assert
 
             // Check if current value is one of the specified types or instances
             foreach ($types as $type) {
-                if (($isObject && $value instanceof $type) xor ($isObject === false && $valueType === $type)) {
+                if (($isObject && ($value instanceof $type || ($type === 'object' && $valueType === $type)))
+                    xor ($isObject === false && $valueType === $type)
+                ) {
                     $match = true;
                     break;
                 }

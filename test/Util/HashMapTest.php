@@ -191,9 +191,11 @@ class HashMapTest extends TestCase
 
     public function testSort(): void
     {
+        $exampleKey   = new StdString('FooBar');
+        $exampleValue = [123, 456];
         $hashMap = new HashMap;
         $hashMap
-            ->put(new StdString('FooBar'), [123, 456])
+            ->put($exampleKey, $exampleValue)
             ->put(new StdString('BarFoo'), [456, 789])
             ->put(new StdString('FooBaz'), [123, 789]);
 
@@ -206,9 +208,11 @@ class HashMapTest extends TestCase
             $keySort->next();
         }
 
+        self::assertEquals($exampleValue, $keySort->get($exampleKey));
+
         // Value sort
         $valueSort = clone $hashMap;
-        $valueSort->sort(function ($a, $b): int {
+        $valueSort->sort(static function ($a, $b): int {
             [$a1, $a2] = $a;
             [$b1, $b2] = $b;
 
@@ -219,6 +223,8 @@ class HashMapTest extends TestCase
             self::assertEquals($expectedKey, (string) $valueSort->key());
             $valueSort->next();
         }
+
+        self::assertEquals($exampleValue, $keySort->get($exampleKey));
     }
 
     public function testToArray(): void

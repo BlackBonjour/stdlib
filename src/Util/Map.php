@@ -224,6 +224,26 @@ class Map implements MapInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function slice(int $length, int $offset = 0, bool $preserveKeys = true): self
+    {
+        $this->mapping = array_slice($this->mapping, $offset, $length, $preserveKeys);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sort(callable $callable): self
+    {
+        uasort($this->mapping, $callable);
+
+        return $this;
+    }
+
+    /**
      * @inheritdoc
      */
     public function toArray(): array

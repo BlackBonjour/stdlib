@@ -19,5 +19,7 @@ class ArrayUtilsTest extends TestCase
     public function testFlatten(): void
     {
         self::assertEquals(['foo', 'bar'], ArrayUtils::flatten([['foo'], ['bar']]));
+        self::assertEmpty(ArrayUtils::flatten([]));
+        self::assertEmpty(ArrayUtils::flatten([[], []]));
     }
 }

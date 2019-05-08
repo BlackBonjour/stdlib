@@ -273,6 +273,26 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function slice(int $length, int $offset = 0, bool $preserveKeys = true): self
+    {
+        $this->values = array_slice($this->values, $offset, $length, $preserveKeys);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sort(callable $callable): self
+    {
+        usort($this->values, $callable);
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array

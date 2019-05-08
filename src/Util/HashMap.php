@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
+use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 
 /**
@@ -209,11 +210,32 @@ class HashMap implements MapInterface
     }
 
     /**
-     * Sorts this hash map using retrieved callback
-     *
-     * @param callable $callback
-     * @param boolean  $keySort
-     * @return static
+     * @inheritdoc
+     */
+    public function size(): int
+    {
+        return count($this->keys);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws InvalidArgumentException
+     */
+    public function slice(int $length, int $offset = 0, bool $preserveKeys = true): self
+    {
+        if ($preserveKeys === false) {
+            throw new InvalidArgumentException('Slice is only allowed with preserving keys!');
+        }
+
+        $this->keys   = array_slice($this->keys, $offset, $length, true);
+        $this->values = array_slice($this->values, $offset, $length, true);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     * @param boolean $keySort
      */
     public function sort(callable $callback, bool $keySort = false): self
     {
@@ -228,18 +250,10 @@ class HashMap implements MapInterface
             $keys = array_replace($values, $keys);
         }
 
-        $this->keys   = array_values($keys);
-        $this->values = array_values($values);
+        $this->keys   = $keys;
+        $this->values = $values;
 
         return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function size(): int
-    {
-        return count($this->keys);
     }
 
     /**

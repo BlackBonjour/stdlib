@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.2.0 - 2019-05-08
+
+### Added
+
+- slice() and sort() to MapInterface and all classes implementing that interface
+
+### Changed
+
+- Assert::typeOf and Assert::validate supporting value type object
+
+### Deprecated
+
+- Nothing
+
+### Removed
+
+- Nothing
+
+### Fixed
+
+- HashMap losing string identifier after sort
+
 ## 2.1.0 - 2019-03-25
 
 ### Added

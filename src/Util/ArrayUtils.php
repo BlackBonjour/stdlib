@@ -19,6 +19,10 @@ class ArrayUtils
      */
     public static function flatten(array $input): array
     {
+        if (empty($input)) {
+            return [];
+        }
+
         return array_merge(...array_values($input));
     }
 }

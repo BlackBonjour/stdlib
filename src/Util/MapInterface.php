@@ -85,6 +85,22 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
     public function size(): int;
 
     /**
+     * @param int  $length
+     * @param int  $offset
+     * @param bool $preserveKeys
+     * @return static
+     */
+    public function slice(int $length, int $offset = 0, bool $preserveKeys = true);
+
+    /**
+     * Sorts this hash map using retrieved callback.
+     *
+     * @param callable $callable
+     * @return static
+     */
+    public function sort(callable $callable);
+
+    /**
      * @return array
      */
     public function toArray(): array;
