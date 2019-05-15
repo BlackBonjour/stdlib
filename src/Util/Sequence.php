@@ -7,6 +7,9 @@ use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use BlackBonjour\Stdlib\Lang\StdObject;
 use TypeError;
+use function array_key_exists;
+use function array_slice;
+use function in_array;
 
 /**
  * @author    Erick Dyck <info@erickdyck.de>
@@ -16,10 +19,6 @@ use TypeError;
  */
 class Sequence extends StdObject implements MapInterface
 {
-    private const MSG_ILLEGAL_ARGUMENT_TYPE         = 'Expected argument %d to be numeric, %s given!';
-    private const MSG_NEGATIVE_ARGUMENT_NOT_ALLOWED = 'Argument %d must be %d or higher!';
-    private const MSG_UNDEFINED_OFFSET              = 'Offset %d does not exist!';
-
     /** @var array */
     private $values = [];
 
@@ -32,9 +31,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @param mixed $key
-     * @return boolean
-     * @throws TypeError
+     * @inheritDoc
      */
     public function containsKey($key): bool
     {
@@ -52,10 +49,9 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * Returns a new sequence from specified array
+     * Returns a new sequence from specified array.
      *
      * @param array $array
-     * @return static
      * @throws InvalidArgumentException
      */
     public static function createFromArray(array $array): self
@@ -80,10 +76,9 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * Fills array with specified value
+     * Fills array with specified value.
      *
      * @param mixed $newValue
-     * @return static
      */
     public function fill($newValue): self
     {
@@ -97,26 +92,22 @@ class Sequence extends StdObject implements MapInterface
     /**
      * @inheritdoc
      * @throws OutOfBoundsException
-     * @throws TypeError
      */
     public function get($key)
     {
         if ($this->offsetExists($key) === false) {
-            throw new OutOfBoundsException(sprintf(static::MSG_UNDEFINED_OFFSET, $key));
+            throw new OutOfBoundsException(sprintf('Offset %d does not exist!', $key));
         }
 
         return $this->values[$key];
     }
 
-    /**
-     * @param mixed $key
-     * @param int   $parameterIndex
-     * @throws TypeError
-     */
     private function handleInvalidKey($key, int $parameterIndex = 1): void
     {
         if (is_numeric($key) === false) {
-            throw new TypeError(sprintf(self::MSG_ILLEGAL_ARGUMENT_TYPE, $parameterIndex, gettype($key)));
+            throw new TypeError(
+                sprintf('Expected argument %d to be numeric, %s given!', $parameterIndex, gettype($key))
+            );
         }
     }
 
@@ -146,7 +137,6 @@ class Sequence extends StdObject implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function offsetExists($offset): bool
     {
@@ -156,7 +146,6 @@ class Sequence extends StdObject implements MapInterface
     /**
      * @inheritdoc
      * @throws OutOfBoundsException
-     * @throws TypeError
      */
     public function offsetGet($offset)
     {
@@ -174,8 +163,6 @@ class Sequence extends StdObject implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws OutOfBoundsException
-     * @throws TypeError
      */
     public function offsetUnset($offset): void
     {
@@ -183,17 +170,15 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * Pushes specified value into array
+     * Pushes specified value into array.
      *
-     * @param mixed    $value
-     * @param int|null $repeat
-     * @return static
+     * @param mixed $value
      * @throws InvalidArgumentException
      */
     public function push($value, int $repeat = null): self
     {
         if ($repeat !== null && $repeat <= 0) {
-            throw new InvalidArgumentException(sprintf(static::MSG_NEGATIVE_ARGUMENT_NOT_ALLOWED, 2, 1));
+            throw new InvalidArgumentException(sprintf('Argument %d must be %d or higher!', 2, 1));
         }
 
         for ($i = 0; $i < ($repeat ?? 1); $i++) {
@@ -204,10 +189,9 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * Pushes multiple values to array
+     * Pushes multiple values to array.
      *
      * @param array $values
-     * @return static
      * @throws InvalidArgumentException
      */
     public function pushAll(array $values): self
@@ -221,7 +205,6 @@ class Sequence extends StdObject implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function put($key, $value)
     {
@@ -234,7 +217,6 @@ class Sequence extends StdObject implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function putAll(MapInterface $map): self
     {
@@ -247,7 +229,6 @@ class Sequence extends StdObject implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function remove($key)
     {
@@ -293,7 +274,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function toArray(): array
     {

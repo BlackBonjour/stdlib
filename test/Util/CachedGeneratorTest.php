@@ -39,6 +39,7 @@ class CachedGeneratorTest extends TestCase
         // Test caching
         $i = 0;
 
+        /** @noinspection PhpUnusedLocalVariableInspection */
         foreach ($cachedGenerator->getIterator() as $value) {
             if ($i === 2) {
                 break;
@@ -49,6 +50,10 @@ class CachedGeneratorTest extends TestCase
 
         self::assertEquals(2, $this->iterations);
 
+        /** @noinspection LoopWhichDoesNotLoopInspection */
+        /** @noinspection PhpStatementHasEmptyBodyInspection */
+        /** @noinspection MissingOrEmptyGroupStatementInspection */
+        /** @noinspection PhpUnusedLocalVariableInspection */
         foreach ($cachedGenerator->getIterator() as $value) {
             // ...
         }

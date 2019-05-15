@@ -20,9 +20,6 @@ class CachedGenerator implements IteratorAggregate
     /** @var array */
     private $items = [];
 
-    /**
-     * @param Generator $generator
-     */
     public function __construct(Generator $generator)
     {
         $this->generator = $generator;

@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace BlackBonjour\Stdlib\Util;
 
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
+use function get_class;
+use function is_array;
+use function is_object;
+use function is_string;
 use Throwable;
 use TypeError;
 
@@ -15,15 +19,10 @@ use TypeError;
  */
 class Assert
 {
-    private const MSG_NO_ARGS_RECEIVED = 'At least one argument is required!';
-    private const MSG_TYPE_MISMATCH    = 'Assertion value must be of type string or array, %s given!';
-
     /**
-     * Checks if specified values are empty
+     * Checks if specified values are empty.
      *
      * @param mixed ...$values
-     * @return boolean
-     * @throws TypeError
      */
     public static function empty(...$values): bool
     {
@@ -38,23 +37,17 @@ class Assert
         return true;
     }
 
-    /**
-     * @param array $values
-     * @throws TypeError
-     */
     private static function handleInvalidArguments(array $values): void
     {
         if (empty($values)) {
-            throw new TypeError(self::MSG_NO_ARGS_RECEIVED);
+            throw new TypeError('At least one argument is required!');
         }
     }
 
     /**
-     * Checks if specified values are not empty
+     * Checks if specified values are not empty.
      *
      * @param mixed ...$values
-     * @return boolean
-     * @throws TypeError
      */
     public static function notEmpty(...$values): bool
     {
@@ -70,13 +63,11 @@ class Assert
     }
 
     /**
-     * Checks if values are of specified types or instances
+     * Checks if values are of specified types or instances.
      *
      * @param array|string $types
      * @param mixed        $values
-     * @return boolean
      * @throws InvalidArgumentException
-     * @throws TypeError
      *
      * @see http://php.net/manual/de/function.gettype.php
      */
@@ -87,7 +78,9 @@ class Assert
         }
 
         if (is_array($types) === false) {
-            throw new InvalidArgumentException(sprintf(static::MSG_TYPE_MISMATCH, gettype($types)));
+            throw new InvalidArgumentException(
+                sprintf('Assertion value must be of type string or array, %s given!', gettype($types))
+            );
         }
 
         foreach ($values as $value) {
@@ -122,11 +115,10 @@ class Assert
     }
 
     /**
-     * Same as ::typeOf, but without throwing any errors
+     * Same as ::typeOf, but without throwing any errors.
      *
      * @param array|string $types
      * @param array        $values
-     * @return boolean
      */
     public static function validate($types, ...$values): bool
     {

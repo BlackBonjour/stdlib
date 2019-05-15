@@ -5,10 +5,11 @@ namespace BlackBonjour\Stdlib\Lang;
 
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Util\Assert;
-use TypeError;
+use function is_array;
+use function is_string;
 
 /**
- * Represents a single character
+ * Represents a single character.
  *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     04.12.2017
@@ -17,18 +18,13 @@ use TypeError;
  */
 class Character extends StdObject implements Comparable
 {
-    public const DEFAULT_VALUE = '';
-
     /** @var string */
     protected $data;
 
     /**
-     * Constructor
-     *
-     * @param string $char
      * @throws InvalidArgumentException
      */
-    public function __construct(string $char = self::DEFAULT_VALUE)
+    public function __construct(string $char = '')
     {
         if (mb_strlen($char) > 1) {
             throw new InvalidArgumentException('Only one character can be represented!');
@@ -46,12 +42,11 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * Determines the number of char values needed to represent the specified character
+     * Determines the number of char values needed to represent the specified
+     * character.
      *
      * @param static|string $char
-     * @return int
      * @throws InvalidArgumentException
-     * @throws TypeError
      */
     public static function charCount($char): int
     {
@@ -62,22 +57,19 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * Returns the unicode code point at specified index
+     * Returns the unicode code point at specified index.
      *
      * @param CharSequence|static[] $chars
-     * @param int                   $index
-     * @param int                   $limit
-     * @return int
      * @throws InvalidArgumentException
      */
     public static function codePointAt($chars, int $index, int $limit = null): int
     {
-        if (\is_array($chars) === false && ($chars instanceof CharSequence) === false) {
+        if (is_array($chars) === false && ($chars instanceof CharSequence) === false) {
             throw new InvalidArgumentException('Only char arrays and sequences can be processed!');
         }
 
         // Validate char array
-        if (\is_array($chars)) {
+        if (is_array($chars)) {
             $test = reset($chars);
 
             if ($test === false || ($test instanceof static) === false) {
@@ -93,29 +85,28 @@ class Character extends StdObject implements Comparable
         // Validate length
         if ($limit !== null) {
             if ($limit < 0 || $index >= $limit) {
-                throw new InvalidArgumentException('Limit cannot be negative and index must be lower than specified limit!');
+                throw new InvalidArgumentException(
+                    'Limit cannot be negative and index must be lower than specified limit!'
+                );
             }
 
-            $length = \is_array($chars) ? count($chars) : $chars->length();
+            $length = is_array($chars) ? count($chars) : $chars->length();
 
             if ($limit > $length) {
                 throw new InvalidArgumentException('Limit cannot be greater than char array/sequence!');
             }
         }
 
-        $char       = \is_array($chars) ? $chars[$index] : $chars->charAt($index);
+        $char       = is_array($chars) ? $chars[$index] : $chars->charAt($index);
         $stringChar = (string) $char;
 
         return mb_ord($stringChar, mb_detect_encoding($stringChar));
     }
 
     /**
-     * Returns the unicode code point before specified index
+     * Returns the unicode code point before specified index.
      *
      * @param CharSequence|static[] $chars
-     * @param int                   $index
-     * @param int                   $start
-     * @return int
      * @throws InvalidArgumentException
      */
     public static function codePointBefore($chars, int $index, int $start = null): int
@@ -128,13 +119,11 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * Compares specified characters numerically
+     * Compares specified characters numerically.
      *
      * @param static|string $charA
      * @param static|string $charB
-     * @return int
      * @throws InvalidArgumentException
-     * @throws TypeError
      */
     public static function compare($charA, $charB): int
     {
@@ -146,7 +135,6 @@ class Character extends StdObject implements Comparable
     /**
      * @inheritdoc
      * @throws InvalidArgumentException
-     * @throws TypeError
      */
     public function compareTo($char): int
     {
@@ -156,12 +144,10 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * Validates given character and throws an exception if required
+     * Validates given character and throws an exception if required.
      *
      * @param mixed[] $chars
-     * @return void
      * @throws InvalidArgumentException
-     * @throws TypeError
      */
     private static function handleIncomingChar(...$chars): void
     {
@@ -175,12 +161,10 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * Checks if specified character is lower case
+     * Checks if specified character is lower case.
      *
      * @param static|string $char
-     * @return boolean
      * @throws InvalidArgumentException
-     * @throws TypeError
      */
     public static function isLowerCase($char): bool
     {
@@ -190,12 +174,10 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * Checks if specified character is upper case
+     * Checks if specified character is upper case.
      *
      * @param static|string $char
-     * @return boolean
      * @throws InvalidArgumentException
-     * @throws TypeError
      */
     public static function isUpperCase($char): bool
     {
@@ -205,12 +187,11 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * Converts specified character to lower case
+     * Converts specified character to lower case.
      *
      * @param static|string $char
      * @return static
      * @throws InvalidArgumentException
-     * @throws TypeError
      */
     public static function toLowerCase($char): self
     {
@@ -220,12 +201,11 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * Converts specified character to upper case
+     * Converts specified character to upper case.
      *
      * @param static|string $char
      * @return static
      * @throws InvalidArgumentException
-     * @throws TypeError
      */
     public static function toUpperCase($char): self
     {
@@ -235,7 +215,7 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * Returns specified value as character
+     * Returns specified value as character.
      *
      * @param static|string $char
      * @return static
@@ -243,7 +223,7 @@ class Character extends StdObject implements Comparable
      */
     public static function valueOf($char): self
     {
-        if (\is_string($char) || $char instanceof self) {
+        if (is_string($char) || $char instanceof self) {
             return new static((string) $char);
         }
 

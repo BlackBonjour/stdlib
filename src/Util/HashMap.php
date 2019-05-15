@@ -5,6 +5,11 @@ namespace BlackBonjour\Stdlib\Util;
 
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
+use function array_key_exists;
+use function array_slice;
+use function in_array;
+use function is_array;
+use function is_object;
 
 /**
  * @author    Erick Dyck <info@erickdyck.de>
@@ -14,8 +19,6 @@ use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
  */
 class HashMap implements MapInterface
 {
-    private const MSG_UNDEFINED_OFFSET = 'Offset %s does not exist!';
-
     /** @var array */
     private $keys = [];
 
@@ -46,12 +49,6 @@ class HashMap implements MapInterface
         return in_array($value, $this->values, true);
     }
 
-    /**
-     * Returns a new map containing key-value mapping from specified array
-     *
-     * @param array $array
-     * @return static
-     */
     public static function createFromArray(array $array): self
     {
         $hashMap = new self;
@@ -92,7 +89,7 @@ class HashMap implements MapInterface
     public function get($key)
     {
         if ($this->containsKey($key) === false) {
-            throw new OutOfBoundsException(sprintf(self::MSG_UNDEFINED_OFFSET, self::stringifyKey($key)));
+            throw new OutOfBoundsException(sprintf('Offset %s does not exist!', self::stringifyKey($key)));
         }
 
         return $this->values[self::stringifyKey($key)];
@@ -235,7 +232,6 @@ class HashMap implements MapInterface
 
     /**
      * @inheritDoc
-     * @param boolean $keySort
      */
     public function sort(callable $callback, bool $keySort = false): self
     {
@@ -257,10 +253,9 @@ class HashMap implements MapInterface
     }
 
     /**
-     * Calculates string representing specified array key
+     * Calculates string representing specified array key.
      *
      * @param array $key
-     * @return string
      */
     private static function stringifyArrayKey(array $key): string
     {
@@ -278,10 +273,9 @@ class HashMap implements MapInterface
     }
 
     /**
-     * Calculates string representing specified key
+     * Calculates string representing specified key.
      *
      * @param mixed $key
-     * @return string
      */
     private static function stringifyKey($key): string
     {

@@ -6,7 +6,7 @@ namespace BlackBonjour\Stdlib\Lang;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 
 /**
- * Interface for readable sequences of char values
+ * Interface for readable sequences of char values.
  *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     05.12.2017
@@ -16,32 +16,24 @@ use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 interface CharSequence
 {
     /**
-     * Returns a string containing the characters in this sequence
-     *
-     * @return string
+     * Returns a string containing the characters in this sequence.
      */
     public function __toString(): string;
 
     /**
-     * Returns the character at specified index
-     *
-     * @param int $index
-     * @return Character
+     * Returns the character at specified index.
      */
     public function charAt(int $index): Character;
 
     /**
-     * Returns the length of this character sequence
-     *
-     * @return int
+     * Returns the length of this character sequence.
      */
     public function length(): int;
 
     /**
-     * Returns an array containing characters between specified start index and end index
+     * Returns an array containing characters between specified start index and
+     * end index.
      *
-     * @param int $begin
-     * @param int $end
      * @return Character[]
      * @throws OutOfBoundsException
      */

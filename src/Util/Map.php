@@ -5,6 +5,9 @@ namespace BlackBonjour\Stdlib\Util;
 
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use TypeError;
+use function array_key_exists;
+use function array_slice;
+use function in_array;
 
 /**
  * @author    Erick Dyck <info@erickdyck.de>
@@ -14,9 +17,6 @@ use TypeError;
  */
 class Map implements MapInterface
 {
-    private const MSG_ILLEGAL_ARGUMENT_TYPE = 'Expected argument %d to be numeric, %s given!';
-    private const MSG_UNDEFINED_OFFSET      = 'Offset %s does not exist!';
-
     /** @var array */
     private $mapping = [];
 
@@ -30,7 +30,6 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function containsKey($key): bool
     {
@@ -48,11 +47,9 @@ class Map implements MapInterface
     }
 
     /**
-     * Returns a new map containing key-value mapping from specified array
+     * Returns a new map containing key-value mapping from specified array.
      *
      * @param array $array
-     * @return static
-     * @throws TypeError
      */
     public static function createFromArray(array $array): self
     {
@@ -84,26 +81,22 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      * @throws OutOfBoundsException
-     * @throws TypeError
      */
     public function get($key)
     {
         if ($this->containsKey($key) === false) {
-            throw new OutOfBoundsException(sprintf(self::MSG_UNDEFINED_OFFSET, $key));
+            throw new OutOfBoundsException(sprintf('Offset %s does not exist!', $key));
         }
 
         return $this->mapping[$key];
     }
 
-    /**
-     * @param mixed $key
-     * @param int   $parameterIndex
-     * @throws TypeError
-     */
     private function handleInvalidKey($key, int $parameterIndex = 1): void
     {
         if (is_scalar($key) === false) {
-            throw new TypeError(sprintf(self::MSG_ILLEGAL_ARGUMENT_TYPE, $parameterIndex, gettype($key)));
+            throw new TypeError(
+                sprintf('Expected argument %d to be numeric, %s given!', $parameterIndex, gettype($key))
+            );
         }
     }
 
@@ -135,7 +128,6 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function offsetExists($offset): bool
     {
@@ -145,7 +137,6 @@ class Map implements MapInterface
     /**
      * @inheritdoc
      * @throws OutOfBoundsException
-     * @throws TypeError
      */
     public function offsetGet($offset)
     {
@@ -154,7 +145,6 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function offsetSet($offset, $value): void
     {
@@ -163,7 +153,6 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function offsetUnset($offset): void
     {
@@ -172,7 +161,6 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function put($key, $value): self
     {
@@ -185,7 +173,6 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function putAll(MapInterface $map): self
     {
@@ -198,7 +185,6 @@ class Map implements MapInterface
 
     /**
      * @inheritdoc
-     * @throws TypeError
      */
     public function remove($key): void
     {

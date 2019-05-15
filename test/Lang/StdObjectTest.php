@@ -17,7 +17,7 @@ use stdClass;
  */
 class StdObjectTest extends TestCase
 {
-    public function test__toString(): void
+    public function testToString(): void
     {
         $obj = new StdObject;
 

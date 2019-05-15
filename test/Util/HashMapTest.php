@@ -131,7 +131,10 @@ class HashMapTest extends TestCase
             usleep(100);
         }
 
+        /** @noinspection PhpUndefinedVariableInspection */
         self::assertEquals('baz', $key);
+
+        /** @noinspection PhpUndefinedVariableInspection */
         self::assertEquals('lorem', $value);
         self::assertNull($map->key());
         self::assertFalse($map->current());
@@ -205,6 +208,8 @@ class HashMapTest extends TestCase
 
         foreach (['BarFoo', 'FooBar', 'FooBaz'] as $expectedKey) {
             self::assertEquals($expectedKey, (string) $keySort->key());
+
+            /** @noinspection DisconnectedForeachInstructionInspection */
             $keySort->next();
         }
 
@@ -221,6 +226,8 @@ class HashMapTest extends TestCase
 
         foreach (['FooBar', 'FooBaz', 'BarFoo'] as $expectedKey) {
             self::assertEquals($expectedKey, (string) $valueSort->key());
+
+            /** @noinspection DisconnectedForeachInstructionInspection */
             $valueSort->next();
         }
 

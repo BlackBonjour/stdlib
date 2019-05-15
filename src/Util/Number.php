@@ -20,8 +20,6 @@ class Number
 
     /**
      * @param string|float|int $number Numeric value
-     * @return string
-     * @throws TypeError
      */
     public static function ordinal($number): string
     {
@@ -49,8 +47,6 @@ class Number
 
     /**
      * @param string|float|int $number Numeric value
-     * @return string
-     * @throws TypeError
      */
     public static function ordinalize($number): string
     {

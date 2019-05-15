@@ -1,7 +1,6 @@
 <?php
 /** @noinspection PhpDocMissingThrowsInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
-/** @noinspection PhpMissingDocCommentInspection */
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
@@ -25,6 +24,10 @@ class AssertTest extends TestCase
 {
     public function dataProviderTypeOf(): array
     {
+        $anonymousClass = new class extends Char {
+            /* Just a test */
+        };
+
         return [
             // Valid
             'one-type-as-string-one-value'   => ['string', ['FooBar']],
@@ -33,7 +36,7 @@ class AssertTest extends TestCase
             'multiple-types-multiple-values' => [['integer', 'double'], [12, 12.3]],
             'char-array'                     => [[Char::class], [new Char, new Char, new Char]],
             'string-array'                   => [[Char::class, StdString::class], [new Char, new StdString, new Char]],
-            'inheritance'                    => [[Char::class], [new class extends Char { /* Just a test */ }]],
+            'inheritance'                    => [[Char::class], [$anonymousClass]],
             'issue-33-simple-object-check'   => ['object', [new stdClass]],
 
             // Invalid
@@ -64,9 +67,9 @@ class AssertTest extends TestCase
     }
 
     /**
-     * @param mixed  $types
-     * @param array  $values
-     * @param string $exception
+     * @param mixed $types
+     * @param array $values
+     *
      * @dataProvider dataProviderTypeOf
      */
     public function testTypeOf($types, array $values, string $exception = null): void
@@ -79,9 +82,9 @@ class AssertTest extends TestCase
     }
 
     /**
-     * @param mixed  $types
-     * @param array  $values
-     * @param string $exception
+     * @param mixed $types
+     * @param array $values
+     *
      * @dataProvider dataProviderTypeOf
      */
     public function testValidate($types, array $values, string $exception = null): void
