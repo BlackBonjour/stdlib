@@ -35,8 +35,6 @@ class Sequence extends StdObject implements MapInterface
      */
     public function containsKey($key): bool
     {
-        $this->handleInvalidKey($key);
-
         return array_key_exists($key, $this->values);
     }
 
@@ -100,15 +98,6 @@ class Sequence extends StdObject implements MapInterface
         }
 
         return $this->values[$key];
-    }
-
-    private function handleInvalidKey($key, int $parameterIndex = 1): void
-    {
-        if (is_numeric($key) === false) {
-            throw new TypeError(
-                sprintf('Expected argument %d to be numeric, %s given!', $parameterIndex, gettype($key))
-            );
-        }
     }
 
     /**
@@ -208,7 +197,11 @@ class Sequence extends StdObject implements MapInterface
      */
     public function put($key, $value)
     {
-        $this->handleInvalidKey($key);
+        if (is_numeric($key) === false) {
+            throw new TypeError(
+                sprintf('Expected argument %d to be numeric, %s given!', 1, gettype($key))
+            );
+        }
 
         $this->values[$key] = $value;
 
@@ -232,8 +225,6 @@ class Sequence extends StdObject implements MapInterface
      */
     public function remove($key)
     {
-        $this->handleInvalidKey($key);
-
         unset($this->values[$key]);
     }
 

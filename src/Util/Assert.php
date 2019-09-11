@@ -26,7 +26,9 @@ class Assert
      */
     public static function empty(...$values): bool
     {
-        self::handleInvalidArguments($values);
+        if (empty($values)) {
+            throw new TypeError('At least one argument is required!');
+        }
 
         foreach ($values as $value) {
             if (empty($value) === false) {
@@ -37,13 +39,6 @@ class Assert
         return true;
     }
 
-    private static function handleInvalidArguments(array $values): void
-    {
-        if (empty($values)) {
-            throw new TypeError('At least one argument is required!');
-        }
-    }
-
     /**
      * Checks if specified values are not empty.
      *
@@ -51,7 +46,9 @@ class Assert
      */
     public static function notEmpty(...$values): bool
     {
-        self::handleInvalidArguments($values);
+        if (empty($values)) {
+            throw new TypeError('At least one argument is required!');
+        }
 
         foreach ($values as $value) {
             if (empty($value)) {
