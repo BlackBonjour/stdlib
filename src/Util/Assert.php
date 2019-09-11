@@ -20,7 +20,7 @@ use TypeError;
 class Assert
 {
     /**
-     * Checks if specified values are empty.
+     * Checks if all specified values are empty.
      *
      * @param mixed ...$values
      */
@@ -40,7 +40,7 @@ class Assert
     }
 
     /**
-     * Checks if specified values are not empty.
+     * Checks if all specified values are not empty.
      *
      * @param mixed ...$values
      */
