@@ -23,7 +23,7 @@ class Sequence extends StdObject implements MapInterface
     private $values = [];
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function clear(): void
     {
@@ -39,7 +39,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function containsValue($value): bool
     {
@@ -58,7 +58,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function count(): int
     {
@@ -66,7 +66,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function current()
     {
@@ -88,7 +88,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws OutOfBoundsException
      */
     public function get($key)
@@ -101,7 +101,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function isEmpty(): bool
     {
@@ -109,7 +109,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function key(): ?int
     {
@@ -117,7 +117,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function next(): void
     {
@@ -125,7 +125,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function offsetExists($offset): bool
     {
@@ -133,7 +133,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws OutOfBoundsException
      */
     public function offsetGet($offset)
@@ -142,7 +142,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws InvalidArgumentException
      */
     public function offsetSet($offset, $value): void
@@ -151,7 +151,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function offsetUnset($offset): void
     {
@@ -193,7 +193,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function put($key, $value)
     {
@@ -209,7 +209,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function putAll(MapInterface $map): self
     {
@@ -221,7 +221,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function remove($key)
     {
@@ -229,7 +229,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function rewind(): void
     {
@@ -237,7 +237,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function size(): int
     {
@@ -273,7 +273,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function valid(): bool
     {
@@ -281,7 +281,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function values(): array
     {

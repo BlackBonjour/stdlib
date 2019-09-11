@@ -26,7 +26,7 @@ class HashMap implements MapInterface
     private $values = [];
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function clear(): void
     {
@@ -34,7 +34,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function containsKey($key): bool
     {
@@ -42,7 +42,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function containsValue($value): bool
     {
@@ -61,7 +61,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function count(): int
     {
@@ -69,7 +69,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function current()
     {
@@ -83,7 +83,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws OutOfBoundsException
      */
     public function get($key)
@@ -96,7 +96,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function isEmpty(): bool
     {
@@ -104,7 +104,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function key()
     {
@@ -114,7 +114,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function next()
     {
@@ -128,7 +128,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function offsetExists($offset): bool
     {
@@ -136,7 +136,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws OutOfBoundsException
      */
     public function offsetGet($offset)
@@ -145,7 +145,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function offsetSet($offset, $value): void
     {
@@ -153,7 +153,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function offsetUnset($offset): void
     {
@@ -161,7 +161,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function put($key, $value): self
     {
@@ -177,7 +177,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function putAll(MapInterface $map): self
     {
@@ -189,7 +189,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function remove($key): void
     {
@@ -199,7 +199,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function rewind(): void
     {
@@ -207,7 +207,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function size(): int
     {
@@ -291,7 +291,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @see HashMap::values()
      */
     public function toArray(): array
@@ -300,7 +300,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function valid(): bool
     {
@@ -308,7 +308,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function values(): array
     {

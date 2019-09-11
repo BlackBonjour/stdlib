@@ -26,7 +26,7 @@ class CachedGenerator implements IteratorAggregate
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getIterator(): Generator
     {

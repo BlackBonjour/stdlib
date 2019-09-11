@@ -57,7 +57,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function __toString(): string
     {
@@ -65,7 +65,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws InvalidArgumentException
      * @throws OutOfBoundsException
      */
@@ -103,7 +103,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Compares given string with this string (not multibyte safe).
      *
-     * @inheritdoc
+     * @inheritDoc
      * @throws InvalidArgumentException
      */
     public function compareTo($string): int
@@ -196,7 +196,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function count(): int
     {
@@ -350,7 +350,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function length(): int
     {
@@ -371,7 +371,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function offsetExists($offset): bool
     {
@@ -385,7 +385,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws InvalidArgumentException
      * @throws OutOfBoundsException
      */
@@ -401,7 +401,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws InvalidArgumentException
      */
     public function offsetSet($offset, $value): void
@@ -444,7 +444,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function offsetUnset($offset): void
     {
@@ -572,7 +572,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws InvalidArgumentException
      */
     public function subSequence(int $begin, int $end): array

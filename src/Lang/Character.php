@@ -34,7 +34,7 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function __toString(): string
     {
@@ -133,7 +133,7 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws InvalidArgumentException
      */
     public function compareTo($char): int
