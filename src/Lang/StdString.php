@@ -52,7 +52,15 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
             );
         }
 
-        $this->encoding = $encoding ?: mb_internal_encoding();
+        if ($encoding === null) {
+            $encoding = mb_internal_encoding();
+
+            if (is_string($encoding) === false) {
+                throw new InvalidArgumentException('Invalid encoding received!');
+            }
+        }
+
+        $this->encoding = $encoding;
     }
 
     public function __toString(): string
