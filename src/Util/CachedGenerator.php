@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
+use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use Generator;
 use IteratorAggregate;
+
+use function array_key_exists;
 
 /**
  * @author    Erick Dyck <info@erickdyck.de>
@@ -15,7 +18,9 @@ use IteratorAggregate;
 class CachedGenerator implements IteratorAggregate
 {
     private Generator $generator;
-    private array $items = [];
+
+    private array $keys = [];
+    private array $values = [];
 
     public function __construct(Generator $generator)
     {
@@ -24,11 +29,20 @@ class CachedGenerator implements IteratorAggregate
 
     public function getIterator(): Generator
     {
-        yield from $this->items;
+        foreach ($this->keys as $index => $key) {
+            if (array_key_exists($index, $this->values) === false) {
+                throw new OutOfBoundsException('Cache index mismatch!');
+            }
+
+            yield $key => $this->values[$index];
+        }
 
         while ($this->generator->valid()) {
-            $key               = $this->generator->key();
-            $this->items[$key] = $value = $this->generator->current();
+            $key   = $this->generator->key();
+            $value = $this->generator->current();
+
+            $this->keys[]   = $key;
+            $this->values[] = $value;
 
             yield $key => $value;
 
