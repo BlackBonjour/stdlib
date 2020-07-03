@@ -21,6 +21,18 @@ use function is_string;
  */
 class Assert
 {
+    public const TYPE_ARRAY           = 'array';
+    public const TYPE_BOOLEAN         = 'boolean';
+    public const TYPE_DOUBLE          = 'double';
+    public const TYPE_FLOAT           = 'double';
+    public const TYPE_INTEGER         = 'integer';
+    public const TYPE_NULL            = 'NULL';
+    public const TYPE_OBJECT          = 'object';
+    public const TYPE_RESOURCE        = 'resource';
+    public const TYPE_RESOURCE_CLOSED = 'resource (closed)';
+    public const TYPE_STRING          = 'string';
+    public const TYPE_UNKNOWN         = 'unknown type';
+
     /**
      * Checks if all specified values are empty.
      *
@@ -90,7 +102,7 @@ class Assert
             // Check if current value is one of the specified types or instances
             foreach ($types as $type) {
                 if (
-                    ($isObject && ($value instanceof $type || ($type === 'object' && $valueType === $type)))
+                    ($isObject && ($value instanceof $type || ($type === self::TYPE_OBJECT && $valueType === $type)))
                     xor ($isObject === false && $valueType === $type)
                 ) {
                     $match = true;

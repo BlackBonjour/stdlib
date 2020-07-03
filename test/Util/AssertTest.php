@@ -27,22 +27,59 @@ class AssertTest extends TestCase
 
         return [
             // Valid
-            'one-type-as-string-one-value'   => ['string', ['FooBar']],
-            'one-type-as-array-one-value'    => [['string'], ['FooBar']],
-            'multiple-types-one-value'       => [['integer', 'double'], [12]],
-            'multiple-types-multiple-values' => [['integer', 'double'], [12, 12.3]],
-            'char-array'                     => [[Char::class], [new Char(), new Char(), new Char()]],
+            'one-type-as-string-one-value'   => [
+                Assert::TYPE_STRING,
+                ['FooBar'],
+            ],
+            'one-type-as-array-one-value'    => [
+                [Assert::TYPE_STRING],
+                ['FooBar'],
+            ],
+            'multiple-types-one-value'       => [
+                [Assert::TYPE_INTEGER, Assert::TYPE_DOUBLE],
+                [12],
+            ],
+            'multiple-types-multiple-values' => [
+                [Assert::TYPE_INTEGER, Assert::TYPE_DOUBLE],
+                [12, 12.3],
+            ],
+            'char-array'                     => [
+                [Char::class],
+                [new Char(), new Char(), new Char()],
+            ],
             'string-array'                   => [
                 [Char::class, StdString::class],
                 [new Char(), new StdString(), new Char()],
             ],
-            'inheritance'                    => [[Char::class], [$anonymousClass]],
-            'issue-33-simple-object-check'   => ['object', [new stdClass()]],
+            'inheritance'                    => [
+                [Char::class],
+                [$anonymousClass],
+            ],
+            'issue-33-simple-object-check'   => [
+                Assert::TYPE_OBJECT,
+                [new stdClass()],
+            ],
+            'issue-36-null-check'   => [
+                Assert::TYPE_NULL,
+                [null],
+            ],
 
             // Invalid
-            'invalid-assertion'              => [null, ['FooBar'], InvalidArgumentException::class],
-            'invalid-type'                   => ['integer', ['223'], TypeError::class],
-            'invalid-instance'               => [StdString::class, [new Char()], TypeError::class],
+            'invalid-assertion'              => [
+                null,
+                ['FooBar'],
+                InvalidArgumentException::class,
+            ],
+            'invalid-type'                   => [
+                'integer',
+                ['223'],
+                TypeError::class,
+            ],
+            'invalid-instance'               => [
+                StdString::class,
+                [new Char()],
+                TypeError::class,
+            ],
             'invalid-char-array'             => [
                 Char::class,
                 [new Char(), new StdString(), new Char()],
