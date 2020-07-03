@@ -25,32 +25,15 @@ use function is_string;
  */
 class StdString extends StdObject implements ArrayAccess, CharSequence, Comparable, Countable
 {
-    protected string $data = '';
+    protected string $data;
     protected string $encoding;
 
     /**
-     * @param static|Character[]|string $string
      * @throws InvalidArgumentException
      */
-    public function __construct($string = '', string $encoding = null)
+    public function __construct(string $data = '', string $encoding = null)
     {
-        if (is_string($string)) {
-            $this->data = $string;
-        } elseif ($string instanceof static) {
-            $this->data = (string) $string;
-        } elseif (is_array($string)) {
-            foreach ($string as $char) {
-                if (($char instanceof Character) === false) {
-                    throw new InvalidArgumentException('Only chars are allowed inside array!');
-                }
-
-                $this->data .= $char;
-            }
-        } else {
-            throw new InvalidArgumentException(
-                'First parameter must by of type string, StdString or an array of Character!'
-            );
-        }
+        $this->data = $data;
 
         if ($encoding === null) {
             $encoding = mb_internal_encoding();
@@ -61,6 +44,24 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
         }
 
         $this->encoding = $encoding;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public static function createFromArrayOfChar(array $chars): self
+    {
+        $data = '';
+
+        foreach ($chars as $char) {
+            if (($char instanceof Character) === false) {
+                throw new InvalidArgumentException('Only chars are allowed inside array!');
+            }
+
+            $data .= $char;
+        }
+
+        return new static($data);
     }
 
     public function __toString(): string

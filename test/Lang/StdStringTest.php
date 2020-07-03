@@ -491,19 +491,40 @@ class StdStringTest extends TestCase
         return new StdString($string);
     }
 
-    /**
-     * @param StdString|Character[]|string $string
-     * @dataProvider dataProviderConstruct
-     */
-    public function testConstruct($string, string $expectation, string $exception = null): void
+    public function testConstruct(): void
     {
-        if ($exception !== null) {
-            $this->expectException($exception);
-        }
+        self::assertEquals('FooBar', (string) (new StdString('FooBar')));
+    }
 
-        $stdString = new StdString($string);
+    public function testCreateFromArrayOfChar(): void
+    {
+        $chars = [
+            new Character('F'),
+            new Character('o'),
+            new Character('o'),
+            new Character('B'),
+            new Character('a'),
+            new Character('r'),
+        ];
 
-        self::assertEquals($expectation, (string) $stdString);
+        self::assertEquals('FooBar', (string) StdString::createFromArrayOfChar($chars));
+    }
+
+    public function testCreateFromArrayOfCharException(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Only chars are allowed inside array!');
+
+        $chars = [
+            new Character('F'),
+            new Character('o'),
+            new Character('o'),
+            new Character('B'),
+            'a',
+            new Character('r'),
+        ];
+
+        StdString::createFromArrayOfChar($chars);
     }
 
     public function testToString(): void
