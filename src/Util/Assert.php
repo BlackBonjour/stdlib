@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
@@ -7,27 +8,41 @@ use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use Throwable;
 use TypeError;
 
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function is_string;
+
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     06.02.2018
- * @package   BlackBonjour\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
  */
 class Assert
 {
-    private const MSG_NO_ARGS_RECEIVED = 'At least one argument is required!';
-    private const MSG_TYPE_MISMATCH    = 'Assertion value must be of type string or array, %s given!';
+    public const TYPE_ARRAY           = 'array';
+    public const TYPE_BOOLEAN         = 'boolean';
+    public const TYPE_DOUBLE          = 'double';
+    public const TYPE_FLOAT           = 'double';
+    public const TYPE_INTEGER         = 'integer';
+    public const TYPE_NULL            = 'NULL';
+    public const TYPE_OBJECT          = 'object';
+    public const TYPE_RESOURCE        = 'resource';
+    public const TYPE_RESOURCE_CLOSED = 'resource (closed)';
+    public const TYPE_STRING          = 'string';
+    public const TYPE_UNKNOWN         = 'unknown type';
 
     /**
-     * Checks if specified values are empty
+     * Checks if all specified values are empty.
      *
      * @param mixed ...$values
-     * @return boolean
-     * @throws TypeError
      */
     public static function empty(...$values): bool
     {
-        self::handleInvalidArguments($values);
+        if (empty($values)) {
+            throw new TypeError('At least one argument is required!');
+        }
 
         foreach ($values as $value) {
             if (empty($value) === false) {
@@ -39,26 +54,15 @@ class Assert
     }
 
     /**
-     * @param array $values
-     * @throws TypeError
-     */
-    private static function handleInvalidArguments(array $values): void
-    {
-        if (empty($values)) {
-            throw new TypeError(self::MSG_NO_ARGS_RECEIVED);
-        }
-    }
-
-    /**
-     * Checks if specified values are not empty
+     * Checks if all specified values are not empty.
      *
      * @param mixed ...$values
-     * @return boolean
-     * @throws TypeError
      */
     public static function notEmpty(...$values): bool
     {
-        self::handleInvalidArguments($values);
+        if (empty($values)) {
+            throw new TypeError('At least one argument is required!');
+        }
 
         foreach ($values as $value) {
             if (empty($value)) {
@@ -70,13 +74,11 @@ class Assert
     }
 
     /**
-     * Checks if values are of specified types or instances
+     * Checks if values are of specified types or instances.
      *
      * @param array|string $types
      * @param mixed        $values
-     * @return boolean
      * @throws InvalidArgumentException
-     * @throws TypeError
      *
      * @see http://php.net/manual/de/function.gettype.php
      */
@@ -87,7 +89,9 @@ class Assert
         }
 
         if (is_array($types) === false) {
-            throw new InvalidArgumentException(sprintf(static::MSG_TYPE_MISMATCH, gettype($types)));
+            throw new InvalidArgumentException(
+                sprintf('Assertion value must be of type string or array, %s given!', gettype($types))
+            );
         }
 
         foreach ($values as $value) {
@@ -97,7 +101,8 @@ class Assert
 
             // Check if current value is one of the specified types or instances
             foreach ($types as $type) {
-                if (($isObject && ($value instanceof $type || ($type === 'object' && $valueType === $type)))
+                if (
+                    ($isObject && ($value instanceof $type || ($type === self::TYPE_OBJECT && $valueType === $type)))
                     xor ($isObject === false && $valueType === $type)
                 ) {
                     $match = true;
@@ -122,11 +127,10 @@ class Assert
     }
 
     /**
-     * Same as ::typeOf, but without throwing any errors
+     * Same as ::typeOf, but without throwing any errors.
      *
      * @param array|string $types
      * @param array        $values
-     * @return boolean
      */
     public static function validate($types, ...$values): bool
     {

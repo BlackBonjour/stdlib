@@ -1,5 +1,5 @@
 <?php
-/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
@@ -14,15 +14,13 @@ use stdClass;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     28.04.2018
- * @package   BlackBonjourTest\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
- * @covers    \BlackBonjour\Stdlib\Util\HashMap
  */
 class HashMapTest extends TestCase
 {
     public function testArrayAccess(): void
     {
-        $map        = new HashMap;
+        $map        = new HashMap();
         $map['foo'] = 'bar';
         $map[12345] = 67890;
 
@@ -37,8 +35,8 @@ class HashMapTest extends TestCase
 
     public function testClearAndSize(): void
     {
-        $map = new HashMap;
-        $map->put(new stdClass, new ArrayObject(['foo' => 'bar']));
+        $map = new HashMap();
+        $map->put(new stdClass(), new ArrayObject(['foo' => 'bar']));
 
         self::assertEquals(1, $map->size());
 
@@ -48,30 +46,32 @@ class HashMapTest extends TestCase
 
     public function testContainsKey(): void
     {
-        $stdClass = new stdClass;
-        $map      = new HashMap;
+        $stdClass = new stdClass();
+        $map      = new HashMap();
         $map->put($stdClass, new ArrayObject(['foo' => 'bar']));
 
         self::assertTrue($map->containsKey($stdClass));
-        self::assertFalse($map->containsKey(new stdClass));
+        self::assertFalse($map->containsKey(new stdClass()));
     }
 
     public function testContainsValue(): void
     {
-        $arrayObject = new ArrayObject;
-        $map         = new HashMap;
-        $map->put(new stdClass, $arrayObject);
+        $arrayObject = new ArrayObject();
+        $map         = new HashMap();
+        $map->put(new stdClass(), $arrayObject);
 
         self::assertTrue($map->containsValue($arrayObject));
-        self::assertFalse($map->containsValue(new ArrayObject));
+        self::assertFalse($map->containsValue(new ArrayObject()));
     }
 
     public function testCreateFromArray(): void
     {
-        $map = HashMap::createFromArray([
-            'foo' => 'bar',
-            'baz' => 'lorem',
-        ]);
+        $map = HashMap::createFromArray(
+            [
+                'foo' => 'bar',
+                'baz' => 'lorem',
+            ]
+        );
 
         self::assertCount(2, $map);
         self::assertTrue(isset($map['foo']));
@@ -89,9 +89,9 @@ class HashMapTest extends TestCase
 
     public function testGet(): void
     {
-        $arrayObject = new ArrayObject;
-        $map         = new HashMap;
-        $stdClass    = new stdClass;
+        $arrayObject = new ArrayObject();
+        $map         = new HashMap();
+        $stdClass    = new stdClass();
 
         $map->put($stdClass, $arrayObject);
 
@@ -102,12 +102,12 @@ class HashMapTest extends TestCase
     {
         $this->expectException(OutOfBoundsException::class);
 
-        self::assertNull((new HashMap)->get(new stdClass));
+        self::assertNull((new HashMap())->get(new stdClass()));
     }
 
     public function testIsEmpty(): void
     {
-        $map = new HashMap;
+        $map = new HashMap();
         self::assertTrue($map->isEmpty());
 
         $map['foo'] = 'bar';
@@ -119,10 +119,12 @@ class HashMapTest extends TestCase
 
     public function testIterable(): void
     {
-        $map = HashMap::createFromArray([
-            'foo' => 'bar',
-            'baz' => 'lorem',
-        ]);
+        $map = HashMap::createFromArray(
+                [
+                'foo' => 'bar',
+                'baz' => 'lorem',
+            ]
+        );
 
         $firstKey   = $map->key();
         $firstValue = $map->current();
@@ -143,16 +145,16 @@ class HashMapTest extends TestCase
 
     public function testKey(): void
     {
-        $map = new HashMap;
+        $map = new HashMap();
         self::assertNull($map->key());
 
-        $map->put(new stdClass, ['foo' => 'bar']);
+        $map->put(new stdClass(), ['foo' => 'bar']);
         self::assertInstanceOf(stdClass::class, $map->key());
     }
 
     public function testPut(): void
     {
-        $map = new HashMap;
+        $map = new HashMap();
         self::assertTrue($map->isEmpty());
 
         $map->put('foo', 'bar');
@@ -160,7 +162,7 @@ class HashMapTest extends TestCase
         self::assertEquals('bar', $map->get('foo'));
 
         $array    = ['foo', ['bar']];
-        $stdClass = new stdClass;
+        $stdClass = new stdClass();
 
         $map->put($array, $stdClass);
         self::assertTrue($map->containsKey($array));
@@ -169,18 +171,18 @@ class HashMapTest extends TestCase
 
     public function testPutAll(): void
     {
-        $mapFoo = new HashMap;
+        $mapFoo = new HashMap();
         $mapFoo->put('foo', 'bar');
         self::assertCount(1, $mapFoo);
 
-        $mapFoo->putAll((new HashMap)->put('baz', 'lorem'));
+        $mapFoo->putAll((new HashMap())->put('baz', 'lorem'));
         self::assertCount(2, $mapFoo);
         self::assertEquals('lorem', $mapFoo->get('baz'));
     }
 
     public function testRemove(): void
     {
-        $map        = new HashMap;
+        $map        = new HashMap();
         $map['foo'] = 'bar';
 
         self::assertCount(1, $map);
@@ -193,7 +195,7 @@ class HashMapTest extends TestCase
     {
         $exampleKey   = new StdString('FooBar');
         $exampleValue = [123, 456];
-        $hashMap = new HashMap;
+        $hashMap      = new HashMap();
         $hashMap
             ->put($exampleKey, $exampleValue)
             ->put(new StdString('BarFoo'), [456, 789])
@@ -205,6 +207,7 @@ class HashMapTest extends TestCase
 
         foreach (['BarFoo', 'FooBar', 'FooBaz'] as $expectedKey) {
             self::assertEquals($expectedKey, (string) $keySort->key());
+
             $keySort->next();
         }
 
@@ -221,6 +224,7 @@ class HashMapTest extends TestCase
 
         foreach (['FooBar', 'FooBaz', 'BarFoo'] as $expectedKey) {
             self::assertEquals($expectedKey, (string) $valueSort->key());
+
             $valueSort->next();
         }
 
@@ -229,7 +233,7 @@ class HashMapTest extends TestCase
 
     public function testToArray(): void
     {
-        $hashMap = (new HashMap)
+        $hashMap = (new HashMap())
             ->put(123, 'foo')
             ->put(456, 'bar');
 
@@ -238,6 +242,6 @@ class HashMapTest extends TestCase
 
     public function testValues(): void
     {
-        self::assertEquals(['bar', 'lorem'], (new HashMap)->put('foo', 'bar')->put('baz', 'lorem')->values());
+        self::assertEquals(['bar', 'lorem'], (new HashMap())->put('foo', 'bar')->put('baz', 'lorem')->values());
     }
 }

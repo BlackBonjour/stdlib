@@ -1,32 +1,30 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
 
+use function get_class;
+
 /**
- * Root class of all objects
+ * Root class of all objects.
  *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     22.11.2017
- * @package   BlackBonjour\Stdlib\Lang
  * @copyright Copyright (c) 2017 Erick Dyck
  */
 class StdObject
 {
-    public const DEFAULT_VALUE = null;
-
     /**
-     * Returns a string representation of this object
-     *
-     * @return string
+     * Returns a string representation of this object.
      */
     public function __toString(): string
     {
-        return \get_class($this) . '@' . $this->hashCode();
+        return get_class($this) . '@' . $this->hashCode();
     }
 
     /**
-     * Returns a copy of this object
+     * Returns a copy of this object.
      *
      * @return static
      */
@@ -36,21 +34,17 @@ class StdObject
     }
 
     /**
-     * Checks if given object is equal to this one
+     * Checks if given object is equal to this one.
      *
      * @param mixed $obj
-     * @return boolean
      */
     public function equals($obj): bool
     {
-        /** @noinspection TypeUnsafeComparisonInspection We ain't gonna check for same reference here! */
         return $this == $obj;
     }
 
     /**
-     * Returns a hash code value for this object
-     *
-     * @return string
+     * Returns a hash code value for this object.
      */
     public function hashCode(): string
     {

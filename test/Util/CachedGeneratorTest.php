@@ -1,6 +1,5 @@
 <?php
-/** @noinspection PhpUnhandledExceptionInspection */
-/** @noinspection PhpMissingDocCommentInspection */
+
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
@@ -12,13 +11,11 @@ use PHPUnit\Framework\TestCase;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     13.11.2018
- * @package   BlackBonjourTest\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
- * @covers    \BlackBonjour\Stdlib\Util\CachedGenerator
  */
 class CachedGeneratorTest extends TestCase
 {
-    private $iterations = 0;
+    private int $iterations = 0;
 
     private function getIterator(): Generator
     {

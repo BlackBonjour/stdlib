@@ -1,5 +1,5 @@
 <?php
-/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
@@ -14,15 +14,13 @@ use TypeError;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     25.03.2019
- * @package   BlackBonjourTest\Stdlib\Util
  * @copyright Copyright (c) 2019 Erick Dyck
- * @covers    \BlackBonjour\Stdlib\Util\Sequence
  */
 class SequenceTest extends TestCase
 {
     public function testArrayAccess(): void
     {
-        $sequence = (new Sequence)->pushAll(['Foo', 'Bar', 'Baz']);
+        $sequence = (new Sequence())->pushAll(['Foo', 'Bar', 'Baz']);
 
         self::assertTrue(isset($sequence[2]));
         self::assertEquals('Bar', $sequence[1]);
@@ -36,7 +34,7 @@ class SequenceTest extends TestCase
 
     public function testClear(): void
     {
-        $sequence = (new Sequence)->pushAll(['foo', 'bar']);
+        $sequence = (new Sequence())->pushAll(['foo', 'bar']);
         self::assertCount(2, $sequence);
 
         $sequence->clear();
@@ -45,7 +43,7 @@ class SequenceTest extends TestCase
 
     public function testContainsValue(): void
     {
-        $sequence = (new Sequence)->pushAll(['foo', 'bar']);
+        $sequence = (new Sequence())->pushAll(['foo', 'bar']);
 
         self::assertTrue($sequence->containsValue('foo'));
         self::assertFalse($sequence->containsValue('baz'));
@@ -53,7 +51,7 @@ class SequenceTest extends TestCase
 
     public function testCreateFromArray(): void
     {
-        $expectation = (new Sequence)
+        $expectation = (new Sequence())
             ->push('foo')
             ->push('bar');
 
@@ -62,7 +60,7 @@ class SequenceTest extends TestCase
 
     public function testFill(): void
     {
-        $sequence = (new Sequence)
+        $sequence = (new Sequence())
             ->pushAll(['Foo', 'Bar', 'Baz'])
             ->fill('Lorem Ipsum');
 
@@ -71,7 +69,7 @@ class SequenceTest extends TestCase
 
     public function testGet(): void
     {
-        $sequence = (new Sequence)->push('foo');
+        $sequence = (new Sequence())->push('foo');
         self::assertEquals('foo', $sequence->get(0));
 
         $this->expectException(OutOfBoundsException::class);
@@ -82,13 +80,13 @@ class SequenceTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        $sequence = (new Sequence)->push('foo');
+        $sequence = (new Sequence())->push('foo');
         $sequence->get([]);
     }
 
     public function testIsEmpty(): void
     {
-        $sequence = new Sequence;
+        $sequence = new Sequence();
         self::assertTrue($sequence->isEmpty());
 
         $sequence->push('foo');
@@ -97,7 +95,7 @@ class SequenceTest extends TestCase
 
     public function testKey(): void
     {
-        $sequence = (new Sequence)->push('foo');
+        $sequence = (new Sequence())->push('foo');
         self::assertEquals(0, $sequence->key());
 
         $sequence->next();
@@ -106,7 +104,7 @@ class SequenceTest extends TestCase
 
     public function testPush(): void
     {
-        $sequence = (new Sequence)->push('FooBar');
+        $sequence = (new Sequence())->push('FooBar');
         self::assertEquals('FooBar', $sequence->current());
 
         $sequence->push('Lorem Ipsum', 3);
@@ -118,14 +116,14 @@ class SequenceTest extends TestCase
 
     public function testPushAll(): void
     {
-        $sequence = (new Sequence)->pushAll(['Foo', 'Bar', 'Baz']);
+        $sequence = (new Sequence())->pushAll(['Foo', 'Bar', 'Baz']);
 
         self::assertEquals(['Foo', 'Bar', 'Baz'], $sequence->toArray());
     }
 
     public function testPut(): void
     {
-        $sequence = (new Sequence)->put(0, 'foo');
+        $sequence = (new Sequence())->put(0, 'foo');
         self::assertEquals('foo', $sequence->get(0));
 
         $sequence->put(0, 'bar');
@@ -134,7 +132,7 @@ class SequenceTest extends TestCase
 
     public function testPutAll(): void
     {
-        $sequence = (new Sequence)->putAll(Map::createFromArray(['foo', 'bar']));
+        $sequence = (new Sequence())->putAll(Map::createFromArray(['foo', 'bar']));
 
         self::assertEquals('foo', $sequence->get(0));
         self::assertEquals('bar', $sequence->get(1));
@@ -142,7 +140,7 @@ class SequenceTest extends TestCase
 
     public function testRemove(): void
     {
-        $sequence = (new Sequence)->pushAll(['foo', 'bar']);
+        $sequence = (new Sequence())->pushAll(['foo', 'bar']);
         self::assertCount(2, $sequence);
 
         $sequence->remove(1);
@@ -152,7 +150,7 @@ class SequenceTest extends TestCase
 
     public function testRewind(): void
     {
-        $sequence = (new Sequence)->pushAll(['foo', 'bar']);
+        $sequence = (new Sequence())->pushAll(['foo', 'bar']);
 
         $sequence->next();
         self::assertEquals('bar', $sequence->current());
@@ -163,7 +161,7 @@ class SequenceTest extends TestCase
 
     public function testValid(): void
     {
-        $sequence = (new Sequence)->pushAll(['foo']);
+        $sequence = (new Sequence())->pushAll(['foo']);
         self::assertTrue($sequence->valid());
 
         $sequence->next();
@@ -172,7 +170,7 @@ class SequenceTest extends TestCase
 
     public function testValues(): void
     {
-        $sequence = (new Sequence)->pushAll([1 => 'foo', 2 => 'bar']);
+        $sequence = (new Sequence())->pushAll([1 => 'foo', 2 => 'bar']);
 
         self::assertEquals(['foo', 'bar'], $sequence->values());
     }

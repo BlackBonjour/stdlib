@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
@@ -8,82 +9,66 @@ use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use BlackBonjour\Stdlib\Lang\StdObject;
 use TypeError;
 
+use function array_key_exists;
+use function array_slice;
+use function count;
+use function gettype;
+use function in_array;
+
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     04.06.2018
- * @package   BlackBonjour\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
  */
 class Sequence extends StdObject implements MapInterface
 {
-    private const MSG_ILLEGAL_ARGUMENT_TYPE         = 'Expected argument %d to be numeric, %s given!';
-    private const MSG_NEGATIVE_ARGUMENT_NOT_ALLOWED = 'Argument %d must be %d or higher!';
-    private const MSG_UNDEFINED_OFFSET              = 'Offset %d does not exist!';
+    private array $values = [];
 
-    /** @var array */
-    private $values = [];
-
-    /**
-     * @inheritdoc
-     */
     public function clear(): void
     {
         $this->values = [];
     }
 
-    /**
-     * @param mixed $key
-     * @return boolean
-     * @throws TypeError
-     */
     public function containsKey($key): bool
     {
-        $this->handleInvalidKey($key);
+        if (is_numeric($key) === false) {
+            throw new TypeError(
+                sprintf('Expected argument %d to be numeric, %s given!', 1, gettype($key))
+            );
+        }
 
         return array_key_exists($key, $this->values);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function containsValue($value): bool
     {
         return in_array($value, $this->values, true);
     }
 
     /**
-     * Returns a new sequence from specified array
+     * Returns a new sequence from specified array.
      *
-     * @param array $array
-     * @return static
      * @throws InvalidArgumentException
      */
     public static function createFromArray(array $array): self
     {
-        return (new self)->pushAll($array);
+        return (new self())->pushAll($array);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function count(): int
     {
         return $this->size();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function current()
     {
         return current($this->values);
     }
 
     /**
-     * Fills array with specified value
+     * Fills array with specified value.
      *
      * @param mixed $newValue
-     * @return static
      */
     public function fill($newValue): self
     {
@@ -95,68 +80,41 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws OutOfBoundsException
-     * @throws TypeError
      */
     public function get($key)
     {
         if ($this->offsetExists($key) === false) {
-            throw new OutOfBoundsException(sprintf(static::MSG_UNDEFINED_OFFSET, $key));
+            throw new OutOfBoundsException(sprintf('Offset %d does not exist!', $key));
         }
 
         return $this->values[$key];
     }
 
-    /**
-     * @param mixed $key
-     * @param int   $parameterIndex
-     * @throws TypeError
-     */
-    private function handleInvalidKey($key, int $parameterIndex = 1): void
-    {
-        if (is_numeric($key) === false) {
-            throw new TypeError(sprintf(self::MSG_ILLEGAL_ARGUMENT_TYPE, $parameterIndex, gettype($key)));
-        }
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function isEmpty(): bool
     {
         return empty($this->values);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function key(): ?int
     {
         return key($this->values);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function next(): void
     {
         next($this->values);
     }
 
-    /**
-     * @inheritdoc
-     * @throws TypeError
-     */
     public function offsetExists($offset): bool
     {
         return $this->containsKey($offset);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws OutOfBoundsException
-     * @throws TypeError
      */
     public function offsetGet($offset)
     {
@@ -164,7 +122,7 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws InvalidArgumentException
      */
     public function offsetSet($offset, $value): void
@@ -172,28 +130,21 @@ class Sequence extends StdObject implements MapInterface
         $this->push($value);
     }
 
-    /**
-     * @inheritdoc
-     * @throws OutOfBoundsException
-     * @throws TypeError
-     */
     public function offsetUnset($offset): void
     {
         $this->remove($offset);
     }
 
     /**
-     * Pushes specified value into array
+     * Pushes specified value into array.
      *
-     * @param mixed    $value
-     * @param int|null $repeat
-     * @return static
+     * @param mixed $value
      * @throws InvalidArgumentException
      */
     public function push($value, int $repeat = null): self
     {
         if ($repeat !== null && $repeat <= 0) {
-            throw new InvalidArgumentException(sprintf(static::MSG_NEGATIVE_ARGUMENT_NOT_ALLOWED, 2, 1));
+            throw new InvalidArgumentException(sprintf('Argument %d must be %d or higher!', 2, 1));
         }
 
         for ($i = 0; $i < ($repeat ?? 1); $i++) {
@@ -204,10 +155,8 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * Pushes multiple values to array
+     * Pushes multiple values to array.
      *
-     * @param array $values
-     * @return static
      * @throws InvalidArgumentException
      */
     public function pushAll(array $values): self
@@ -220,22 +169,21 @@ class Sequence extends StdObject implements MapInterface
     }
 
     /**
-     * @inheritdoc
-     * @throws TypeError
+     * @inheritDoc
      */
     public function put($key, $value)
     {
-        $this->handleInvalidKey($key);
+        if (is_numeric($key) === false) {
+            throw new TypeError(
+                sprintf('Expected argument %d to be numeric, %s given!', 1, gettype($key))
+            );
+        }
 
         $this->values[$key] = $value;
 
         return $this;
     }
 
-    /**
-     * @inheritdoc
-     * @throws TypeError
-     */
     public function putAll(MapInterface $map): self
     {
         foreach ($map as $key => $value) {
@@ -245,36 +193,27 @@ class Sequence extends StdObject implements MapInterface
         return $this;
     }
 
-    /**
-     * @inheritdoc
-     * @throws TypeError
-     */
     public function remove($key)
     {
-        $this->handleInvalidKey($key);
+        if (is_numeric($key) === false) {
+            throw new TypeError(
+                sprintf('Expected argument %d to be numeric, %s given!', 1, gettype($key))
+            );
+        }
 
         unset($this->values[$key]);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function rewind(): void
     {
         reset($this->values);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function size(): int
     {
         return count($this->values);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function slice(int $length, int $offset = 0, bool $preserveKeys = true): self
     {
         $this->values = array_slice($this->values, $offset, $length, $preserveKeys);
@@ -282,9 +221,6 @@ class Sequence extends StdObject implements MapInterface
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function sort(callable $callable): self
     {
         usort($this->values, $callable);
@@ -292,25 +228,16 @@ class Sequence extends StdObject implements MapInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return $this->values;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function valid(): bool
     {
         return $this->key() !== null;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function values(): array
     {
         return array_values($this->values);

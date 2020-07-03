@@ -1,60 +1,56 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
+use JsonException;
+
+use function array_key_exists;
+use function array_slice;
+use function count;
+use function in_array;
+use function is_array;
+use function is_object;
 
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     27.04.2018
- * @package   BlackBonjour\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
  */
 class HashMap implements MapInterface
 {
-    private const MSG_UNDEFINED_OFFSET = 'Offset %s does not exist!';
+    private array $keys = [];
+    private array $values = [];
 
-    /** @var array */
-    private $keys = [];
-
-    /** @var array */
-    private $values = [];
-
-    /**
-     * @inheritdoc
-     */
     public function clear(): void
     {
-        $this->keys = $this->values = [];
+        $this->values = [];
+        $this->keys   = [];
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws JsonException
      */
     public function containsKey($key): bool
     {
         return isset($this->keys[self::stringifyKey($key)]);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function containsValue($value): bool
     {
         return in_array($value, $this->values, true);
     }
 
     /**
-     * Returns a new map containing key-value mapping from specified array
-     *
-     * @param array $array
-     * @return static
+     * @throws JsonException
      */
     public static function createFromArray(array $array): self
     {
-        $hashMap = new self;
+        $hashMap = new self();
 
         foreach ($array as $key => $value) {
             $hashMap->put($key, $value);
@@ -63,17 +59,11 @@ class HashMap implements MapInterface
         return $hashMap;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function count(): int
     {
         return $this->size();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function current()
     {
         $key = key($this->keys);
@@ -86,29 +76,24 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws JsonException
      * @throws OutOfBoundsException
      */
     public function get($key)
     {
         if ($this->containsKey($key) === false) {
-            throw new OutOfBoundsException(sprintf(self::MSG_UNDEFINED_OFFSET, self::stringifyKey($key)));
+            throw new OutOfBoundsException(sprintf('Offset %s does not exist!', self::stringifyKey($key)));
         }
 
         return $this->values[self::stringifyKey($key)];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isEmpty(): bool
     {
         return empty($this->keys);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function key()
     {
         $key = current($this->keys);
@@ -116,9 +101,6 @@ class HashMap implements MapInterface
         return $key !== false ? $key : null;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function next()
     {
         $key = next($this->keys);
@@ -131,7 +113,8 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws JsonException
      */
     public function offsetExists($offset): bool
     {
@@ -139,7 +122,8 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws JsonException
      * @throws OutOfBoundsException
      */
     public function offsetGet($offset)
@@ -148,7 +132,8 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws JsonException
      */
     public function offsetSet($offset, $value): void
     {
@@ -156,7 +141,8 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws JsonException
      */
     public function offsetUnset($offset): void
     {
@@ -164,7 +150,8 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws JsonException
      */
     public function put($key, $value): self
     {
@@ -180,7 +167,7 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @throws JsonException
      */
     public function putAll(MapInterface $map): self
     {
@@ -192,7 +179,8 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws JsonException
      */
     public function remove($key): void
     {
@@ -201,24 +189,17 @@ class HashMap implements MapInterface
         unset($this->keys[$index], $this->values[$index]);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function rewind(): void
     {
         reset($this->keys);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function size(): int
     {
         return count($this->keys);
     }
 
     /**
-     * @inheritDoc
      * @throws InvalidArgumentException
      */
     public function slice(int $length, int $offset = 0, bool $preserveKeys = true): self
@@ -233,10 +214,6 @@ class HashMap implements MapInterface
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     * @param boolean $keySort
-     */
     public function sort(callable $callback, bool $keySort = false): self
     {
         $keys   = $this->keys;
@@ -257,10 +234,9 @@ class HashMap implements MapInterface
     }
 
     /**
-     * Calculates string representing specified array key
+     * Calculates string representing specified array key.
      *
-     * @param array $key
-     * @return string
+     * @throws JsonException
      */
     private static function stringifyArrayKey(array $key): string
     {
@@ -274,14 +250,14 @@ class HashMap implements MapInterface
             }
         }
 
-        return json_encode($key);
+        return json_encode($key, JSON_THROW_ON_ERROR);
     }
 
     /**
-     * Calculates string representing specified key
+     * Calculates string representing specified key.
      *
      * @param mixed $key
-     * @return string
+     * @throws JsonException
      */
     private static function stringifyKey($key): string
     {
@@ -297,7 +273,6 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritdoc
      * @see HashMap::values()
      */
     public function toArray(): array
@@ -305,17 +280,11 @@ class HashMap implements MapInterface
         return $this->values();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function valid(): bool
     {
         return $this->key() !== null;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function values(): array
     {
         return array_values($this->values);

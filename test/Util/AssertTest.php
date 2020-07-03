@@ -1,7 +1,5 @@
 <?php
-/** @noinspection PhpDocMissingThrowsInspection */
-/** @noinspection PhpUnhandledExceptionInspection */
-/** @noinspection PhpMissingDocCommentInspection */
+
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
@@ -17,30 +15,76 @@ use TypeError;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     06.02.2018
- * @package   BlackBonjourTest\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
- * @covers    \BlackBonjour\Stdlib\Util\Assert
  */
 class AssertTest extends TestCase
 {
     public function dataProviderTypeOf(): array
     {
+        $anonymousClass = new class extends Char {
+            /* Just a test */
+        };
+
         return [
             // Valid
-            'one-type-as-string-one-value'   => ['string', ['FooBar']],
-            'one-type-as-array-one-value'    => [['string'], ['FooBar']],
-            'multiple-types-one-value'       => [['integer', 'double'], [12]],
-            'multiple-types-multiple-values' => [['integer', 'double'], [12, 12.3]],
-            'char-array'                     => [[Char::class], [new Char, new Char, new Char]],
-            'string-array'                   => [[Char::class, StdString::class], [new Char, new StdString, new Char]],
-            'inheritance'                    => [[Char::class], [new class extends Char { /* Just a test */ }]],
-            'issue-33-simple-object-check'   => ['object', [new stdClass]],
+            'one-type-as-string-one-value'   => [
+                Assert::TYPE_STRING,
+                ['FooBar'],
+            ],
+            'one-type-as-array-one-value'    => [
+                [Assert::TYPE_STRING],
+                ['FooBar'],
+            ],
+            'multiple-types-one-value'       => [
+                [Assert::TYPE_INTEGER, Assert::TYPE_DOUBLE],
+                [12],
+            ],
+            'multiple-types-multiple-values' => [
+                [Assert::TYPE_INTEGER, Assert::TYPE_DOUBLE],
+                [12, 12.3],
+            ],
+            'char-array'                     => [
+                [Char::class],
+                [new Char(), new Char(), new Char()],
+            ],
+            'string-array'                   => [
+                [Char::class, StdString::class],
+                [new Char(), new StdString(), new Char()],
+            ],
+            'inheritance'                    => [
+                [Char::class],
+                [$anonymousClass],
+            ],
+            'issue-33-simple-object-check'   => [
+                Assert::TYPE_OBJECT,
+                [new stdClass()],
+            ],
+            'issue-36-null-check'   => [
+                Assert::TYPE_NULL,
+                [null],
+            ],
 
             // Invalid
-            'invalid-assertion'  => [null, ['FooBar'], InvalidArgumentException::class],
-            'invalid-type'       => ['integer', ['223'], TypeError::class],
-            'invalid-instance'   => [StdString::class, [new Char], TypeError::class],
-            'invalid-char-array' => [Char::class, [new Char, new StdString, new Char], TypeError::class],
+            'invalid-assertion'              => [
+                null,
+                ['FooBar'],
+                InvalidArgumentException::class,
+            ],
+            'invalid-type'                   => [
+                'integer',
+                ['223'],
+                TypeError::class,
+            ],
+            'invalid-instance'               => [
+                StdString::class,
+                [new Char()],
+                TypeError::class,
+            ],
+            'invalid-char-array'             => [
+                Char::class,
+                [new Char(), new StdString(), new Char()],
+                TypeError::class,
+            ],
         ];
     }
 
@@ -64,9 +108,7 @@ class AssertTest extends TestCase
     }
 
     /**
-     * @param mixed  $types
-     * @param array  $values
-     * @param string $exception
+     * @param mixed $types
      * @dataProvider dataProviderTypeOf
      */
     public function testTypeOf($types, array $values, string $exception = null): void
@@ -79,9 +121,7 @@ class AssertTest extends TestCase
     }
 
     /**
-     * @param mixed  $types
-     * @param array  $values
-     * @param string $exception
+     * @param mixed $types
      * @dataProvider dataProviderTypeOf
      */
     public function testValidate($types, array $values, string $exception = null): void
