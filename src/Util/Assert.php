@@ -1,20 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
+use Throwable;
+use TypeError;
+
 use function get_class;
+use function gettype;
 use function is_array;
 use function is_object;
 use function is_string;
-use Throwable;
-use TypeError;
 
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     06.02.2018
- * @package   BlackBonjour\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
  */
 class Assert
@@ -87,7 +89,8 @@ class Assert
 
             // Check if current value is one of the specified types or instances
             foreach ($types as $type) {
-                if (($isObject && ($value instanceof $type || ($type === 'object' && $valueType === $type)))
+                if (
+                    ($isObject && ($value instanceof $type || ($type === 'object' && $valueType === $type)))
                     xor ($isObject === false && $valueType === $type)
                 ) {
                     $match = true;

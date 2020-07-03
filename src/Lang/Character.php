@@ -1,10 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
 
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Util\Assert;
+
+use function count;
 use function is_array;
 use function is_string;
 
@@ -13,13 +16,11 @@ use function is_string;
  *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     04.12.2017
- * @package   BlackBonjour\Stdlib\Lang
  * @copyright Copyright (c) 2017 Erick Dyck
  */
 class Character extends StdObject implements Comparable
 {
-    /** @var string */
-    protected $data;
+    protected string $data;
 
     /**
      * @throws InvalidArgumentException
@@ -33,9 +34,6 @@ class Character extends StdObject implements Comparable
         $this->data = $char;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function __toString(): string
     {
         return $this->data;

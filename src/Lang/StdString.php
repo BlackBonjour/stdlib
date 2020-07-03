@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
@@ -9,6 +10,8 @@ use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use BlackBonjour\Stdlib\Exception\RuntimeException;
 use BlackBonjour\Stdlib\Util\Assert;
 use Countable;
+
+use function gettype;
 use function is_array;
 use function is_object;
 use function is_string;
@@ -18,16 +21,12 @@ use function is_string;
  *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     22.11.2017
- * @package   BlackBonjour\Stdlib\Lang
  * @copyright Copyright (c) 2017 Erick Dyck
  */
 class StdString extends StdObject implements ArrayAccess, CharSequence, Comparable, Countable
 {
-    /** @var string */
-    protected $data;
-
-    /** @var string */
-    protected $encoding;
+    protected string $data = '';
+    protected string $encoding;
 
     /**
      * @param static|Character[]|string $string
@@ -56,9 +55,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
         $this->encoding = $encoding ?: mb_internal_encoding();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function __toString(): string
     {
         return $this->data;
@@ -195,9 +191,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
         return new static($string);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function count(): int
     {
         return $this->length();
@@ -349,9 +342,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
         return $pos > -1 ? $pos : -1;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function length(): int
     {
         return mb_strlen($this->data, $this->encoding);
@@ -370,9 +360,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
         return preg_match((string) $pattern, $this->data) === 1;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function offsetExists($offset): bool
     {
         if (is_numeric($offset) === false) {
@@ -443,9 +430,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
         $this->data = $prefix . $value . $suffix;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function offsetUnset($offset): void
     {
         trigger_error('Cannot unset string offsets', E_USER_ERROR);

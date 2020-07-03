@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
@@ -10,7 +11,6 @@ use function get_class;
  *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     22.11.2017
- * @package   BlackBonjour\Stdlib\Lang
  * @copyright Copyright (c) 2017 Erick Dyck
  */
 class StdObject
@@ -40,7 +40,6 @@ class StdObject
      */
     public function equals($obj): bool
     {
-        /** @noinspection TypeUnsafeComparisonInspection We ain't gonna check for same reference here! */
         return $this == $obj;
     }
 

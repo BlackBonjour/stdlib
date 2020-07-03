@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
@@ -8,7 +9,6 @@ namespace BlackBonjour\Stdlib\Lang;
  *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     30.11.2017
- * @package   BlackBonjour\Stdlib\Lang
  * @copyright Copyright (c) 2017 Erick Dyck
  */
 interface Comparable

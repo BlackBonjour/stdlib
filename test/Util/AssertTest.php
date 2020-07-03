@@ -1,6 +1,5 @@
 <?php
-/** @noinspection PhpDocMissingThrowsInspection */
-/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
@@ -16,9 +15,7 @@ use TypeError;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     06.02.2018
- * @package   BlackBonjourTest\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
- * @covers    \BlackBonjour\Stdlib\Util\Assert
  */
 class AssertTest extends TestCase
 {
@@ -34,16 +31,23 @@ class AssertTest extends TestCase
             'one-type-as-array-one-value'    => [['string'], ['FooBar']],
             'multiple-types-one-value'       => [['integer', 'double'], [12]],
             'multiple-types-multiple-values' => [['integer', 'double'], [12, 12.3]],
-            'char-array'                     => [[Char::class], [new Char, new Char, new Char]],
-            'string-array'                   => [[Char::class, StdString::class], [new Char, new StdString, new Char]],
+            'char-array'                     => [[Char::class], [new Char(), new Char(), new Char()]],
+            'string-array'                   => [
+                [Char::class, StdString::class],
+                [new Char(), new StdString(), new Char()],
+            ],
             'inheritance'                    => [[Char::class], [$anonymousClass]],
-            'issue-33-simple-object-check'   => ['object', [new stdClass]],
+            'issue-33-simple-object-check'   => ['object', [new stdClass()]],
 
             // Invalid
-            'invalid-assertion'  => [null, ['FooBar'], InvalidArgumentException::class],
-            'invalid-type'       => ['integer', ['223'], TypeError::class],
-            'invalid-instance'   => [StdString::class, [new Char], TypeError::class],
-            'invalid-char-array' => [Char::class, [new Char, new StdString, new Char], TypeError::class],
+            'invalid-assertion'              => [null, ['FooBar'], InvalidArgumentException::class],
+            'invalid-type'                   => ['integer', ['223'], TypeError::class],
+            'invalid-instance'               => [StdString::class, [new Char()], TypeError::class],
+            'invalid-char-array'             => [
+                Char::class,
+                [new Char(), new StdString(), new Char()],
+                TypeError::class,
+            ],
         ];
     }
 
@@ -68,8 +72,6 @@ class AssertTest extends TestCase
 
     /**
      * @param mixed $types
-     * @param array $values
-     *
      * @dataProvider dataProviderTypeOf
      */
     public function testTypeOf($types, array $values, string $exception = null): void
@@ -83,8 +85,6 @@ class AssertTest extends TestCase
 
     /**
      * @param mixed $types
-     * @param array $values
-     *
      * @dataProvider dataProviderTypeOf
      */
     public function testValidate($types, array $values, string $exception = null): void

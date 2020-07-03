@@ -1,6 +1,5 @@
 <?php
-/** @noinspection PhpDocMissingThrowsInspection */
-/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Lang;
@@ -14,9 +13,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     05.12.2017
- * @package   BlackBonjourTest\Stdlib\Lang
  * @copyright Copyright (c) 2017 Erick Dyck
- * @covers    \BlackBonjour\Stdlib\Lang\Character
  */
 class CharacterTest extends TestCase
 {
@@ -67,10 +64,10 @@ class CharacterTest extends TestCase
 
         return [
             // Latin test
-            'latin-string' => [$charA, 'c', 0],
-            'latin-char'   => [$charA, $this->getObject(), 0],
-            'latin-higher' => [$charA, 'd', -1],
-            'latin-lower'  => [$charA, 'b', 1],
+            'latin-string'    => [$charA, 'c', 0],
+            'latin-char'      => [$charA, $this->getObject(), 0],
+            'latin-higher'    => [$charA, 'd', -1],
+            'latin-lower'     => [$charA, 'b', 1],
 
             // Cyrillic test
             'cyrillic-string' => [$charB, 'в', 0],
@@ -154,7 +151,6 @@ class CharacterTest extends TestCase
 
     /**
      * @param CharSequence|array $chars
-     *
      * @dataProvider dataProviderCodePointAt
      */
     public function testCodePointAt(
@@ -173,7 +169,6 @@ class CharacterTest extends TestCase
 
     /**
      * @param CharSequence|array $chars
-     *
      * @dataProvider dataProviderCodePointBefore
      */
     public function testCodePointBefore(
@@ -192,7 +187,6 @@ class CharacterTest extends TestCase
 
     /**
      * @param Character|string $compare
-     *
      * @dataProvider dataProviderCompareTo
      */
     public function testCompareTo(Character $char, $compare, int $expected): void
@@ -244,7 +238,6 @@ class CharacterTest extends TestCase
 
     /**
      * @param Character|string $char
-     *
      * @dataProvider dataProviderToLowerCase
      */
     public function testToLowerCase(Character $expectation, $char): void
@@ -254,7 +247,6 @@ class CharacterTest extends TestCase
 
     /**
      * @param Character|string $char
-     *
      * @dataProvider dataProviderToUpperCase
      */
     public function testToUpperCase(Character $expectation, $char): void
@@ -264,7 +256,6 @@ class CharacterTest extends TestCase
 
     /**
      * @param Character|string|null $char
-     *
      * @dataProvider dataProviderValueOf
      */
     public function testValueOf(

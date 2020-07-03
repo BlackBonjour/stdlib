@@ -1,5 +1,5 @@
 <?php
-/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
@@ -11,13 +11,11 @@ use TypeError;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     28.04.2018
- * @package   BlackBonjourTest\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
- * @covers    \BlackBonjour\Stdlib\Util\Number
  */
 class NumberTest extends TestCase
 {
-    public function testOrdinal() : void
+    public function testOrdinal(): void
     {
         self::assertEquals(Number::ORDINAL_ST, Number::ordinal(1));
         self::assertEquals(Number::ORDINAL_ST, Number::ordinal(21));
@@ -35,7 +33,7 @@ class NumberTest extends TestCase
         Number::ordinal('foobar');
     }
 
-    public function testOrdinalize() : void
+    public function testOrdinalize(): void
     {
         self::assertEquals(1 . Number::ORDINAL_ST, Number::ordinalize(1));
         self::assertEquals(21 . Number::ORDINAL_ST, Number::ordinalize(21));

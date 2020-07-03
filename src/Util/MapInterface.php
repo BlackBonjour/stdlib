@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
@@ -10,7 +11,6 @@ use Iterator;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     24.04.2018
- * @package   BlackBonjour\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
  */
 interface MapInterface extends ArrayAccess, Countable, Iterator
@@ -85,7 +85,6 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
     /**
      * Sorts this hash map using retrieved callback.
      *
-     * @param callable $callable
      * @return static
      */
     public function sort(callable $callable);
@@ -94,8 +93,6 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
 
     /**
      * Returns an array with all values contained in this map.
-     *
-     * @return array
      */
     public function values(): array;
 }

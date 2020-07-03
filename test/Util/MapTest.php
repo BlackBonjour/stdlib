@@ -1,5 +1,5 @@
 <?php
-/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Util;
@@ -12,15 +12,13 @@ use TypeError;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     24.04.2018
- * @package   BlackBonjourTest\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
- * @covers    \BlackBonjour\Stdlib\Util\Map
  */
 class MapTest extends TestCase
 {
     public function testArrayAccess(): void
     {
-        $map        = new Map;
+        $map        = new Map();
         $map['foo'] = 'bar';
         $map[12345] = 67890;
 
@@ -35,7 +33,7 @@ class MapTest extends TestCase
 
     public function testClearAndSize(): void
     {
-        $map        = new Map;
+        $map        = new Map();
         $map['foo'] = uniqid('foo_', false);
 
         self::assertEquals(1, $map->size());
@@ -46,7 +44,7 @@ class MapTest extends TestCase
 
     public function testContainsKey(): void
     {
-        $map        = new Map;
+        $map        = new Map();
         $map['foo'] = 'bar';
         $map[123]   = 456;
 
@@ -59,12 +57,12 @@ class MapTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        (new Map)->containsKey([]);
+        (new Map())->containsKey([]);
     }
 
     public function testContainsValue(): void
     {
-        $map        = new Map;
+        $map        = new Map();
         $map['foo'] = 'bar';
 
         self::assertTrue($map->containsValue('bar'));
@@ -73,10 +71,12 @@ class MapTest extends TestCase
 
     public function testCreateFromArray(): void
     {
-        $map = Map::createFromArray([
-            'foo' => 'bar',
-            'baz' => 'lorem',
-        ]);
+        $map = Map::createFromArray(
+            [
+                'foo' => 'bar',
+                'baz' => 'lorem',
+            ]
+        );
 
         self::assertCount(2, $map);
         self::assertTrue(isset($map['foo']));
@@ -86,7 +86,7 @@ class MapTest extends TestCase
 
     public function testGet(): void
     {
-        $map        = new Map;
+        $map        = new Map();
         $map['foo'] = 'bar';
 
         self::assertEquals('bar', $map->get('foo'));
@@ -96,19 +96,19 @@ class MapTest extends TestCase
     {
         $this->expectException(OutOfBoundsException::class);
 
-        (new Map)->get('baz');
+        (new Map())->get('baz');
     }
 
     public function testGetThrowsTypeError(): void
     {
         $this->expectException(TypeError::class);
 
-        (new Map)->get([]);
+        (new Map())->get([]);
     }
 
     public function testIsEmpty(): void
     {
-        $map = new Map;
+        $map = new Map();
         self::assertTrue($map->isEmpty());
 
         $map['foo'] = 'bar';
@@ -120,10 +120,12 @@ class MapTest extends TestCase
 
     public function testIterable(): void
     {
-        $map = Map::createFromArray([
-            'foo' => 'bar',
-            'baz' => 'lorem',
-        ]);
+        $map = Map::createFromArray(
+            [
+                'foo' => 'bar',
+                'baz' => 'lorem',
+            ]
+        );
 
         $firstValue = $map->current();
 
@@ -131,9 +133,7 @@ class MapTest extends TestCase
             usleep(100);
         }
 
-        /** @noinspection PhpUndefinedVariableInspection */
         self::assertEquals('baz', $key);
-        /** @noinspection PhpUndefinedVariableInspection */
         self::assertEquals('lorem', $value);
         self::assertNull($map->key());
         self::assertFalse($map->current());
@@ -144,7 +144,7 @@ class MapTest extends TestCase
 
     public function testPut(): void
     {
-        $map = new Map;
+        $map = new Map();
         self::assertTrue($map->isEmpty());
 
         $map->put('foo', 'bar');
@@ -156,23 +156,23 @@ class MapTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        (new Map)->put([], 'bar');
+        (new Map())->put([], 'bar');
     }
 
     public function testPutAll(): void
     {
-        $mapFoo = new Map;
+        $mapFoo = new Map();
         $mapFoo->put('foo', 'bar');
         self::assertCount(1, $mapFoo);
 
-        $mapFoo->putAll((new Map)->put('baz', 'lorem'));
+        $mapFoo->putAll((new Map())->put('baz', 'lorem'));
         self::assertCount(2, $mapFoo);
         self::assertEquals('lorem', $mapFoo->get('baz'));
     }
 
     public function testRemove(): void
     {
-        $map        = new Map;
+        $map        = new Map();
         $map['foo'] = 'bar';
 
         self::assertCount(1, $map);
@@ -186,7 +186,7 @@ class MapTest extends TestCase
 
     public function testToArray(): void
     {
-        $map = (new Map)
+        $map = (new Map())
             ->put(123, 'foo')
             ->put('bar', 'baz');
 
@@ -195,6 +195,6 @@ class MapTest extends TestCase
 
     public function testValues(): void
     {
-        self::assertEquals(['bar', 'lorem'], (new Map)->put('foo', 'bar')->put('baz', 'lorem')->values());
+        self::assertEquals(['bar', 'lorem'], (new Map())->put('foo', 'bar')->put('baz', 'lorem')->values());
     }
 }

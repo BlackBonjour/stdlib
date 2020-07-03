@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
@@ -10,7 +11,6 @@ use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
  *
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     05.12.2017
- * @package   BlackBonjour\Stdlib
  * @copyright Copyright (c) 2017 Erick Dyck
  */
 interface CharSequence

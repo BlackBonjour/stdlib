@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
@@ -9,25 +10,18 @@ use IteratorAggregate;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     13.11.2018
- * @package   BlackBonjour\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
  */
 class CachedGenerator implements IteratorAggregate
 {
-    /** @var Generator */
-    private $generator;
-
-    /** @var array */
-    private $items = [];
+    private Generator $generator;
+    private array $items = [];
 
     public function __construct(Generator $generator)
     {
         $this->generator = $generator;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getIterator(): Generator
     {
         yield from $this->items;

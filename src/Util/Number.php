@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
@@ -8,7 +9,6 @@ use TypeError;
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     27.04.2018
- * @package   BlackBonjour\Stdlib\Util
  * @copyright Copyright (c) 2018 Erick Dyck
  */
 class Number

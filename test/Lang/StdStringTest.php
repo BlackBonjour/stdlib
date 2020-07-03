@@ -1,6 +1,5 @@
 <?php
-/** @noinspection PhpDocMissingThrowsInspection */
-/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace BlackBonjourTest\Stdlib\Lang;
@@ -16,14 +15,13 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 use Throwable;
 use TypeError;
+
 use function strlen;
 
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     29.11.2017
- * @package   BlackBonjourTest\Stdlib\Lang
  * @copyright Copyright (c) 2017 Erick Dyck
- * @covers    \BlackBonjour\Stdlib\Lang\StdString
  */
 class StdStringTest extends TestCase
 {
@@ -159,9 +157,9 @@ class StdStringTest extends TestCase
                     new Character('a'),
                     new Character('r'),
                 ],
-                $stringA
+                $stringA,
             ],
-            'invalid-char-list' => [666, $stringA, TypeError::class],
+            'invalid-char-list'     => [666, $stringA, TypeError::class],
         ];
     }
 
@@ -211,12 +209,12 @@ class StdStringTest extends TestCase
     public function dataProviderFormat(): array
     {
         return [
-            'string-pattern' => [
+            'string-pattern'  => [
                 'There are %d cars in that %s.',
                 [5, $this->getObject('garage')],
                 $this->getObject('There are 5 cars in that garage.'),
             ],
-            'object-pattern' => [
+            'object-pattern'  => [
                 $this->getObject('%d chinese men with a %s'),
                 [3, $this->getObject('contrabass')],
                 $this->getObject('3 chinese men with a contrabass'),
@@ -352,13 +350,13 @@ class StdStringTest extends TestCase
     public function dataProviderReplaceAll(): array
     {
         return [
-            'string-pattern-and-replacement' => [
+            'string-pattern-and-replacement'   => [
                 $this->getObject('She sells sea shells by the sea shore.'),
                 '/sea/',
                 'ocean',
                 $this->getObject('She sells ocean shells by the ocean shore.'),
             ],
-            'object-pattern-and-replacement' => [
+            'object-pattern-and-replacement'   => [
                 $this->getObject('She sells sea shells by the sea shore.'),
                 $this->getObject('/sea/'),
                 $this->getObject('ocean'),
@@ -370,14 +368,14 @@ class StdStringTest extends TestCase
                 'Джеймс',
                 $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Джеймс секс-скандал, сообщает EW.'),
             ],
-            'invalid-pattern' => [
+            'invalid-pattern'                  => [
                 $this->getObject('She sells sea shells by the sea shore.'),
                 123,
                 'ocean',
                 $this->getObject('She sells ocean shells by the ocean shore.'),
                 TypeError::class,
             ],
-            'invalid-replacement' => [
+            'invalid-replacement'              => [
                 $this->getObject('She sells sea shells by the sea shore.'),
                 '/sea/',
                 123,
@@ -390,13 +388,13 @@ class StdStringTest extends TestCase
     public function dataProviderReplaceFirst(): array
     {
         return [
-            'string-pattern-and-replacement' => [
+            'string-pattern-and-replacement'   => [
                 $this->getObject('She sells sea shells by the sea shore.'),
                 '/sea/',
                 'ocean',
                 $this->getObject('She sells ocean shells by the sea shore.'),
             ],
-            'object-pattern-and-replacement' => [
+            'object-pattern-and-replacement'   => [
                 $this->getObject('She sells sea shells by the sea shore.'),
                 $this->getObject('/sea/'),
                 $this->getObject('ocean'),
@@ -408,14 +406,14 @@ class StdStringTest extends TestCase
                 'Джеймс',
                 $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'),
             ],
-            'invalid-pattern' => [
+            'invalid-pattern'                  => [
                 $this->getObject('She sells sea shells by the sea shore.'),
                 123,
                 'ocean',
                 $this->getObject('She sells ocean shells by the sea shore.'),
                 TypeError::class,
             ],
-            'invalid-replacement' => [
+            'invalid-replacement'              => [
                 $this->getObject('She sells sea shells by the sea shore.'),
                 '/sea/',
                 123,
@@ -430,13 +428,13 @@ class StdStringTest extends TestCase
         $string = $this->getObject();
 
         return [
-            'string-pattern' => [$string, '/oo/', [$this->getObject('F'), $this->getObject('Bar')]],
-            'object-pattern' => [
+            'string-pattern'       => [$string, '/oo/', [$this->getObject('F'), $this->getObject('Bar')]],
+            'object-pattern'       => [
                 $string,
                 $this->getObject('/oo/'),
                 [$this->getObject('F'), $this->getObject('Bar')],
             ],
-            'invalid-pattern' => [
+            'invalid-pattern'      => [
                 $string,
                 'oo',
                 [$this->getObject('F'), $this->getObject('Bar')],
@@ -468,7 +466,7 @@ class StdStringTest extends TestCase
 
     public function dataProviderValueOf(): array
     {
-        $obj            = new StdObject;
+        $obj            = new StdObject();
         $anonymousClass = new class {
             public function __toString()
             {
@@ -495,7 +493,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|Character[]|string $string
-     *
      * @dataProvider dataProviderConstruct
      */
     public function testConstruct($string, string $expectation, string $exception = null): void
@@ -549,7 +546,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $compareValue
-     *
      * @dataProvider dataProviderCompareTo
      */
     public function testCompareTo(StdString $string, $compareValue, int $expectation, string $exception = null): void
@@ -563,7 +559,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $compareValue
-     *
      * @dataProvider dataProviderCompareToIgnoreCase
      */
     public function testCompareToIgnoreCase(
@@ -581,7 +576,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $value
-     *
      * @dataProvider dataProviderConcat
      */
     public function testConcat(StdString $string, $value, ?StdString $expectation, string $exception = null): void
@@ -595,7 +589,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $pattern
-     *
      * @dataProvider dataProviderContains
      */
     public function testContains(StdString $string, $pattern, bool $expectation): void
@@ -605,7 +598,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $pattern
-     *
      * @dataProvider dataProviderContentEquals
      */
     public function testContentEquals(StdString $string, $pattern, bool $expectation): void
@@ -615,7 +607,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string|array $charList
-     *
      * @dataProvider dataProviderCopyValueOf
      */
     public function testCopyValueOf($charList, StdString $expectation, string $exception = null): void
@@ -635,7 +626,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $pattern
-     *
      * @dataProvider dataProviderEndsWith
      */
     public function testEndsWith(StdString $string, $pattern, bool $caseInsensitive, bool $expectation): void
@@ -648,7 +638,7 @@ class StdStringTest extends TestCase
         $objA = $this->getObject();
         $objB = clone $objA;
         $objC = $this->getObject('Dis I Like');
-        $objD = new StdObject;
+        $objD = new StdObject();
 
         self::assertTrue($objA->equals($objB));
         self::assertFalse($objA->equals($objC));
@@ -657,7 +647,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $pattern
-     *
      * @dataProvider dataProviderEqualsIgnoreCase
      */
     public function testEqualsIgnoreCase(StdString $string, $pattern, bool $expectation): void
@@ -667,8 +656,7 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $pattern
-     * @param StdString[]      $expectation
-     *
+     * @param StdString[] $expectation
      * @dataProvider dataProviderExplode
      */
     public function testExplode(StdString $string, $pattern, array $expectation, string $exception = null): void
@@ -682,8 +670,7 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $pattern
-     * @param array            $arguments
-     *
+     * @param array $arguments
      * @dataProvider dataProviderFormat
      */
     public function testFormat($pattern, array $arguments, ?StdString $expectation, string $exception = null): void
@@ -741,7 +728,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $needle
-     *
      * @dataProvider dataProviderIndexOf
      */
     public function testIndexOf(
@@ -766,7 +752,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $needle
-     *
      * @dataProvider dataProviderLastIndexOf
      */
     public function testLastIndexOf(
@@ -791,7 +776,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $pattern
-     *
      * @dataProvider dataProviderMatches
      */
     public function testMatches(StdString $string, $pattern, bool $expectation, string $exception = null): void
@@ -805,7 +789,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param mixed $offset
-     *
      * @dataProvider dataProviderOffsetExists
      */
     public function testOffsetExists(StdString $string, $offset, bool $expectation): void
@@ -815,7 +798,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param mixed $offset
-     *
      * @dataProvider dataProviderOffsetGet
      */
     public function testOffsetGet(StdString $string, $offset, string $expectation, string $exception = null): void
@@ -830,7 +812,6 @@ class StdStringTest extends TestCase
     /**
      * @param mixed $offset
      * @param mixed $value
-     *
      * @dataProvider dataProviderOffsetSet
      */
     public function testOffsetSet(StdString $string, $offset, $value, string $expectation): void
@@ -857,7 +838,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $pattern
-     *
      * @dataProvider dataProviderRegionMatches
      */
     public function testRegionMatches(
@@ -880,7 +860,6 @@ class StdStringTest extends TestCase
     /**
      * @param StdString|string $old
      * @param StdString|string $new
-     *
      * @dataProvider dataProviderReplace
      */
     public function testReplace(StdString $string, $old, $new, ?StdString $expected, string $exception = null): void
@@ -895,7 +874,6 @@ class StdStringTest extends TestCase
     /**
      * @param StdString|string $pattern
      * @param StdString|string $replacement
-     *
      * @dataProvider dataProviderReplaceAll
      */
     public function testReplaceAll(
@@ -915,7 +893,6 @@ class StdStringTest extends TestCase
     /**
      * @param StdString|string $pattern
      * @param StdString|string $replacement
-     *
      * @dataProvider dataProviderReplaceFirst
      */
     public function testReplaceFirst(
@@ -935,7 +912,6 @@ class StdStringTest extends TestCase
     /**
      * @param StdString|string $pattern
      * @param StdString|string $expectation
-     *
      * @dataProvider dataProviderSplit
      */
     public function testSplit(
@@ -954,7 +930,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $needle
-     *
      * @dataProvider dataProviderStartsWith
      */
     public function testStartsWith(StdString $string, $needle, bool $expectation, int $offset = 0): void
@@ -1056,7 +1031,6 @@ class StdStringTest extends TestCase
 
     /**
      * @param mixed $value
-     *
      * @dataProvider dataProviderValueOf
      */
     public function testValueOf($value, ?StdString $expected, bool $throwsException = false): void
