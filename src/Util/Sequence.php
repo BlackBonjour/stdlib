@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
+use ArrayIterator;
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use BlackBonjour\Stdlib\Lang\StdObject;
@@ -90,6 +91,11 @@ class Sequence extends StdObject implements MapInterface
         }
 
         return $this->values[$key];
+    }
+
+    public function getIterator()
+    {
+        return new ArrayIterator($this->values);
     }
 
     public function isEmpty(): bool

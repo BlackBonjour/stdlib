@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
+use ArrayIterator;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use TypeError;
 
@@ -76,6 +77,11 @@ class Map implements MapInterface
         }
 
         return $this->mapping[$key];
+    }
+
+    public function getIterator(): iterable
+    {
+        return new ArrayIterator($this->mapping);
     }
 
     public function isEmpty(): bool

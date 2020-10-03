@@ -89,6 +89,13 @@ class HashMap implements MapInterface
         return $this->values[self::stringifyKey($key)];
     }
 
+    public function getIterator()
+    {
+        foreach ($this->keys as $index => $key) {
+            yield $key => $this->values[$index];
+        }
+    }
+
     public function isEmpty(): bool
     {
         return empty($this->keys);
