@@ -25,6 +25,38 @@ class Sequence extends StdObject implements MapInterface
 {
     private array $values = [];
 
+    /**
+     * @deprecated Extending StdObject will be removed in the future!
+     */
+    public function __toString(): string
+    {
+        return parent::__toString();
+    }
+
+    /**
+     * @deprecated Extending StdObject will be removed in the future!
+     */
+    public function clone(): StdObject
+    {
+        return parent::clone();
+    }
+
+    /**
+     * @deprecated Extending StdObject will be removed in the future!
+     */
+    public function equals($obj): bool
+    {
+        return parent::equals($obj);
+    }
+
+    /**
+     * @deprecated Extending StdObject will be removed in the future!
+     */
+    public function hashCode(): string
+    {
+        return parent::hashCode();
+    }
+
     public function clear(): void
     {
         $this->values = [];

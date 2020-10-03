@@ -2,26 +2,46 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 3.1.0 - 2020-10-03
+
+### Added
+
+- [#37](https://github.com/BlackBonjour/stdlib/issues/37) Introduced ```MapInterface::getIterator```, affecting
+```HashMap```, ```Map``` and ```Sequence``` are now deprecated and will be removed with the next major version
+
+### Changed
+
+- Nothing
+
+### Deprecated
+
+- All public methods in ```Sequence``` that come from ```StdObject``` (```Sequence::__toString```,
+```Sequence::clone```, ```Sequence::equals```, ```Sequence::hashCode```) 
+
+### Removed
+
+- Nothing
+
+### Fixed
+
+- Nothing
+
 ## 3.0.0 - 2020-07-03
 
 ### Added
 
-- Introduced ```StdString::createFromArrayOfChar``` to create a ```StdString```
-instance from ```Character[]```
-- Constructor of ```StdString``` will throw an ```InvalidArgumentException``` in
-case an invalid encoding was fetched from using ```mb_internal_encoding```
-- [#36](https://github.com/BlackBonjour/stdlib/issues/36) Added all possible
-types from PHPs internal function
-[gettype()](https://www.php.net/manual/function.gettype.php) as new constants
-for ```Assert::typeOf``` and ```Assert::validate``` to use
+- Introduced ```StdString::createFromArrayOfChar``` to create a ```StdString``` instance from ```Character[]```
+- Constructor of ```StdString``` will throw an ```InvalidArgumentException``` in case an invalid encoding was fetched
+from using ```mb_internal_encoding```
+- [#36](https://github.com/BlackBonjour/stdlib/issues/36) Added all possible types from PHPs internal function
+[gettype()](https://www.php.net/manual/function.gettype.php) as new constants for ```Assert::typeOf``` and
+```Assert::validate``` to use
 
 ### Changed
 
-- [#29](https://github.com/BlackBonjour/stdlib/issues/29) Bumped PHPUnit to
-version 9.*
+- [#29](https://github.com/BlackBonjour/stdlib/issues/29) Bumped PHPUnit to version 9.*
 - Constructor of ```StdString``` no longer supports other types than strings
-- ```HashMap``` can now throw ```JsonException``` as it uses ```json_encode```
-to stringify injected keys of type array
+- ```HashMap``` can now throw ```JsonException``` as it uses ```json_encode``` to stringify injected keys of type array
 
 ### Deprecated
 
@@ -29,17 +49,15 @@ to stringify injected keys of type array
 
 ### Removed
 
-- [#28](https://github.com/BlackBonjour/stdlib/issues/28) Dropped support for
-PHP 7.3 and lower
-- [#30](https://github.com/BlackBonjour/stdlib/issues/30) ```Util\Arrays``` was
-removed
-- Remove the useless feature to create a ```StdString``` instance from another
-```StdString``` instance (if still needed, just clone that instance instead!)
+- [#28](https://github.com/BlackBonjour/stdlib/issues/28) Dropped support for PHP 7.3 and lower
+- [#30](https://github.com/BlackBonjour/stdlib/issues/30) ```Util\Arrays``` was removed
+- Remove the useless feature to create a ```StdString``` instance from another ```StdString``` instance (if still
+needed, just clone that instance instead!)
 
 ### Fixed
 
-- ```CachedGenerator``` would throw errors in case the injected ```Generator```
-yielded keys that weren't of type string or integer
+- ```CachedGenerator``` would throw errors in case the injected ```Generator``` yielded keys that weren't of type string
+or integer
 
 ## 2.2.0 - 2019-05-08
 
