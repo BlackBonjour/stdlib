@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Lang;
 
+use Stringable;
+
 use function get_class;
 
 /**
@@ -13,11 +15,8 @@ use function get_class;
  * @since     22.11.2017
  * @copyright Copyright (c) 2017 Erick Dyck
  */
-class StdObject
+class StdObject implements Stringable
 {
-    /**
-     * Returns a string representation of this object.
-     */
     public function __toString(): string
     {
         return get_class($this) . '@' . $this->hashCode();
@@ -25,18 +24,14 @@ class StdObject
 
     /**
      * Returns a copy of this object.
-     *
-     * @return static
      */
-    public function clone(): self
+    public function clone(): static
     {
         return clone $this;
     }
 
     /**
      * Checks if given object is equal to this one.
-     *
-     * @param mixed $obj
      */
     public function equals($obj): bool
     {

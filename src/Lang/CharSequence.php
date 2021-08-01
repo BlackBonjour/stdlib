@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BlackBonjour\Stdlib\Lang;
 
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
+use Stringable;
 
 /**
  * Interface for readable sequences of char values.
@@ -13,13 +14,8 @@ use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
  * @since     05.12.2017
  * @copyright Copyright (c) 2017 Erick Dyck
  */
-interface CharSequence
+interface CharSequence extends Stringable
 {
-    /**
-     * Returns a string containing the characters in this sequence.
-     */
-    public function __toString(): string;
-
     /**
      * Returns the character at specified index.
      */

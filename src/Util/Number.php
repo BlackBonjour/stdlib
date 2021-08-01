@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
-use TypeError;
-
 /**
  * @author    Erick Dyck <info@erickdyck.de>
  * @since     27.04.2018
@@ -18,38 +16,24 @@ class Number
     public const ORDINAL_RD = 'rd';
     public const ORDINAL_TH = 'th';
 
-    /**
-     * @param string|float|int $number Numeric value
-     */
-    public static function ordinal($number): string
+    public static function ordinal(string|float|int $number): string
     {
-        if (is_numeric($number) === false) {
-            throw new TypeError('Number must be of type string, float or integer!');
-        }
-
-        $number = abs((int) $number);
+        $number = (int) abs((int) $number);
 
         if ($number === 11 || $number === 12 || $number === 13) {
-            return self::ORDINAL_TH;
+            return static::ORDINAL_TH;
         }
 
-        switch ($number % 10) {
-            case 1:
-                return self::ORDINAL_ST;
-            case 2:
-                return self::ORDINAL_ND;
-            case 3:
-                return self::ORDINAL_RD;
-        }
-
-        return self::ORDINAL_TH;
+        return match ($number % 10) {
+            1       => static::ORDINAL_ST,
+            2       => static::ORDINAL_ND,
+            3       => static::ORDINAL_RD,
+            default => static::ORDINAL_TH,
+        };
     }
 
-    /**
-     * @param string|float|int $number Numeric value
-     */
-    public static function ordinalize($number): string
+    public static function ordinalize(string|float|int $number): string
     {
-        return $number . self::ordinal($number);
+        return $number . static::ordinal($number);
     }
 }

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace BlackBonjour\Stdlib\Util;
 
-use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use Throwable;
 use TypeError;
 
 use function get_class;
 use function gettype;
-use function is_array;
 use function is_object;
 use function is_string;
 
@@ -76,22 +74,12 @@ class Assert
     /**
      * Checks if values are of specified types or instances.
      *
-     * @param array|string $types
-     * @param mixed        $values
-     * @throws InvalidArgumentException
-     *
      * @see http://php.net/manual/de/function.gettype.php
      */
-    public static function typeOf($types, ...$values): bool
+    public static function typeOf(string|array $types, ...$values): bool
     {
         if (is_string($types)) {
             $types = [$types];
-        }
-
-        if (is_array($types) === false) {
-            throw new InvalidArgumentException(
-                sprintf('Assertion value must be of type string or array, %s given!', gettype($types))
-            );
         }
 
         foreach ($values as $value) {
@@ -101,11 +89,13 @@ class Assert
 
             // Check if current value is one of the specified types or instances
             foreach ($types as $type) {
-                if (
-                    ($isObject && ($value instanceof $type || ($type === self::TYPE_OBJECT && $valueType === $type)))
-                    xor ($isObject === false && $valueType === $type)
-                ) {
-                    $match = true;
+                if ($isObject) {
+                    $match = $type === static::TYPE_OBJECT || $value instanceof $type;
+                } else {
+                    $match = $valueType === $type;
+                }
+
+                if ($match) {
                     break;
                 }
             }
@@ -128,14 +118,11 @@ class Assert
 
     /**
      * Same as ::typeOf, but without throwing any errors.
-     *
-     * @param array|string $types
-     * @param array        $values
      */
-    public static function validate($types, ...$values): bool
+    public static function validate(string|array $types, ...$values): bool
     {
         try {
-            return self::typeOf($types, ...$values);
+            return static::typeOf($types, ...$values);
         } catch (Throwable $t) {
             // We won't do anything
         }

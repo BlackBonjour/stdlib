@@ -29,7 +29,6 @@ class CharacterTest extends TestCase
             'char-array'         => [97, [$charF, $charO, $charO, $charB, $charA, $charR], 4],
             'char-sequence'      => [97, new StdString('FooBar'), 4],
             'with-limit'         => [97, new StdString('FooBar'), 4, 5],
-            'invalid-char'       => [0, 666, 2, null, InvalidArgumentException::class],
             'empty-char-array'   => [0, [], 2, null, InvalidArgumentException::class],
             'invalid-char-array' => [0, [666, 333, 223], 2, null, InvalidArgumentException::class],
             'invalid-index'      => [0, new StdString('topkek'), -1, null, InvalidArgumentException::class],
@@ -113,7 +112,6 @@ class CharacterTest extends TestCase
             'latin-char'      => [$charA, $this->getObject()],
             'cyrillic-string' => [$charB, 'б'],
             'cyrillic-char'   => [$charB, $this->getObject('б')],
-            'exception'       => [null, null, true, InvalidArgumentException::class],
         ];
     }
 
@@ -150,12 +148,11 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param CharSequence|array $chars
      * @dataProvider dataProviderCodePointAt
      */
     public function testCodePointAt(
         int $expected,
-        $chars,
+        array|CharSequence $chars,
         int $index,
         int $limit = null,
         string $exception = null
@@ -168,12 +165,11 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param CharSequence|array $chars
      * @dataProvider dataProviderCodePointBefore
      */
     public function testCodePointBefore(
         int $expected,
-        $chars,
+        array|CharSequence $chars,
         int $index,
         int $start = null,
         string $exception = null
@@ -186,10 +182,9 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param Character|string $compare
      * @dataProvider dataProviderCompareTo
      */
-    public function testCompareTo(Character $char, $compare, int $expected): void
+    public function testCompareTo(Character $char, string|Character $compare, int $expected): void
     {
         self::assertEquals($expected, $char->compareTo($compare));
     }
@@ -237,37 +232,26 @@ class CharacterTest extends TestCase
     }
 
     /**
-     * @param Character|string $char
      * @dataProvider dataProviderToLowerCase
      */
-    public function testToLowerCase(Character $expectation, $char): void
+    public function testToLowerCase(Character $expectation, string|Character $char): void
     {
         self::assertEquals($expectation, Character::toLowerCase($char));
     }
 
     /**
-     * @param Character|string $char
      * @dataProvider dataProviderToUpperCase
      */
-    public function testToUpperCase(Character $expectation, $char): void
+    public function testToUpperCase(Character $expectation, string|Character $char): void
     {
         self::assertEquals($expectation, Character::toUpperCase($char));
     }
 
     /**
-     * @param Character|string|null $char
      * @dataProvider dataProviderValueOf
      */
-    public function testValueOf(
-        ?Character $expectation,
-        $char,
-        bool $expectException = false,
-        string $exception = null
-    ): void {
-        if ($expectException) {
-            $this->expectException($exception);
-        }
-
+    public function testValueOf(Character $expectation, string|Character $char): void
+    {
         self::assertEquals($expectation, Character::valueOf($char));
     }
 }

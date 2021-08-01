@@ -21,7 +21,7 @@ class AssertTest extends TestCase
 {
     public function dataProviderTypeOf(): array
     {
-        $anonymousClass = new class extends Char {
+        $anonymousClass = new class ('F') extends Char {
             /* Just a test */
         };
 
@@ -45,11 +45,11 @@ class AssertTest extends TestCase
             ],
             'char-array'                     => [
                 [Char::class],
-                [new Char(), new Char(), new Char()],
+                [new Char('F'), new Char('F'), new Char('F')],
             ],
             'string-array'                   => [
                 [Char::class, StdString::class],
-                [new Char(), new StdString(), new Char()],
+                [new Char('F'), new StdString(), new Char('F')],
             ],
             'inheritance'                    => [
                 [Char::class],
@@ -59,17 +59,12 @@ class AssertTest extends TestCase
                 Assert::TYPE_OBJECT,
                 [new stdClass()],
             ],
-            'issue-36-null-check'   => [
+            'issue-36-null-check'            => [
                 Assert::TYPE_NULL,
                 [null],
             ],
 
             // Invalid
-            'invalid-assertion'              => [
-                null,
-                ['FooBar'],
-                InvalidArgumentException::class,
-            ],
             'invalid-type'                   => [
                 'integer',
                 ['223'],
@@ -77,12 +72,12 @@ class AssertTest extends TestCase
             ],
             'invalid-instance'               => [
                 StdString::class,
-                [new Char()],
+                [new Char('F')],
                 TypeError::class,
             ],
             'invalid-char-array'             => [
                 Char::class,
-                [new Char(), new StdString(), new Char()],
+                [new Char('F'), new StdString(), new Char('F')],
                 TypeError::class,
             ],
         ];
@@ -108,7 +103,6 @@ class AssertTest extends TestCase
     }
 
     /**
-     * @param mixed $types
      * @dataProvider dataProviderTypeOf
      */
     public function testTypeOf($types, array $values, string $exception = null): void
@@ -121,7 +115,6 @@ class AssertTest extends TestCase
     }
 
     /**
-     * @param mixed $types
      * @dataProvider dataProviderTypeOf
      */
     public function testValidate($types, array $values, string $exception = null): void

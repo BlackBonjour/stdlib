@@ -37,7 +37,7 @@ class HashMap implements MapInterface
      */
     public function containsKey($key): bool
     {
-        return isset($this->keys[self::stringifyKey($key)]);
+        return isset($this->keys[static::stringifyKey($key)]);
     }
 
     public function containsValue($value): bool
@@ -48,9 +48,9 @@ class HashMap implements MapInterface
     /**
      * @throws JsonException
      */
-    public static function createFromArray(array $array): self
+    public static function createFromArray(array $array): static
     {
-        $hashMap = new self();
+        $hashMap = new static();
 
         foreach ($array as $key => $value) {
             $hashMap->put($key, $value);
@@ -83,13 +83,13 @@ class HashMap implements MapInterface
     public function get($key)
     {
         if ($this->containsKey($key) === false) {
-            throw new OutOfBoundsException(sprintf('Offset %s does not exist!', self::stringifyKey($key)));
+            throw new OutOfBoundsException(sprintf('Offset %s does not exist!', static::stringifyKey($key)));
         }
 
-        return $this->values[self::stringifyKey($key)];
+        return $this->values[static::stringifyKey($key)];
     }
 
-    public function getIterator()
+    public function getIterator(): iterable
     {
         foreach ($this->keys as $index => $key) {
             yield $key => $this->values[$index];
@@ -160,9 +160,9 @@ class HashMap implements MapInterface
      * @inheritDoc
      * @throws JsonException
      */
-    public function put($key, $value): self
+    public function put($key, $value): static
     {
-        $index = self::stringifyKey($key);
+        $index = static::stringifyKey($key);
 
         if (isset($this->keys[$index]) === false) {
             $this->keys[$index] = $key;
@@ -176,7 +176,7 @@ class HashMap implements MapInterface
     /**
      * @throws JsonException
      */
-    public function putAll(MapInterface $map): self
+    public function putAll(MapInterface $map): static
     {
         foreach ($map as $key => $value) {
             $this->put($key, $value);
@@ -191,7 +191,7 @@ class HashMap implements MapInterface
      */
     public function remove($key): void
     {
-        $index = self::stringifyKey($key);
+        $index = static::stringifyKey($key);
 
         unset($this->keys[$index], $this->values[$index]);
     }
@@ -209,7 +209,7 @@ class HashMap implements MapInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function slice(int $length, int $offset = 0, bool $preserveKeys = true): self
+    public function slice(int $length, int $offset = 0, bool $preserveKeys = true): static
     {
         if ($preserveKeys === false) {
             throw new InvalidArgumentException('Slice is only allowed with preserving keys!');
@@ -221,16 +221,16 @@ class HashMap implements MapInterface
         return $this;
     }
 
-    public function sort(callable $callback, bool $keySort = false): self
+    public function sort(callable $callable, bool $keySort = false): static
     {
         $keys   = $this->keys;
         $values = $this->values;
 
         if ($keySort) {
-            uasort($keys, $callback);
+            uasort($keys, $callable);
             $values = array_replace($keys, $values);
         } else {
-            uasort($values, $callback);
+            uasort($values, $callable);
             $keys = array_replace($values, $keys);
         }
 
@@ -251,9 +251,9 @@ class HashMap implements MapInterface
 
         foreach ($key as &$value) {
             if (is_array($value)) {
-                $value = self::stringifyArrayKey($value);
+                $value = static::stringifyArrayKey($value);
             } elseif (is_object($value)) {
-                $value = self::stringifyKey($value);
+                $value = static::stringifyKey($value);
             }
         }
 
@@ -263,7 +263,6 @@ class HashMap implements MapInterface
     /**
      * Calculates string representing specified key.
      *
-     * @param mixed $key
      * @throws JsonException
      */
     private static function stringifyKey($key): string

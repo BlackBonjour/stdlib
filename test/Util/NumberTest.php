@@ -28,9 +28,6 @@ class NumberTest extends TestCase
         self::assertEquals(Number::ORDINAL_TH, Number::ordinal(12));
         self::assertEquals(Number::ORDINAL_TH, Number::ordinal(13));
         self::assertEquals(Number::ORDINAL_TH, Number::ordinal(24));
-
-        $this->expectException(TypeError::class);
-        Number::ordinal('foobar');
     }
 
     public function testOrdinalize(): void

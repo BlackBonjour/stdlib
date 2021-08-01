@@ -10,6 +10,7 @@ use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
 use BlackBonjour\Stdlib\Exception\RuntimeException;
 use BlackBonjour\Stdlib\Util\Assert;
 use Countable;
+use Stringable;
 
 use function gettype;
 use function is_array;
@@ -25,37 +26,34 @@ use function is_string;
  */
 class StdString extends StdObject implements ArrayAccess, CharSequence, Comparable, Countable
 {
-    protected string $data;
-    protected string $encoding;
-
     /**
      * @throws InvalidArgumentException
      */
-    public function __construct(string $data = '', string $encoding = null)
-    {
-        $this->data = $data;
+    public function __construct(
+        protected string $data = '',
+        protected ?string $encoding = null,
+    ) {
+        if ($this->encoding === null) {
+            $this->encoding = mb_internal_encoding();
 
-        if ($encoding === null) {
-            $encoding = mb_internal_encoding();
-
-            if (is_string($encoding) === false) {
+            if (is_string($this->encoding) === false) {
                 throw new InvalidArgumentException('Invalid encoding received!');
             }
         }
-
-        $this->encoding = $encoding;
     }
 
     /**
      * @throws InvalidArgumentException
      */
-    public static function createFromArrayOfChar(array $chars): self
+    public static function createFromArrayOfChar(array $chars): static
     {
         $data = '';
 
         foreach ($chars as $char) {
             if (($char instanceof Character) === false) {
-                throw new InvalidArgumentException('Only chars are allowed inside array!');
+                throw new InvalidArgumentException(
+                    sprintf('Array of %s is required!', Character::class)
+                );
             }
 
             $data .= $char;
@@ -111,66 +109,45 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
      * @inheritDoc
      * @throws InvalidArgumentException
      */
-    public function compareTo($string): int
+    public function compareTo($object): int
     {
-        Assert::typeOf(['string', __CLASS__], $string);
+        Assert::typeOf(['string', __CLASS__], $object);
 
-        return strcmp($this->data, (string) $string) <=> 0;
+        return strcmp($this->data, (string) $object) <=> 0;
     }
 
     /**
      * Compares given string with this string case insensitive (not multibyte
      * safe).
-     *
-     * @param static|string $string
-     * @throws InvalidArgumentException
      */
-    public function compareToIgnoreCase($string): int
+    public function compareToIgnoreCase(string|self $string): int
     {
-        Assert::typeOf(['string', __CLASS__], $string);
-
         return strcasecmp($this->data, (string) $string) <=> 0;
     }
 
     /**
      * Concatenates given string to the end of this string.
      *
-     * @param static|string $string
-     * @return static
      * @throws InvalidArgumentException
      */
-    public function concat($string): self
+    public function concat(string|self $string): static
     {
-        Assert::typeOf(['string', __CLASS__], $string);
-
         return new static($this->data . $string, $this->encoding);
     }
 
     /**
      * Checks if this string contains specified string.
-     *
-     * @param static|string $string
      */
-    public function contains($string): bool
+    public function contains(string|self $string): bool
     {
-        if (Assert::validate(['string', __CLASS__], $string) === false) {
-            return false;
-        }
-
         return mb_strpos($this->data, (string) $string, 0, $this->encoding) !== false;
     }
 
     /**
      * Checks if this string is equal to the given string.
-     *
-     * @param static|string $string
      */
-    public function contentEquals($string): bool
+    public function contentEquals(string|self $string): bool
     {
-        if (Assert::validate(['string', __CLASS__], $string) === false) {
-            return false;
-        }
-
         return $this->data === (string) $string;
     }
 
@@ -178,15 +155,10 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
      * Returns a string that represents the character sequence in the array
      * specified.
      *
-     * @param static|string|array $charList
-     * @return static
      * @throws InvalidArgumentException
      */
-    public static function copyValueOf($charList): self
+    public static function copyValueOf(string|array|self $charList): static
     {
-        Assert::typeOf(['string', 'array', __CLASS__], $charList);
-
-        // Convert to native string before creating a new string object
         $string = '';
 
         if (is_array($charList)) {
@@ -207,15 +179,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
 
     /**
      * Checks if this string ends with specified string.
-     *
-     * @param static|string $string
      */
-    public function endsWith($string, bool $caseInsensitive = false): bool
+    public function endsWith(string|self $string, bool $caseInsensitive = false): bool
     {
-        if (Assert::validate(['string', __CLASS__], $string) === false) {
-            return false;
-        }
-
         $value  = (string) $string;
         $strLen = mb_strlen($value, $this->encoding);
         $length = $this->length();
@@ -229,33 +195,25 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
 
     /**
      * Compares this string to the given string case insensitive.
-     *
-     * @param static|string $string
      */
-    public function equalsIgnoreCase($string): bool
+    public function equalsIgnoreCase(string|self $string): bool
     {
-        if (Assert::validate(['string', __CLASS__], $string) === false) {
-            return false;
-        }
-
-        return strcmp(
+        $result = strcmp(
             mb_strtolower($this->data, $this->encoding),
             mb_strtolower((string) $string, $this->encoding)
-        ) === 0;
+        );
+
+        return $result === 0;
     }
 
     /**
      * Explodes this string by specified delimiter.
      *
-     * @param static|string $delimiter
      * @return static[]
      * @throws InvalidArgumentException
-     * @throws RuntimeException
      */
-    public function explode($delimiter): array
+    public function explode(string|self $delimiter): array
     {
-        Assert::typeOf(['string', __CLASS__], $delimiter);
-
         $delimiter = (string) $delimiter;
 
         if ($delimiter === '') {
@@ -264,10 +222,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
 
         $response = [];
         $results  = explode($delimiter, $this->data);
-
-        if ($results === false) {
-            throw new RuntimeException('An unknown error occurred while splitting string!');
-        }
 
         foreach ($results as $result) {
             $response[] = new static($result, $this->encoding);
@@ -279,15 +233,10 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Returns a formatted string using the given format and arguments.
      *
-     * @param static|string $format
-     * @param mixed         ...$args
-     * @return static
      * @throws InvalidArgumentException
      */
-    public static function format($format, ...$args): self
+    public static function format(string|self $format, ...$args): static
     {
-        Assert::typeOf(['string', __CLASS__], $format);
-
         return new static(sprintf((string) $format, ...$args));
     }
 
@@ -320,14 +269,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Returns the index within this string of the first occurrence of the
      * specified string.
-     *
-     * @param static|string $string
-     * @throws InvalidArgumentException
      */
-    public function indexOf($string, int $offset = 0): int
+    public function indexOf(string|self $string, int $offset = 0): int
     {
-        Assert::typeOf(['string', __CLASS__], $string);
-
         $pos = mb_strpos($this->data, (string) $string, $offset, $this->encoding);
 
         return $pos > -1 ? $pos : -1;
@@ -344,14 +288,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Returns the index within this string of the last occurrence of the
      * specified string.
-     *
-     * @param static|string $string
-     * @throws InvalidArgumentException
      */
-    public function lastIndexOf($string, int $offset = 0): int
+    public function lastIndexOf(string|self $string, int $offset = 0): int
     {
-        Assert::typeOf(['string', __CLASS__], $string);
-
         $pos = mb_strrpos($this->data, (string) $string, $offset, $this->encoding);
 
         return $pos > -1 ? $pos : -1;
@@ -364,14 +303,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
 
     /**
      * Checks if this string matches the given regex pattern.
-     *
-     * @param static|string $pattern
-     * @throws InvalidArgumentException
      */
-    public function matches($pattern): bool
+    public function matches(string|self $pattern): bool
     {
-        Assert::typeOf(['string', __CLASS__], $pattern);
-
         return preg_match((string) $pattern, $this->data) === 1;
     }
 
@@ -452,14 +386,14 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
 
     /**
      * Checks if two string regions are equal.
-     *
-     * @param static|string $string
-     * @throws InvalidArgumentException
      */
-    public function regionMatches(int $offset, $string, int $strOffset, int $len, bool $ignoreCase = false): bool
-    {
-        Assert::typeOf(['string', __CLASS__], $string);
-
+    public function regionMatches(
+        int $offset,
+        string|self $string,
+        int $strOffset,
+        int $len,
+        bool $ignoreCase = false
+    ): bool {
         $strLen = is_string($string) ? mb_strlen($string, $this->encoding) : $string->length();
 
         if ($offset < 0 || $strOffset < 0 || ($strOffset + $len) > $strLen || ($offset + $len) > $this->length()) {
@@ -482,15 +416,10 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Replaces all occurrences of $old in this string with $new.
      *
-     * @param static|string $old
-     * @param static|string $new
-     * @return static
      * @throws InvalidArgumentException
      */
-    public function replace($old, $new): self
+    public function replace(string|self $old, string|self $new): static
     {
-        Assert::typeOf(['string', __CLASS__], $old, $new);
-
         return new static(str_replace((string) $old, (string) $new, $this->data), $this->encoding);
     }
 
@@ -498,15 +427,10 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
      * Replaces each substring of this string that matches the given regex
      * pattern with the specified replacement.
      *
-     * @param static|string $pattern
-     * @param static|string $replacement
-     * @return static
      * @throws InvalidArgumentException
      */
-    public function replaceAll($pattern, $replacement): self
+    public function replaceAll(string|self $pattern, string|self $replacement): static
     {
-        Assert::typeOf(['string', __CLASS__], $pattern, $replacement);
-
         $result = preg_replace((string) $pattern, (string) $replacement, $this->data);
 
         return new static($result ?: $this->data, $this->encoding);
@@ -516,15 +440,10 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
      * Replaces the first substring of this string that matches the given regex
      * pattern with the specified replacement.
      *
-     * @param static|string $pattern
-     * @param static|string $replacement
-     * @return static
      * @throws InvalidArgumentException
      */
-    public function replaceFirst($pattern, $replacement): self
+    public function replaceFirst(string|self $pattern, string|self $replacement): static
     {
-        Assert::typeOf(['string', __CLASS__], $pattern, $replacement);
-
         $result = preg_replace((string) $pattern, (string) $replacement, $this->data, 1);
 
         return new static($result ?: $this->data, $this->encoding);
@@ -533,15 +452,12 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Splits this string around matches of the given regex pattern.
      *
-     * @param static|string $pattern
      * @return static[]
      * @throws InvalidArgumentException
      * @throws RuntimeException
      */
-    public function split($pattern, int $limit = -1): array
+    public function split(string|self $pattern, int $limit = -1): array
     {
-        Assert::typeOf(['string', __CLASS__], $pattern);
-
         $response = [];
         $results  = preg_split((string) $pattern, $this->data, $limit);
 
@@ -558,15 +474,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
 
     /**
      * Checks if this string starts with specified string.
-     *
-     * @param static|string $string
      */
-    public function startsWith($string, int $offset = 0): bool
+    public function startsWith(string|self $string, int $offset = 0): bool
     {
-        if (Assert::validate(['string', __CLASS__], $string) === false) {
-            return false;
-        }
-
         return mb_strpos($this->data, (string) $string, $offset, $this->encoding) === 0;
     }
 
@@ -592,10 +502,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Returns a new string object that is a substring of this string.
      *
-     * @return static
      * @throws InvalidArgumentException
      */
-    public function substr(int $start, int $length = null): self
+    public function substr(int $start, int $length = null): static
     {
         if ($start < 0) {
             throw new InvalidArgumentException('Negative index is not allowed!');
@@ -608,10 +517,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
      * Returns a new string object that is a substring of this string
      * (equivalent to java.lang.String).
      *
-     * @return static
      * @throws InvalidArgumentException
      */
-    public function substring(int $begin, int $end = null): self
+    public function substring(int $begin, int $end = null): static
     {
         return $this->substr($begin, $end ? $end - $begin + 1 : null);
     }
@@ -635,10 +543,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Converts all characters in this string to lower case.
      *
-     * @return static
      * @throws InvalidArgumentException
      */
-    public function toLowerCase(): self
+    public function toLowerCase(): static
     {
         return new static(mb_strtolower($this->data, $this->encoding), $this->encoding);
     }
@@ -646,10 +553,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Converts all characters in this string to upper case.
      *
-     * @return static
      * @throws InvalidArgumentException
      */
-    public function toUpperCase(): self
+    public function toUpperCase(): static
     {
         return new static(mb_strtoupper($this->data, $this->encoding), $this->encoding);
     }
@@ -657,10 +563,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Removes leading and ending whitespaces in this string.
      *
-     * @return static
      * @throws InvalidArgumentException
      */
-    public function trim(): self
+    public function trim(): static
     {
         return new static(trim($this->data));
     }
@@ -668,17 +573,15 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     /**
      * Returns the string representation of the given value.
      *
-     * @param mixed $value
-     * @return static
      * @throws InvalidArgumentException
      */
-    public static function valueOf($value): self
+    public static function valueOf($value): static
     {
         $strVal = null;
 
         switch (gettype($value)) {
             case 'object':
-                if ($value instanceof StdObject || (is_object($value) && method_exists($value, '__toString'))) {
+                if ($value instanceof Stringable || (is_object($value) && method_exists($value, '__toString'))) {
                     $strVal = (string) $value;
                 }
                 break;

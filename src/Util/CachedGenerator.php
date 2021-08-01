@@ -17,14 +17,12 @@ use function array_key_exists;
  */
 class CachedGenerator implements IteratorAggregate
 {
-    private Generator $generator;
-
     private array $keys = [];
     private array $values = [];
 
-    public function __construct(Generator $generator)
-    {
-        $this->generator = $generator;
+    public function __construct(
+        private Generator $generator,
+    ) {
     }
 
     public function getIterator(): Generator

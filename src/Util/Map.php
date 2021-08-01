@@ -45,9 +45,9 @@ class Map implements MapInterface
     /**
      * Returns a new map containing key-value mapping from specified array.
      */
-    public static function createFromArray(array $array): self
+    public static function createFromArray(array $array): static
     {
-        $map = new self();
+        $map = new static();
 
         foreach ($array as $key => $value) {
             $map->put($key, $value);
@@ -125,7 +125,7 @@ class Map implements MapInterface
         $this->remove($offset);
     }
 
-    public function put($key, $value): self
+    public function put($key, $value): static
     {
         if (is_scalar($key) === false) {
             throw new TypeError(sprintf('Expected argument 1 to be scalar, %s given!', gettype($key)));
@@ -136,7 +136,7 @@ class Map implements MapInterface
         return $this;
     }
 
-    public function putAll(MapInterface $map): self
+    public function putAll(MapInterface $map): static
     {
         foreach ($map as $key => $value) {
             $this->put($key, $value);
@@ -164,14 +164,14 @@ class Map implements MapInterface
         return count($this->mapping);
     }
 
-    public function slice(int $length, int $offset = 0, bool $preserveKeys = true): self
+    public function slice(int $length, int $offset = 0, bool $preserveKeys = true): static
     {
         $this->mapping = array_slice($this->mapping, $offset, $length, $preserveKeys);
 
         return $this;
     }
 
-    public function sort(callable $callable): self
+    public function sort(callable $callable): static
     {
         uasort($this->mapping, $callable);
 

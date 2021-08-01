@@ -50,19 +50,13 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
 
     /**
      * Associates the specified value with the specified key in this map.
-     *
-     * @param mixed $key
-     * @param mixed $value
-     * @return static
      */
-    public function put($key, $value);
+    public function put($key, $value): static;
 
     /**
      * Copies all of the mapping from the specified map to this map.
-     *
-     * @return static
      */
-    public function putAll(MapInterface $map);
+    public function putAll(MapInterface $map): static;
 
     /**
      * Removes the mapping for a key from this map if it is present.
@@ -77,17 +71,12 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
      */
     public function size(): int;
 
-    /**
-     * @return static
-     */
-    public function slice(int $length, int $offset = 0, bool $preserveKeys = true);
+    public function slice(int $length, int $offset = 0, bool $preserveKeys = true): static;
 
     /**
      * Sorts this hash map using retrieved callback.
-     *
-     * @return static
      */
-    public function sort(callable $callable);
+    public function sort(callable $callable): static;
 
     public function toArray(): array;
 

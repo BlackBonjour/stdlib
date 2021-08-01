@@ -39,7 +39,7 @@ class StdStringTest extends TestCase
         };
 
         $anonymousClass = new class {
-            public function __toString()
+            public function __toString(): string
             {
                 return 'FooBar';
             }
@@ -119,7 +119,6 @@ class StdStringTest extends TestCase
             'latin-string'          => [$string, 'oo', true],
             'cyrillic-string-class' => [$string, $this->getObject('оо'), false],
             'cyrillic-string'       => [$string, 'оо', false],
-            'invalid-pattern'       => [$string, 666, false],
         ];
     }
 
@@ -133,7 +132,6 @@ class StdStringTest extends TestCase
             'latin-string-lowercase' => [$string, 'foobar', false],
             'cyrillic-string-class'  => [$string, $this->getObject('Тест'), false],
             'cyrillic-string'        => [$string, 'Тест', false],
-            'invalid-pattern'        => [$string, 666, false],
         ];
     }
 
@@ -171,7 +169,6 @@ class StdStringTest extends TestCase
             'default'          => [$string, 'Bar', false, true],
             'case-insensitive' => [$string, 'bar', true, true],
             'case-sensitive'   => [$string, 'bar', false, false],
-            'invalid-pattern'  => [$string, null, false, false],
             'pattern-too-long' => [$string, 'FooBarBar', false, false],
         ];
     }
@@ -190,7 +187,6 @@ class StdStringTest extends TestCase
             'cyrillic-string'                => [$stringB, 'тест', true],
             'cyrillic-string-class-no-match' => [$stringB, $this->getObject('теcт'), false], // With latin 'c'
             'cyrillic-string-no-match'       => [$stringB, 'теcт', false], // With latin 'c'
-            'invalid-pattern'                => [$stringB, 666, false],
         ];
     }
 
@@ -363,10 +359,14 @@ class StdStringTest extends TestCase
                 $this->getObject('She sells ocean shells by the ocean shore.'),
             ],
             'cyrillic-pattern-and-replacement' => [
-                $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Спейси из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'),
+                $this->getObject(
+                    'Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Спейси из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'
+                ),
                 '/Спейси/',
                 'Джеймс',
-                $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Джеймс секс-скандал, сообщает EW.'),
+                $this->getObject(
+                    'Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Джеймс секс-скандал, сообщает EW.'
+                ),
             ],
             'invalid-pattern'                  => [
                 $this->getObject('She sells sea shells by the sea shore.'),
@@ -401,10 +401,14 @@ class StdStringTest extends TestCase
                 $this->getObject('She sells ocean shells by the sea shore.'),
             ],
             'cyrillic-pattern-and-replacement' => [
-                $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Спейси из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'),
+                $this->getObject(
+                    'Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Спейси из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'
+                ),
                 '/Спейси/',
                 'Джеймс',
-                $this->getObject('Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'),
+                $this->getObject(
+                    'Режиссеру Риддли Скотту пришлось вырезать все сцены с участием Кевина Джеймс из нового трейлера фильма "Все деньги мира", который выйдет на экраны в конце декабря. Причина столь радикальной редактуры – вспыхнувший вокруг Спейси секс-скандал, сообщает EW.'
+                ),
             ],
             'invalid-pattern'                  => [
                 $this->getObject('She sells sea shells by the sea shore.'),
@@ -460,7 +464,6 @@ class StdStringTest extends TestCase
             'object-needle'        => [$string, $this->getObject('Foo'), true],
             'cyrillic'             => [$this->getObject('Тест'), 'Те', true],
             'needled-non-existent' => [$string, 'baz', false],
-            'invalid-needle'       => [$string, 123, false],
         ];
     }
 
@@ -468,7 +471,7 @@ class StdStringTest extends TestCase
     {
         $obj            = new StdObject();
         $anonymousClass = new class {
-            public function __toString()
+            public function __toString(): string
             {
                 return 'FooBar';
             }
@@ -513,7 +516,7 @@ class StdStringTest extends TestCase
     public function testCreateFromArrayOfCharException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Only chars are allowed inside array!');
+        $this->expectExceptionMessage(sprintf('Array of %s is required!', Character::class));
 
         $chars = [
             new Character('F'),
@@ -609,19 +612,17 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param StdString|string $pattern
      * @dataProvider dataProviderContains
      */
-    public function testContains(StdString $string, $pattern, bool $expectation): void
+    public function testContains(StdString $string, string|StdString $pattern, bool $expectation): void
     {
         self::assertEquals($expectation, $string->contains($pattern));
     }
 
     /**
-     * @param StdString|string $pattern
      * @dataProvider dataProviderContentEquals
      */
-    public function testContentEquals(StdString $string, $pattern, bool $expectation): void
+    public function testContentEquals(StdString $string, string|StdString $pattern, bool $expectation): void
     {
         self::assertEquals($expectation, $string->contentEquals($pattern));
     }
@@ -646,11 +647,14 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param StdString|string $pattern
      * @dataProvider dataProviderEndsWith
      */
-    public function testEndsWith(StdString $string, $pattern, bool $caseInsensitive, bool $expectation): void
-    {
+    public function testEndsWith(
+        StdString $string,
+        string|StdString $pattern,
+        bool $caseInsensitive,
+        bool $expectation
+    ): void {
         self::assertEquals($expectation, $string->endsWith($pattern, $caseInsensitive));
     }
 
@@ -667,17 +671,16 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param StdString|string $pattern
      * @dataProvider dataProviderEqualsIgnoreCase
      */
-    public function testEqualsIgnoreCase(StdString $string, $pattern, bool $expectation): void
+    public function testEqualsIgnoreCase(StdString $string, string|StdString $pattern, bool $expectation): void
     {
         self::assertEquals($expectation, $string->equalsIgnoreCase($pattern));
     }
 
     /**
      * @param StdString|string $pattern
-     * @param StdString[] $expectation
+     * @param StdString[]      $expectation
      * @dataProvider dataProviderExplode
      */
     public function testExplode(StdString $string, $pattern, array $expectation, string $exception = null): void
@@ -691,7 +694,7 @@ class StdStringTest extends TestCase
 
     /**
      * @param StdString|string $pattern
-     * @param array $arguments
+     * @param array            $arguments
      * @dataProvider dataProviderFormat
      */
     public function testFormat($pattern, array $arguments, ?StdString $expectation, string $exception = null): void
@@ -950,10 +953,9 @@ class StdStringTest extends TestCase
     }
 
     /**
-     * @param StdString|string $needle
      * @dataProvider dataProviderStartsWith
      */
-    public function testStartsWith(StdString $string, $needle, bool $expectation, int $offset = 0): void
+    public function testStartsWith(StdString $string, string|StdString $needle, bool $expectation, int $offset = 0): void
     {
         self::assertEquals($expectation, $string->startsWith($needle, $offset));
     }

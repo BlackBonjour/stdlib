@@ -15,8 +15,6 @@ interface Comparable
 {
     /**
      * Compares given object with current one.
-     *
-     * @param mixed $object
      */
     public function compareTo($object): int;
 }

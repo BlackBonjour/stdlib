@@ -7,7 +7,6 @@ namespace BlackBonjour\Stdlib\Util;
 use ArrayIterator;
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
-use BlackBonjour\Stdlib\Lang\StdObject;
 use TypeError;
 
 use function array_key_exists;
@@ -21,41 +20,9 @@ use function in_array;
  * @since     04.06.2018
  * @copyright Copyright (c) 2018 Erick Dyck
  */
-class Sequence extends StdObject implements MapInterface
+class Sequence implements MapInterface
 {
     private array $values = [];
-
-    /**
-     * @deprecated Extending StdObject will be removed in the future!
-     */
-    public function __toString(): string
-    {
-        return parent::__toString();
-    }
-
-    /**
-     * @deprecated Extending StdObject will be removed in the future!
-     */
-    public function clone(): StdObject
-    {
-        return parent::clone();
-    }
-
-    /**
-     * @deprecated Extending StdObject will be removed in the future!
-     */
-    public function equals($obj): bool
-    {
-        return parent::equals($obj);
-    }
-
-    /**
-     * @deprecated Extending StdObject will be removed in the future!
-     */
-    public function hashCode(): string
-    {
-        return parent::hashCode();
-    }
 
     public function clear(): void
     {
@@ -83,9 +50,9 @@ class Sequence extends StdObject implements MapInterface
      *
      * @throws InvalidArgumentException
      */
-    public static function createFromArray(array $array): self
+    public static function createFromArray(array $array): static
     {
-        return (new self())->pushAll($array);
+        return (new static())->pushAll($array);
     }
 
     public function count(): int
@@ -100,12 +67,10 @@ class Sequence extends StdObject implements MapInterface
 
     /**
      * Fills array with specified value.
-     *
-     * @param mixed $newValue
      */
-    public function fill($newValue): self
+    public function fill($newValue): static
     {
-        foreach ($this->values as $index => $value) {
+        foreach (array_keys($this->values) as $index) {
             $this->values[$index] = $newValue;
         }
 
@@ -125,7 +90,7 @@ class Sequence extends StdObject implements MapInterface
         return $this->values[$key];
     }
 
-    public function getIterator()
+    public function getIterator(): iterable
     {
         return new ArrayIterator($this->values);
     }
@@ -176,10 +141,9 @@ class Sequence extends StdObject implements MapInterface
     /**
      * Pushes specified value into array.
      *
-     * @param mixed $value
      * @throws InvalidArgumentException
      */
-    public function push($value, int $repeat = null): self
+    public function push($value, int $repeat = null): static
     {
         if ($repeat !== null && $repeat <= 0) {
             throw new InvalidArgumentException(sprintf('Argument %d must be %d or higher!', 2, 1));
@@ -197,7 +161,7 @@ class Sequence extends StdObject implements MapInterface
      *
      * @throws InvalidArgumentException
      */
-    public function pushAll(array $values): self
+    public function pushAll(array $values): static
     {
         foreach ($values as $value) {
             $this->push($value);
@@ -206,10 +170,7 @@ class Sequence extends StdObject implements MapInterface
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function put($key, $value)
+    public function put($key, $value): static
     {
         if (is_numeric($key) === false) {
             throw new TypeError(
@@ -222,7 +183,7 @@ class Sequence extends StdObject implements MapInterface
         return $this;
     }
 
-    public function putAll(MapInterface $map): self
+    public function putAll(MapInterface $map): static
     {
         foreach ($map as $key => $value) {
             $this->put($key, $value);
@@ -252,14 +213,14 @@ class Sequence extends StdObject implements MapInterface
         return count($this->values);
     }
 
-    public function slice(int $length, int $offset = 0, bool $preserveKeys = true): self
+    public function slice(int $length, int $offset = 0, bool $preserveKeys = true): static
     {
         $this->values = array_slice($this->values, $offset, $length, $preserveKeys);
 
         return $this;
     }
 
-    public function sort(callable $callable): self
+    public function sort(callable $callable): static
     {
         usort($this->values, $callable);
 
