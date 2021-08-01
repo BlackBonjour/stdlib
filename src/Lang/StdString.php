@@ -256,8 +256,14 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     {
         Assert::typeOf(['string', __CLASS__], $delimiter);
 
+        $delimiter = (string) $delimiter;
+
+        if ($delimiter === '') {
+            throw new InvalidArgumentException('Empty delimiter!');
+        }
+
         $response = [];
-        $results  = explode((string) $delimiter, $this->data);
+        $results  = explode($delimiter, $this->data);
 
         if ($results === false) {
             throw new RuntimeException('An unknown error occurred while splitting string!');
@@ -501,7 +507,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     {
         Assert::typeOf(['string', __CLASS__], $pattern, $replacement);
 
-        $result = preg_replace($pattern, $replacement, $this->data);
+        $result = preg_replace((string) $pattern, (string) $replacement, $this->data);
 
         return new static($result ?: $this->data, $this->encoding);
     }
@@ -519,7 +525,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     {
         Assert::typeOf(['string', __CLASS__], $pattern, $replacement);
 
-        $result = preg_replace($pattern, $replacement, $this->data, 1);
+        $result = preg_replace((string) $pattern, (string) $replacement, $this->data, 1);
 
         return new static($result ?: $this->data, $this->encoding);
     }

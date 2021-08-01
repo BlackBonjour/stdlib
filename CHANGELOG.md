@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 3.2.0 - 2021-08-01
+
+### Added
+
+- Nothing
+
+### Changed
+
+- Nothing
+
+### Deprecated
+
+- Nothinh
+
+### Removed
+
+- Nothing
+
+### Fixed
+
+- [#38](https://github.com/BlackBonjour/stdlib/issues/38) Fixed empty delimiter for StdString::explode()
+- PHP8 compatibility
+
 ## 3.1.0 - 2020-10-03
 
 ### Added

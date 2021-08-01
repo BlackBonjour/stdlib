@@ -202,7 +202,7 @@ class StdStringTest extends TestCase
             'default'         => [$string, 'oo', ['F', 'Bar']],
             'object-pattern'  => [$string, $this->getObject('oo'), ['F', 'Bar']],
             'invalid-pattern' => [$string, 666, ['F', 'Bar'], TypeError::class],
-            'empty-pattern'   => [$string, '', ['F', 'Bar'], RuntimeException::class], // Should trigger a warning
+            'empty-pattern'   => [$string, '', ['F', 'Bar'], InvalidArgumentException::class],
         ];
     }
 
