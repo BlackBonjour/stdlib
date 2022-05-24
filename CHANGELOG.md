@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 3.2.1 - 2022-05-24
+
+### Added
+
+- Nothing
+
+### Changed
+
+- Changed compatibility to max PHP 8.0 only
+
+### Deprecated
+
+- Nothinh
+
+### Removed
+
+- Nothing
+
+### Fixed
+
+- Nothing
+
 ## 3.2.0 - 2021-08-01
 
 ### Added
