@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Compatibility for PHP 8.1
+- [#39](https://github.com/BlackBonjour/stdlib/issues/39) Compatibility for PHP 8.1
 
 ### Changed
 
