@@ -6,6 +6,7 @@ namespace BlackBonjour\Stdlib\Util;
 
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
+use Generator;
 use JsonException;
 
 use function array_key_exists;
@@ -64,7 +65,7 @@ class HashMap implements MapInterface
         return $this->size();
     }
 
-    public function current()
+    public function current(): mixed
     {
         $key = key($this->keys);
 
@@ -101,22 +102,16 @@ class HashMap implements MapInterface
         return empty($this->keys);
     }
 
-    public function key()
+    public function key(): mixed
     {
         $key = current($this->keys);
 
         return $key !== false ? $key : null;
     }
 
-    public function next()
+    public function next(): void
     {
-        $key = next($this->keys);
-
-        if ($key === false) {
-            return false;
-        }
-
-        return $this->values[key($this->keys)];
+        next($this->keys);
     }
 
     /**
@@ -133,7 +128,7 @@ class HashMap implements MapInterface
      * @throws JsonException
      * @throws OutOfBoundsException
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->get($offset);
     }
