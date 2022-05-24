@@ -93,7 +93,7 @@ class Sequence extends StdObject implements MapInterface
         return $this->size();
     }
 
-    public function current()
+    public function current(): mixed
     {
         return current($this->values);
     }
@@ -125,7 +125,7 @@ class Sequence extends StdObject implements MapInterface
         return $this->values[$key];
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->values);
     }
@@ -154,7 +154,7 @@ class Sequence extends StdObject implements MapInterface
      * @inheritDoc
      * @throws OutOfBoundsException
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->get($offset);
     }
@@ -259,9 +259,9 @@ class Sequence extends StdObject implements MapInterface
         return $this;
     }
 
-    public function sort(callable $callable): self
+    public function sort(callable $callback): self
     {
-        usort($this->values, $callable);
+        usort($this->values, $callback);
 
         return $this;
     }

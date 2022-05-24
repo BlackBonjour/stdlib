@@ -68,6 +68,7 @@ class Character extends StdObject implements Comparable
 
         // Validate char array
         if (is_array($chars)) {
+            /** @var array $chars */
             $test = reset($chars);
 
             if ($test === false || ($test instanceof static) === false) {

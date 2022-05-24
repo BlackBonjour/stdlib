@@ -61,7 +61,7 @@ class Map implements MapInterface
         return $this->size();
     }
 
-    public function current()
+    public function current(): mixed
     {
         return current($this->mapping);
     }
@@ -110,7 +110,7 @@ class Map implements MapInterface
      * @inheritDoc
      * @throws OutOfBoundsException
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->get($offset);
     }
@@ -171,9 +171,9 @@ class Map implements MapInterface
         return $this;
     }
 
-    public function sort(callable $callable): self
+    public function sort(callable $callback): self
     {
-        uasort($this->mapping, $callable);
+        uasort($this->mapping, $callback);
 
         return $this;
     }

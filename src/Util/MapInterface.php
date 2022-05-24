@@ -87,7 +87,7 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
      *
      * @return static
      */
-    public function sort(callable $callable);
+    public function sort(callable $callback);
 
     public function toArray(): array;
 

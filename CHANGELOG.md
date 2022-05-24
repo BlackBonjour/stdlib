@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 3.3.0 - 2022-05-24
+
+### Added
+
+- Compatibility for PHP 8.1
+
+### Changed
+
+- Nothing
+
+### Deprecated
+
+- Nothing
+
+### Removed
+
+- Nothing
+
+### Fixed
+
+- Nothing
+
 ## 3.2.1 - 2022-05-24
 
 ### Added
@@ -14,7 +36,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Deprecated
 
-- Nothinh
+- Nothing
 
 ### Removed
 
@@ -36,7 +58,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Deprecated
 
-- Nothinh
+- Nothing
 
 ### Removed
 
