@@ -120,7 +120,7 @@ class HashMapTest extends TestCase
     public function testIterable(): void
     {
         $map = HashMap::createFromArray(
-                [
+            [
                 'foo' => 'bar',
                 'baz' => 'lorem',
             ]

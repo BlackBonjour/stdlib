@@ -7,7 +7,6 @@ namespace BlackBonjourTest\Stdlib\Util;
 use BlackBonjour\Stdlib\Lang\Character as Char;
 use BlackBonjour\Stdlib\Lang\StdString;
 use BlackBonjour\Stdlib\Util\Assert;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use TypeError;

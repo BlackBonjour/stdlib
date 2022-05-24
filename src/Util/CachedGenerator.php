@@ -20,9 +20,8 @@ class CachedGenerator implements IteratorAggregate
     private array $keys = [];
     private array $values = [];
 
-    public function __construct(
-        private Generator $generator,
-    ) {
+    public function __construct(private Generator $generator)
+    {
     }
 
     public function getIterator(): Generator

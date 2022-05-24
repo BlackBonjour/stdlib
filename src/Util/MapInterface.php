@@ -16,30 +16,22 @@ use Iterator;
 interface MapInterface extends ArrayAccess, Countable, Iterator
 {
     /**
-     * Removes all of the mapping from this map.
+     * Removes all the mapping from this map.
      */
     public function clear(): void;
 
     /**
      * Returns true if this map contains a mapping for the specified key.
-     *
-     * @param mixed $key
      */
     public function containsKey($key): bool;
 
     /**
-     * Returns true if this map maps one or more keys to the specified value.
-     *
-     * @param mixed $value
+     * Returns true if this map does contain at least one map to the specified value.
      */
     public function containsValue($value): bool;
 
     /**
-     * Returns the value to which the specified key is mapped, or null if this
-     * map contains no mapping for the key.
-     *
-     * @param mixed $key
-     * @return mixed
+     * Returns the value to which the specified key is mapped, or null if this map contains no mapping for the key.
      */
     public function get($key);
 
@@ -54,17 +46,14 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
     public function put($key, $value): static;
 
     /**
-     * Copies all of the mapping from the specified map to this map.
+     * Copies all the mapping from the specified map to this map.
      */
     public function putAll(MapInterface $map): static;
 
     /**
      * Removes the mapping for a key from this map if it is present.
-     *
-     * @param mixed $key
-     * @return mixed
      */
-    public function remove($key);
+    public function remove($key): void;
 
     /**
      * Returns the number of key-value mappings in this map.
@@ -76,7 +65,7 @@ interface MapInterface extends ArrayAccess, Countable, Iterator
     /**
      * Sorts this hash map using retrieved callback.
      */
-    public function sort(callable $callable): static;
+    public function sort(callable $callback): static;
 
     public function toArray(): array;
 

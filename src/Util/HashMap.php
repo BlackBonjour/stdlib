@@ -6,7 +6,6 @@ namespace BlackBonjour\Stdlib\Util;
 
 use BlackBonjour\Stdlib\Exception\InvalidArgumentException;
 use BlackBonjour\Stdlib\Exception\OutOfBoundsException;
-use Generator;
 use JsonException;
 
 use function array_key_exists;
@@ -33,7 +32,6 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws JsonException
      */
     public function containsKey($key): bool
@@ -77,7 +75,6 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws JsonException
      * @throws OutOfBoundsException
      */
@@ -115,7 +112,6 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws JsonException
      */
     public function offsetExists($offset): bool
@@ -124,7 +120,6 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws JsonException
      * @throws OutOfBoundsException
      */
@@ -134,7 +129,6 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws JsonException
      */
     public function offsetSet($offset, $value): void
@@ -143,7 +137,6 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws JsonException
      */
     public function offsetUnset($offset): void
@@ -152,7 +145,6 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws JsonException
      */
     public function put($key, $value): static
@@ -181,7 +173,6 @@ class HashMap implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws JsonException
      */
     public function remove($key): void
@@ -216,16 +207,16 @@ class HashMap implements MapInterface
         return $this;
     }
 
-    public function sort(callable $callable, bool $keySort = false): static
+    public function sort(callable $callback, bool $keySort = false): static
     {
         $keys   = $this->keys;
         $values = $this->values;
 
         if ($keySort) {
-            uasort($keys, $callable);
+            uasort($keys, $callback);
             $values = array_replace($keys, $values);
         } else {
-            uasort($values, $callable);
+            uasort($values, $callback);
             $keys = array_replace($values, $keys);
         }
 

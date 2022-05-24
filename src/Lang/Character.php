@@ -22,9 +22,8 @@ class Character extends StdObject implements Comparable
     /**
      * @throws InvalidArgumentException
      */
-    public function __construct(
-        protected string $data = '',
-    ) {
+    public function __construct(protected string $data = '')
+    {
         if (mb_strlen($this->data) !== 1) {
             throw new InvalidArgumentException('Only one character can be represented!');
         }
@@ -36,8 +35,7 @@ class Character extends StdObject implements Comparable
     }
 
     /**
-     * Determines the number of char values needed to represent the specified
-     * character.
+     * Determines the number of char values needed to represent the specified character.
      */
     public static function charCount(string|self $char): int
     {
@@ -50,6 +48,7 @@ class Character extends StdObject implements Comparable
      * Returns the unicode code point at specified index.
      *
      * @param static[]|CharSequence $chars
+     *
      * @throws InvalidArgumentException
      */
     public static function codePointAt(array|CharSequence $chars, int $index, int $limit = null): int
@@ -99,6 +98,7 @@ class Character extends StdObject implements Comparable
      * Returns the unicode code point before specified index.
      *
      * @param static[]|CharSequence $chars
+     *
      * @throws InvalidArgumentException
      */
     public static function codePointBefore(array|CharSequence $chars, int $index, int $start = null): int
@@ -118,10 +118,6 @@ class Character extends StdObject implements Comparable
         return (string) $charA <=> (string) $charB;
     }
 
-    /**
-     * @inheritDoc
-     * @throws InvalidArgumentException
-     */
     public function compareTo($object): int
     {
         Assert::typeOf(['string', __CLASS__], $object);

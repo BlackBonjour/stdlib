@@ -68,7 +68,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritDoc
      * @throws InvalidArgumentException
      * @throws OutOfBoundsException
      */
@@ -107,7 +106,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
      * Compares given string with this string (not multibyte safe).
      *
      * @inheritDoc
-     * @throws InvalidArgumentException
      */
     public function compareTo($object): int
     {
@@ -117,8 +115,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * Compares given string with this string case insensitive (not multibyte
-     * safe).
+     * Compares given string with this string case-insensitive (not multibyte safe).
      */
     public function compareToIgnoreCase(string|self $string): int
     {
@@ -152,8 +149,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * Returns a string that represents the character sequence in the array
-     * specified.
+     * Returns a string that represents the character sequence in the array specified.
      *
      * @throws InvalidArgumentException
      */
@@ -194,7 +190,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * Compares this string to the given string case insensitive.
+     * Compares this string to the given string case-insensitive.
      */
     public function equalsIgnoreCase(string|self $string): bool
     {
@@ -254,6 +250,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
      * Copies characters from this string into the destination array.
      *
      * @param Character[] $destination
+     *
      * @throws InvalidArgumentException
      * @throws OutOfBoundsException
      */
@@ -267,8 +264,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * Returns the index within this string of the first occurrence of the
-     * specified string.
+     * Returns the index within this string of the first occurrence of the specified string.
      */
     public function indexOf(string|self $string, int $offset = 0): int
     {
@@ -286,8 +282,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * Returns the index within this string of the last occurrence of the
-     * specified string.
+     * Returns the index within this string of the last occurrence of the specified string.
      */
     public function lastIndexOf(string|self $string, int $offset = 0): int
     {
@@ -321,7 +316,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritDoc
      * @throws InvalidArgumentException
      * @throws OutOfBoundsException
      */
@@ -337,7 +331,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * @inheritDoc
      * @throws InvalidArgumentException
      */
     public function offsetSet($offset, $value): void
@@ -379,6 +372,9 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
         $this->data = $prefix . $value . $suffix;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function offsetUnset($offset): void
     {
         trigger_error('Cannot unset string offsets', E_USER_ERROR);
@@ -424,8 +420,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * Replaces each substring of this string that matches the given regex
-     * pattern with the specified replacement.
+     * Replaces each substring of this string that matches the given regex pattern with the specified replacement.
      *
      * @throws InvalidArgumentException
      */
@@ -437,8 +432,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * Replaces the first substring of this string that matches the given regex
-     * pattern with the specified replacement.
+     * Replaces the first substring of this string that matches the given regex pattern with the specified replacement.
      *
      * @throws InvalidArgumentException
      */
@@ -493,7 +487,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
         }
 
         $charList = [];
-
         $this->getChars($begin, $end, $charList, 0);
 
         return $charList;
@@ -514,8 +507,7 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     }
 
     /**
-     * Returns a new string object that is a substring of this string
-     * (equivalent to java.lang.String).
+     * Returns a new string object that is a substring of this string (equivalent to java.lang.String).
      *
      * @throws InvalidArgumentException
      */
@@ -534,7 +526,6 @@ class StdString extends StdObject implements ArrayAccess, CharSequence, Comparab
     public function toCharArray(): array
     {
         $charList = [];
-
         $this->getChars(0, $this->length() - 1, $charList, 0);
 
         return $charList;

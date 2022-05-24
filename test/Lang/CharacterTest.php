@@ -19,11 +19,11 @@ class CharacterTest extends TestCase
 {
     public function dataProviderCodePointAt(): array
     {
-        $charA = $this->getObject('a');
-        $charB = $this->getObject('B');
-        $charF = $this->getObject('F');
-        $charO = $this->getObject('o');
-        $charR = $this->getObject('r');
+        $charA = new Character('a');
+        $charB = new Character('B');
+        $charF = new Character('F');
+        $charO = new Character('o');
+        $charR = new Character('r');
 
         return [
             'char-array'         => [97, [$charF, $charO, $charO, $charB, $charA, $charR], 4],
@@ -40,11 +40,11 @@ class CharacterTest extends TestCase
 
     public function dataProviderCodePointBefore(): array
     {
-        $charA = $this->getObject('a');
-        $charB = $this->getObject('B');
-        $charF = $this->getObject('F');
-        $charO = $this->getObject('o');
-        $charR = $this->getObject('r');
+        $charA = new Character('a');
+        $charB = new Character('B');
+        $charF = new Character('F');
+        $charO = new Character('o');
+        $charR = new Character('r');
 
         return [
             'char-array'         => [97, [$charF, $charO, $charO, $charB, $charA, $charR], 5],
@@ -58,19 +58,19 @@ class CharacterTest extends TestCase
 
     public function dataProviderCompareTo(): array
     {
-        $charA = $this->getObject();    // Latin
-        $charB = $this->getObject('в'); // Cyrillic
+        $charA = new Character('c');    // Latin
+        $charB = new Character('в'); // Cyrillic
 
         return [
             // Latin test
             'latin-string'    => [$charA, 'c', 0],
-            'latin-char'      => [$charA, $this->getObject(), 0],
+            'latin-char'      => [$charA, new Character('c'), 0],
             'latin-higher'    => [$charA, 'd', -1],
             'latin-lower'     => [$charA, 'b', 1],
 
             // Cyrillic test
             'cyrillic-string' => [$charB, 'в', 0],
-            'cyrillic-char'   => [$charB, $this->getObject('в'), 0],
+            'cyrillic-char'   => [$charB, new Character('в'), 0],
             'cyrillic-higher' => [$charB, 'г', -1],
             'cyrillic-lower'  => [$charB, 'б', 1],
         ];
@@ -78,71 +78,54 @@ class CharacterTest extends TestCase
 
     public function dataProviderToLowerCase(): array
     {
-        $charA = $this->getObject(); // Latin
-        $charB = $this->getObject('б'); // Cyrillic
+        $charA = new Character('c'); // Latin
+        $charB = new Character('б'); // Cyrillic
 
         return [
             'latin-string'    => [$charA, 'C'],
-            'latin-char'      => [$charA, $this->getObject('C')],
+            'latin-char'      => [$charA, new Character('C')],
             'cyrillic-string' => [$charB, 'Б'],
-            'cyrillic-char'   => [$charB, $this->getObject('Б')],
+            'cyrillic-char'   => [$charB, new Character('Б')],
         ];
     }
 
     public function dataProviderToUpperCase(): array
     {
-        $charA = $this->getObject('C'); // Latin
-        $charB = $this->getObject('Б'); // Cyrillic
+        $charA = new Character('C'); // Latin
+        $charB = new Character('Б'); // Cyrillic
 
         return [
             'latin-string'    => [$charA, 'c'],
-            'latin-char'      => [$charA, $this->getObject()],
+            'latin-char'      => [$charA, new Character('c')],
             'cyrillic-string' => [$charB, 'б'],
-            'cyrillic-char'   => [$charB, $this->getObject('б')],
+            'cyrillic-char'   => [$charB, new Character('б')],
         ];
     }
 
     public function dataProviderValueOf(): array
     {
-        $charA = $this->getObject(); // Latin
-        $charB = $this->getObject('б'); // Cyrillic
+        $charA = new Character('c'); // Latin
+        $charB = new Character('б'); // Cyrillic
 
         return [
             'latin-string'    => [$charA, 'c'],
-            'latin-char'      => [$charA, $this->getObject()],
+            'latin-char'      => [$charA, new Character('c')],
             'cyrillic-string' => [$charB, 'б'],
-            'cyrillic-char'   => [$charB, $this->getObject('б')],
+            'cyrillic-char'   => [$charB, new Character('б')],
         ];
-    }
-
-    private function getObject(string $char = 'c'): Character
-    {
-        return new Character($char);
-    }
-
-    public function testConstruct(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->getObject('cc');
-    }
-
-    public function testToString(): void
-    {
-        self::assertEquals('c', (string) $this->getObject()); // Latin
-        self::assertEquals('с', (string) $this->getObject('с')); // Cyrillic
     }
 
     public function testCharCount(): void
     {
         self::assertEquals(1, Character::charCount('c'));
-        self::assertEquals(1, Character::charCount($this->getObject()));
+        self::assertEquals(1, Character::charCount(new Character('c')));
         self::assertEquals(1, Character::charCount('я'));
         self::assertEquals(2, Character::charCount('😁'));
     }
 
     public function testClone(): void
     {
-        $char = $this->getObject();
+        $char = new Character('c');
 
         self::assertInstanceOf(Character::class, $char->clone());
     }
@@ -189,23 +172,29 @@ class CharacterTest extends TestCase
         self::assertEquals($expected, $char->compareTo($compare));
     }
 
+    public function testConstruct(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new Character('cc');
+    }
+
     public function testEquals(): void
     {
         // Latin base character
-        self::assertTrue($this->getObject()->equals('c'));
-        self::assertTrue($this->getObject()->equals($this->getObject()));
-        self::assertFalse($this->getObject()->equals('с')); // Cyrillic
+        self::assertTrue((new Character('c'))->equals('c'));
+        self::assertTrue((new Character('c'))->equals(new Character('c')));
+        self::assertFalse((new Character('c'))->equals('с')); // Cyrillic
 
         // Cyrillic base character
-        self::assertTrue($this->getObject('с')->equals('с'));
-        self::assertTrue($this->getObject('с')->equals($this->getObject('с')));
-        self::assertFalse($this->getObject('с')->equals('c')); // Latin
+        self::assertTrue((new Character('с'))->equals('с'));
+        self::assertTrue((new Character('с'))->equals(new Character('с')));
+        self::assertFalse((new Character('с'))->equals('c')); // Latin
     }
 
     public function testHashCode(): void
     {
-        $charA = $this->getObject();
-        $charB = $this->getObject('с');
+        $charA = new Character('c');
+        $charB = new Character('с');
 
         self::assertEquals(spl_object_hash($charA), $charA->hashCode());
         self::assertEquals(spl_object_hash($charB), $charB->hashCode());
@@ -213,45 +202,51 @@ class CharacterTest extends TestCase
 
     public function testIsLowerCase(): void
     {
-        self::assertTrue(Character::isLowerCase($this->getObject())); // Latin
-        self::assertTrue(Character::isLowerCase($this->getObject('с'))); // Cyrillic
+        self::assertTrue(Character::isLowerCase(new Character('c'))); // Latin
+        self::assertTrue(Character::isLowerCase(new Character('с'))); // Cyrillic
         self::assertTrue(Character::isLowerCase('c'));
-        self::assertFalse(Character::isLowerCase($this->getObject('C'))); // Latin
-        self::assertFalse(Character::isLowerCase($this->getObject('С'))); // Cyrillic
+        self::assertFalse(Character::isLowerCase(new Character('C'))); // Latin
+        self::assertFalse(Character::isLowerCase(new Character('С'))); // Cyrillic
         self::assertFalse(Character::isLowerCase('C'));
     }
 
     public function testIsUpperCase(): void
     {
-        self::assertTrue(Character::isUpperCase($this->getObject('C'))); // Latin
-        self::assertTrue(Character::isUpperCase($this->getObject('С'))); // Cyrillic
+        self::assertTrue(Character::isUpperCase(new Character('C'))); // Latin
+        self::assertTrue(Character::isUpperCase(new Character('С'))); // Cyrillic
         self::assertTrue(Character::isUpperCase('C'));
-        self::assertFalse(Character::isUpperCase($this->getObject())); // Latin
-        self::assertFalse(Character::isUpperCase($this->getObject('с'))); // Cyrillic
+        self::assertFalse(Character::isUpperCase(new Character('c'))); // Latin
+        self::assertFalse(Character::isUpperCase(new Character('с'))); // Cyrillic
         self::assertFalse(Character::isUpperCase('c'));
     }
 
     /**
      * @dataProvider dataProviderToLowerCase
      */
-    public function testToLowerCase(Character $expectation, string|Character $char): void
+    public function testToLowerCase(Character $expected, string|Character $char): void
     {
-        self::assertEquals($expectation, Character::toLowerCase($char));
+        self::assertEquals($expected, Character::toLowerCase($char));
+    }
+
+    public function testToString(): void
+    {
+        self::assertEquals('c', (string) new Character('c')); // Latin
+        self::assertEquals('с', (string) new Character('с')); // Cyrillic
     }
 
     /**
      * @dataProvider dataProviderToUpperCase
      */
-    public function testToUpperCase(Character $expectation, string|Character $char): void
+    public function testToUpperCase(Character $expected, string|Character $char): void
     {
-        self::assertEquals($expectation, Character::toUpperCase($char));
+        self::assertEquals($expected, Character::toUpperCase($char));
     }
 
     /**
      * @dataProvider dataProviderValueOf
      */
-    public function testValueOf(Character $expectation, string|Character $char): void
+    public function testValueOf(Character $expected, string|Character $char): void
     {
-        self::assertEquals($expectation, Character::valueOf($char));
+        self::assertEquals($expected, Character::valueOf($char));
     }
 }

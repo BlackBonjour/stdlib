@@ -6,7 +6,6 @@ namespace BlackBonjourTest\Stdlib\Util;
 
 use BlackBonjour\Stdlib\Util\Number;
 use PHPUnit\Framework\TestCase;
-use TypeError;
 
 /**
  * @author    Erick Dyck <info@erickdyck.de>

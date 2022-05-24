@@ -78,7 +78,6 @@ class Sequence implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws OutOfBoundsException
      */
     public function get($key)
@@ -116,7 +115,6 @@ class Sequence implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws OutOfBoundsException
      */
     public function offsetGet($offset): mixed
@@ -192,7 +190,7 @@ class Sequence implements MapInterface
         return $this;
     }
 
-    public function remove($key)
+    public function remove($key): void
     {
         if (is_numeric($key) === false) {
             throw new TypeError(
@@ -220,9 +218,9 @@ class Sequence implements MapInterface
         return $this;
     }
 
-    public function sort(callable $callable): static
+    public function sort(callable $callback): static
     {
-        usort($this->values, $callable);
+        usort($this->values, $callback);
 
         return $this;
     }

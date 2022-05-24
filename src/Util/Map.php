@@ -67,7 +67,6 @@ class Map implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws OutOfBoundsException
      */
     public function get($key)
@@ -107,7 +106,6 @@ class Map implements MapInterface
     }
 
     /**
-     * @inheritDoc
      * @throws OutOfBoundsException
      */
     public function offsetGet($offset): mixed
@@ -171,9 +169,9 @@ class Map implements MapInterface
         return $this;
     }
 
-    public function sort(callable $callable): static
+    public function sort(callable $callback): static
     {
-        uasort($this->mapping, $callable);
+        uasort($this->mapping, $callback);
 
         return $this;
     }

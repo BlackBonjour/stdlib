@@ -51,18 +51,18 @@ class SequenceTest extends TestCase
 
     public function testCreateFromArray(): void
     {
-        $expectation = (new Sequence())
-            ->push('foo')
-            ->push('bar');
+        $expected = new Sequence();
+        $expected->push('foo');
+        $expected->push('bar');
 
-        self::assertEquals($expectation, Sequence::createFromArray(['foo', 'bar']));
+        self::assertEquals($expected, Sequence::createFromArray(['foo', 'bar']));
     }
 
     public function testFill(): void
     {
-        $sequence = (new Sequence())
-            ->pushAll(['Foo', 'Bar', 'Baz'])
-            ->fill('Lorem Ipsum');
+        $sequence = new Sequence();
+        $sequence->pushAll(['Foo', 'Bar', 'Baz']);
+        $sequence->fill('Lorem Ipsum');
 
         self::assertEquals(array_fill(0, 3, 'Lorem Ipsum'), $sequence->toArray());
     }

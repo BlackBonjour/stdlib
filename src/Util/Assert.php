@@ -33,8 +33,6 @@ class Assert
 
     /**
      * Checks if all specified values are empty.
-     *
-     * @param mixed ...$values
      */
     public static function empty(...$values): bool
     {
@@ -53,8 +51,6 @@ class Assert
 
     /**
      * Checks if all specified values are not empty.
-     *
-     * @param mixed ...$values
      */
     public static function notEmpty(...$values): bool
     {
@@ -123,7 +119,7 @@ class Assert
     {
         try {
             return static::typeOf($types, ...$values);
-        } catch (Throwable $t) {
+        } catch (Throwable) {
             // We won't do anything
         }
 

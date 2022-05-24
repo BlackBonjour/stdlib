@@ -28,10 +28,10 @@ class CachedGeneratorTest extends TestCase
 
     public function testGetIterator(): void
     {
-        $expectation     = $this->getIterator();
-        $cachedGenerator = new CachedGenerator($expectation);
+        $expected        = $this->getIterator();
+        $cachedGenerator = new CachedGenerator($expected);
 
-        self::assertEquals($expectation, $cachedGenerator->getIterator());
+        self::assertEquals($expected, $cachedGenerator->getIterator());
 
         // Test caching
         $i = 0;
