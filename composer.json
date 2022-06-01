@@ -2,7 +2,18 @@
   "name": "blackbonjour/stdlib",
   "type": "library",
   "description": "Standard library for PHP",
-  "keywords": ["PHP", "stdlib", "string", "utf-8", "util", "utility", "assertion", "manipulation", "hashmap", "map"],
+  "keywords": [
+    "PHP",
+    "stdlib",
+    "string",
+    "utf-8",
+    "util",
+    "utility",
+    "assertion",
+    "manipulation",
+    "hashmap",
+    "map"
+  ],
   "homepage": "https://github.com/BlackBonjour/stdlib",
   "license": "MIT",
   "authors": [
@@ -18,8 +29,7 @@
     "source": "https://github.com/BlackBonjour/stdlib"
   },
   "require": {
-    "php": "^8.1",
-
+    "php": "^8.0",
     "ext-json": "*",
     "ext-mbstring": "*"
   },

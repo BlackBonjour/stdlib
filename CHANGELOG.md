@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 3.3.1 - 2022-06-01
+
+### Added
+
+- Nothing
+
+### Changed
+
+- Lowered requirements
+
+### Deprecated
+
+- Nothing
+
+### Removed
+
+- Nothing
+
+### Fixed
+
+- Nothing
+
 ## 3.3.0 - 2022-05-24
 
 ### Added
